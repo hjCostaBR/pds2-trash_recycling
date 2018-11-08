@@ -1,0 +1,58 @@
+
+** PDS2 **
+** Trabalho Pratico Final
+*** Sistema de Auxilio a Coleta Seletiva
+**** Estorias
+
+- Indice
+	- Agendamento de Coleta
+	- Agendamento de Coleta por Doador
+	- Agendamento de Coleta por Receptor
+	- Cadastro de Residuos
+	- Cadastro de Usuario
+	- Computar coleta realizada
+	- Menu principal
+
+
+=======================================
+- Agendamento de Coleta
+- Agendamento de Coleta por Doador
+- Agendamento de Coleta por Receptor
+
+	- Usuario doador
+		- Como 01 usuario do tipo Doador eu desejo agendar 01 doacao de residuo
+		- Neste procedimento eu vou
+			- Selecionar qual(is) residuo(s) vou doar, dentre a minha lista de residuos (residuos que posso doar)
+			- Selecionar para qual receptor eu vou fazer a doacao
+			- Selecionar 01 Ponto de Coleta dentre a lista de pontos de coletas disponiveis, no momento
+
+	- Usuario Recolhedor
+		- Como 01 usuario do tipo Recolhedor eu desejo agendar 01 recolhimento de residuo
+		- Neste procedimento eu vou
+			- Selecionar qual(is) residuo(s) desejo receber, dentre a minha lista de residuos (residuos que posso receber)
+			- Selecionar de qual doador eu vou receber a doacao
+			- Selecionar 01 Ponto de Coleta dentre a lista de pontos de coletas disponiveis, no momento
+
+
+=======================================
+- Cadastro de Residuos
+
+	- @todo
+
+
+=======================================
+- Cadastro de Usuario
+
+	- @todo
+
+
+=======================================
+- Computar coleta realizada
+
+	- @todo
+
+
+=======================================
+- Menu principal
+
+	- @todo
