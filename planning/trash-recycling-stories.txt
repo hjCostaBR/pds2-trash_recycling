@@ -34,7 +34,7 @@
 		- Infomar meu codigo
 		- Infomar minha senha
 
-	- Caso os dados que eu informar estejam corretos, desejo visualizar entao visualizar o menu principal
+	- Caso os dados que eu informar estejam corretos, desejo entao visualizar o menu principal
 
 
 =======================================
