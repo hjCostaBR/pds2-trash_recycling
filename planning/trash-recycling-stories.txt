@@ -27,6 +27,16 @@
 
 
 =======================================
+- Estoria: Menu principal
+
+	- Como 01 usuario, eu desejo visualizar 01 menu com as opcoes de uso do sistema
+	- Neste procedimento eu devo poder
+		- Visualizar todas as funcoes possiveis disponiveis para mim
+		- Selecionar 01 das opcoes de acao possivel
+		- Sair do sistema (encerrar sessao)
+
+
+=======================================
 - Estoria: Login de Usuario
 
 	- Como 01 usuario, eu desejo realizar login dentro do sistema
@@ -35,16 +45,6 @@
 		- Infomar minha senha
 
 	- Caso os dados que eu informar estejam corretos, desejo entao visualizar o menu principal
-
-
-=======================================
-- Estoria: Menu principal
-
-	- Como 01 usuario, apos realizar login, eu desejo visualizar 01 menu com as opcoes de uso do sistema
-		- Neste procedimento eu devo poder
-			- Visualizar todas as funcoes possiveis disponiveis para mim
-			- Selecionar 01 das opcoes de acao possivel
-			- Sair do sistema (encerrar sessao)
 
 
 =======================================

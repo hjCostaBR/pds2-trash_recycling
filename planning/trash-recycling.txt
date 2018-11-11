@@ -49,7 +49,7 @@
 		- Entrega parcial
 			- Valor: [06pts]
 
-		- Deve posteriormente ser incluso da documentacao (entrega final)
+		- Deve posteriormente ser incluso na documentacao/Relatorio (entrega final)
 
 	- Programa
 		- Valor
@@ -117,17 +117,17 @@
 
 =======================================
 - Estorias
-- Agendamento de Coleta por Doador
-- Agendamento de Coleta por Receptor
-- Cadastro de Novo Tipo Residuos
-- Cadastro de novo Usuario
-- Computar coleta realizada
-- Editar cadastro de usuario
-- Editar Tipo Residuo Cadastrado
-- Listar/Remover tipo de residuo cadastrado
-- Listar/Remover usuarios cadastrados
-- Login de Usuario
-- Menu principal
-- Visualizar minhas Coletas agendadas
+- Estoria: Agendamento de Coleta por Doador
+- Estoria: Agendamento de Coleta por Receptor
+- Estoria: Cadastro de Novo Tipo Residuos
+- Estoria: Cadastro de novo Usuario
+- Estoria: Computar coleta realizada
+- Estoria: Editar cadastro de usuario
+- Estoria: Editar Tipo Residuo Cadastrado
+- Estoria: Listar/Remover tipo de residuo cadastrado
+- Estoria: Listar/Remover usuarios cadastrados
+- Estoria: Login de Usuario
+- Estoria: Menu principal
+- Estoria: Visualizar minhas Coletas agendadas
 
 	- Ver arquivo: Estorias .txt
