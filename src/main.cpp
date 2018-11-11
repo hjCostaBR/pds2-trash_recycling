@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 
-#include "class/module/main-menu/MainMenuController.cpp"
+#include "class/module/menu/MenuController.cpp"
 #include "class/common/PageControllerSet/PageControllerSet.cpp"
 
 using namespace std;
@@ -19,17 +19,19 @@ using namespace std;
 
 int main(int argc, char const *argv[])
 {
+    // Cabecalho
     cout << endl
          << "-- SISTEMA DE CONTROLE DE RECICLAGEM DE LIXO --"
-         << endl;
+         << endl << endl;
 
+    // Exibir menu principal
     vector<PageControllerSet> menuItems;
-    // menuItems.pushBack(pageControllerSet())
+    menuItems.push_back(PageControllerSet("Login", NULL));
 
-    MainMenuController menuController(menuItems);
+    MenuController menuController("Menu Principal", menuItems);
     menuController.initialize();
 
+    // Fim da execucao
     cout << endl << "FIM" << endl;
-
     return 0;
 }

@@ -7,8 +7,6 @@ using namespace std;
 
 class Controller
 {
-private:
-  /* data */
 public:
     Controller(void) {};
     ~Controller() {};

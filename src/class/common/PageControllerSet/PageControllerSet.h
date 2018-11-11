@@ -16,7 +16,6 @@ private:
     Controller *controller;
 public:
     PageControllerSet(string menuString, Controller* controller) : menuString(menuString), controller(controller) {};
-  //   ~PageControllerSet();
     string getMenuString();
     Controller* getController();
 };
