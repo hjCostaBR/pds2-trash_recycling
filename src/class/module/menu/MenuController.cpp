@@ -9,8 +9,7 @@ using namespace std;
 // Valida 01 opcao do menu selecionada
 bool MenuController::isSelectedItemValid(int selectedCode)
 {
-    int actualValue = (selectedCode - 1);
-    return (actualValue >= 0 && actualValue < this->menuItems.size());
+    return (selectedCode >= 0 && selectedCode < this->menuItems.size());
 }
 
 // Exibe opcoes de 01 menu
@@ -33,7 +32,7 @@ void MenuController::initialize(void)
     
     bool tried = false;
     string readInput;
-    int selectedOption;
+    int selectedOptionCode;
 
     do {
 
@@ -50,16 +49,24 @@ void MenuController::initialize(void)
         cin >> readInput;
 
         try {
-            selectedOption = stoi(readInput);
+            selectedOptionCode = (stoi(readInput) - 1);
 
         } catch(exception error) {
-            selectedOption = -1;
+            selectedOptionCode = -1;
         }
 
-    } while (!this->isSelectedItemValid(selectedOption));
+    } while (!this->isSelectedItemValid(selectedOptionCode));
 
-    // Tudo OK
-    cout << endl << "Opcao selecionada: " << selectedOption << endl;
+    // Exibe opcao selecionada
+    PageControllerSet selectedOption = this->menuItems[selectedOptionCode];
+
+    cout << endl << "Opcao selecionada: "
+         << selectedOption.getMenuString() << endl;
+
+    // Executa acao apropriada (se houver)
+    if (selectedOption.getController()) {
+        selectedOption.getController()->initialize();
+    }
 }
 
 #endif

@@ -11,12 +11,11 @@ using namespace std;
 
 /**
  * MAIN
- * Arquivo principal do sistema
+ * Funcao principal do sistema
  * Trash Recycling System
  * 
  * @author hjcostabr
  */
-
 int main(int argc, char const *argv[])
 {
     // Cabecalho
@@ -27,6 +26,7 @@ int main(int argc, char const *argv[])
     // Exibir menu principal
     vector<PageControllerSet> menuItems;
     menuItems.push_back(PageControllerSet("Login", NULL));
+    menuItems.push_back(PageControllerSet("Sair", NULL));
 
     MenuController menuController("Menu Principal", menuItems);
     menuController.initialize();
