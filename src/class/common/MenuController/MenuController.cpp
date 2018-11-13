@@ -60,11 +60,13 @@ void MenuController::initialize(void)
     // Exibe opcao selecionada
     PageControllerSet selectedOption = this->menuItems[selectedOptionCode];
 
-    cout << endl << "Opcao selecionada: "
-         << selectedOption.getMenuString() << endl;
+    cout << endl
+         << "Opcao selecionada: "
+         << selectedOption.getMenuString() << endl
+         << endl;
 
     // Executa acao apropriada (se houver)
-    if (selectedOption.getController()) {
+    if (selectedOption.getController() != NULL) {
         selectedOption.getController()->initialize();
     }
 }

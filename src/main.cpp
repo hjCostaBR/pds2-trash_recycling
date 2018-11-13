@@ -4,8 +4,9 @@
 #include <iostream>
 #include <vector>
 
-#include "class/module/menu/MenuController.cpp"
+#include "class/common/MenuController/MenuController.cpp"
 #include "class/common/PageControllerSet/PageControllerSet.cpp"
+#include "class/module/login/LoginController/LoginController.cpp"
 
 using namespace std;
 
@@ -25,9 +26,10 @@ int main(int argc, char const *argv[])
 
     // Exibir menu principal
     vector<PageControllerSet> menuItems;
-    menuItems.push_back(PageControllerSet("Login", NULL));
+    
+    menuItems.push_back(PageControllerSet("Login", new LoginController()));
     menuItems.push_back(PageControllerSet("Sair", NULL));
-
+    
     MenuController menuController("Menu Principal", menuItems);
     menuController.initialize();
 
