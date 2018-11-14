@@ -1,4 +1,11 @@
+# IDE
 .vscode/*
+.idea/*
+
+# Generated
+cmake-build-debug/*
 **/*.o
 trash-recycling
+
+# Storage
 storage/*
