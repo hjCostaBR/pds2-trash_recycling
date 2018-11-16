@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <iostream>
 
-#include "../Controller.h"
+#include "Controller.h"
 
 using namespace std; 
 

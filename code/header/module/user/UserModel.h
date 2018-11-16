@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "../../reject-type/RejectTypeModel/RejectTypeModel.h"
+#include "../reject-type/RejectTypeModel.h"
 #include "../../enum/UserTypeEnum.cpp"
 
 using namespace std;

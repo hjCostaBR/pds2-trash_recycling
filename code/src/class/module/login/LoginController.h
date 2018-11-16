@@ -1,7 +1,6 @@
 #ifndef _LOGIN_CONTROLLER_H_
 #define _LOGIN_CONTROLLER_H_
 
-#include "../../../common/Controller.h"
 #include "../../../common/MenuController/MenuController.h"
 
 /**

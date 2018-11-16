@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 
-#include "../../reject-type/RejectTypeModel/RejectTypeModel.h"
-#include "../../user/UserModel/UserModel.h"
+#include "../reject-type/RejectTypeModel.h"
+#include "../user/UserModel.h"
 #include "../../meeting-point/MeetingPointModel/MeetingPointModel.h"
 
 using namespace std;

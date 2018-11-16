@@ -3,8 +3,8 @@
 
 #include <vector>
 
-#include "../../common/Controller.h"
-#include "../../common/PageControllerSet/PageControllerSet.h"
+#include "Controller.h"
+#include "PageControllerSet.h"
 
 /* 
  * CLASS: INTERFACE
