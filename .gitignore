@@ -3,9 +3,8 @@
 .idea/*
 
 # Generated
-trash-recycling/build/*
-**/*.o
-#trash-recycling
+/build/*
+/**/*.o
 
 # Storage
-trash-recycling/storage/*
+#/**/*storage/*
