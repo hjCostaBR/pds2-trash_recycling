@@ -3,9 +3,9 @@
 .idea/*
 
 # Generated
-cmake-build-debug/*
+trash-recycling/build/*
 **/*.o
-trash-recycling
+#trash-recycling
 
 # Storage
-storage/*
+trash-recycling/storage/*
