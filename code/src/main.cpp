@@ -2,6 +2,12 @@
 #include <stdlib.h>
 #include <iostream>
 #include <vector>
+#include <memory>
+
+#include "../header/common/PageControllerSet.h"
+#include "../header/common/Controller.h"
+#include "../header/common/MenuController.h"
+#include "../header/module/login/LoginController.h"
 
 using namespace std;
 
@@ -20,13 +26,14 @@ int main(int argc, char const *argv[])
          << endl << endl;
 
     // Exibir menu principal
-    // vector<PageController> menuItems;
+    typedef shared_ptr<Controller> ControllerShdPtr;
+    vector<PageControllerSet> menuItems;
     
-    // menuItems.push_back(PageControllerSet("Login", new LoginController()));
-    // menuItems.push_back(PageControllerSet("Sair", NULL));
+    menuItems.push_back(PageControllerSet("Login", ControllerShdPtr(new LoginController())));
+    menuItems.push_back(PageControllerSet("Sair", nullptr));
     
-    // MenuController menuController("Menu Principal", menuItems);
-    // menuController.initialize();
+    MenuController menuController("Menu Principal", menuItems);
+    menuController.initialize();
 
     // Fim da execucao
     cout << endl << "FIM" << endl;

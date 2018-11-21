@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
+#include <memory>
 
 #include "Controller.h"
 
@@ -13,11 +14,15 @@ class PageControllerSet
 {
 private:
     string menuString;
-    Controller *controller;
+    shared_ptr<Controller> controller;
+
 public:
-    PageControllerSet(string menuString, Controller* controller) : menuString(menuString), controller(controller) {};
+    PageControllerSet(string menuString, shared_ptr<Controller> controller)
+        : menuString(menuString), controller(controller)
+        {};
+
     string getMenuString();
-    Controller* getController();
+    shared_ptr<Controller> getController();
 };
 
 #endif
