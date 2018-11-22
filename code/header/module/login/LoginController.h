@@ -15,8 +15,8 @@
 class LoginController: public Controller
 {
 private:
-    shared_ptr<int> userLoginCode;
-    shared_ptr<string> userLoginPwd;
+    int userLoginCode = 0;
+    string userLoginPwd = "";
 
     // Forca valor das variaveis necessarias para autenticacao para seus valores 'default'
     void reset(void);

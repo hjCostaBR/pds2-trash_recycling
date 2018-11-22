@@ -26,10 +26,9 @@ int main(int argc, char const *argv[])
          << endl << endl;
 
     // Exibir menu principal
-    typedef shared_ptr<Controller> ControllerShdPtr;
     vector<PageControllerSet> menuItems;
-    
-    menuItems.push_back(PageControllerSet("Login", ControllerShdPtr(new LoginController())));
+
+    menuItems.push_back(PageControllerSet("Login", make_shared<LoginController>()));
     menuItems.push_back(PageControllerSet("Sair", nullptr));
     
     MenuController menuController("Menu Principal", menuItems);
