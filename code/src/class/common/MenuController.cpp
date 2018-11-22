@@ -50,7 +50,7 @@ shared_ptr<Controller> MenuController::showOptionsAndGetSelectedController(void)
     } while (!this->isSelectedItemValid(selectedOptionCode));
 
     // Exibe opcao selecionada
-    PageControllerSet selectedOption = this->menuItems[selectedOptionCode];
+    MenuItemSet selectedOption = this->menuItems[selectedOptionCode];
 
     cout << endl
          << "Opcao selecionada: "

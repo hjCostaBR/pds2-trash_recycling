@@ -1,3 +1,6 @@
+#ifndef _USER_TYPE_EN_
+#define _USER_TYPE_EN_
+
 /**
  * ENUM
  * Define tipos de usuario do sistema
@@ -10,3 +13,5 @@ enum UserTypeEnum {
     DONATOR = 101,
     RECEIVER = 102
 };
+
+#endif

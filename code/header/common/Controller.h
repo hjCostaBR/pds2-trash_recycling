@@ -18,6 +18,7 @@ public:
 
     /** Encapsula procedimento de inicializacao do controlador. */
     virtual void initialize() = 0;
+    virtual void initialize(int action) = 0;
 };
 
 #endif

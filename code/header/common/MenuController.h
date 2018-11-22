@@ -5,7 +5,7 @@
 #include <memory>
 
 #include "Controller.h"
-#include "PageControllerSet.h"
+#include "MenuItemSet.h"
 
 /*
  * Controller do MENU PRINCIPAL do sistema
@@ -21,7 +21,7 @@ private:
     string name;
 
     /** Lista de opcoes do Menu. */
-    vector<PageControllerSet> menuItems;
+    vector<MenuItemSet> menuItems;
 
 
     /**
@@ -46,7 +46,7 @@ public:
      * @param name Nome (titulo) do menu.
      * @param menuItems Lista de opcoes do menu.
      */
-    MenuController(string name, vector<PageControllerSet> menuItems) :
+    MenuController(string name, vector<MenuItemSet> menuItems) :
         name(name),
         menuItems(menuItems) {};
 

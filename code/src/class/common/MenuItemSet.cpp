@@ -4,14 +4,14 @@
 #include <string>
 #include <memory>
 #include "../../../header/common/Controller.h"
-#include "../../../header/common/PageControllerSet.h"
+#include "../../../header/common/MenuItemSet.h"
 
 
-string PageControllerSet::getMenuString(void) {
+string MenuItemSet::getMenuString(void) {
     return this->menuString;
 };
 
-shared_ptr<Controller> PageControllerSet::getController(void) {
+shared_ptr<Controller> MenuItemSet::getController(void) {
     return this->controller;
 };
 
