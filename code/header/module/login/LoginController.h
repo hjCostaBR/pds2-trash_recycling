@@ -12,29 +12,34 @@
  * 
  * @author hjcostabr
  */
-class LoginController: public Controller
-{
+class LoginController: public Controller {
+
 private:
+
+    /** Codigo do usuario para o qual eh feita 01 tentativa de login. */
     int userLoginCode = 0;
+
+    /** Senha do usuario para o qual eh feita 01 tentativa de login. */
     string userLoginPwd = "";
 
-    // Forca valor das variaveis necessarias para autenticacao para seus valores 'default'
+
+    /** Forca valor das variaveis necessarias para autenticacao para seus valores 'default'. */
     void reset(void);
 
-    // Captura codigo do usuario para o qual sera feito o login
+    /** Captura codigo do usuario para o qual sera feito o login. */
     void getLoginUserCode(void);
 
-    // Captura senha para autenticacao do usuario
+    /** Captura senha para autenticacao do usuario. */
     void getLoginUserPwd(void);
 
-    // Autentica dados para login de usuario
+    /** Autentica dados para login de usuario. */
     void authenticate(void);
 
 public:
-    // Contrutor
+    /** Contrutor. */
     LoginController() {};
 
-    // Inicializa exibicao da tela de login
+    /** Inicializa exibicao da tela de login. */
     virtual void initialize(void);
 };
 

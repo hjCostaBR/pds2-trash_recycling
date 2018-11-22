@@ -6,15 +6,12 @@
 
 using namespace std;
 
-// Valida 01 opcao do menu selecionada
-bool MenuController::isSelectedItemValid(int selectedCode)
-{
+bool MenuController::isSelectedItemValid(int selectedCode) {
     return (selectedCode >= 0 && selectedCode < this->menuItems.size());
 }
 
-// Exibe opcoes de 01 menu
-void MenuController::showMenuOptions(void)
-{
+void MenuController::showMenuOptions(void) {
+
     cout << ">> Opcoes Disponiveis:" << endl;
 
     for (int i = 0; i < this->menuItems.size(); i++) {
@@ -24,12 +21,8 @@ void MenuController::showMenuOptions(void)
     cout << endl;
 }
 
-// Incializa a exibicao de 01 menu
-void MenuController::initialize(void)
-{
-    // Exibe menu
-    cout << "> " << this->name << endl;
-    
+shared_ptr<Controller> MenuController::showOptionsAndGetSelectedController(void) {
+
     bool tried = false;
     string readInput;
     int selectedOptionCode;
@@ -37,15 +30,14 @@ void MenuController::initialize(void)
     do {
 
         // Notifica tentativa invalida (se necessario)
-        if (tried) {
-            cout << "Opção invalida '" << readInput << "'!" << endl << endl;
+        if (tried) cout << "Opção invalida '" << readInput << "'!" << endl << endl;
+        tried = true;
 
-        } else {
-            tried = true;
-        }
+        // Exibe menu
+        cout << "> " << this->name << endl;
+        this->showMenuOptions();
 
         // Captura selecao de 01 item do menu
-        this->showMenuOptions();
         cin >> readInput;
 
         try {
@@ -65,10 +57,24 @@ void MenuController::initialize(void)
          << selectedOption.getMenuString() << endl
          << endl;
 
-    // Executa acao apropriada (se houver)
-    if (selectedOption.getController() != NULL) {
-        selectedOption.getController()->initialize();
-    }
+    // Retorna controller da opcao selecionada
+    return selectedOption.getController();
+}
+
+void MenuController::initialize(void) {
+
+    shared_ptr<Controller> selectedItemController = nullptr;
+
+    do {
+
+        selectedItemController = this->showOptionsAndGetSelectedController();
+
+        if (selectedItemController != nullptr) {
+            selectedItemController->initialize();
+            cout << endl;
+        }
+
+    } while (selectedItemController != nullptr);
 }
 
 #endif

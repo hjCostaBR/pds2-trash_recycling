@@ -18,8 +18,8 @@ using namespace std;
  * 
  * @author hjcostabr
  */
-int main(int argc, char const *argv[])
-{
+int main(int argc, char const *argv[]) {
+
     // Cabecalho
     cout << endl
          << "-- SISTEMA DE CONTROLE DE RECICLAGEM DE LIXO --"
