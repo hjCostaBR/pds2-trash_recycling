@@ -5,7 +5,6 @@
 #include <vector>
 
 #include "../reject-type/RejectTypeModel.h"
-#include "../../enum/UserTypeEnum.cpp"
 
 using namespace std;
 
@@ -14,13 +13,12 @@ class UserModel
 private:
     int code;
     string cpfCnpj;
-    UserTypeEnum type;
+    int type;
     string name;
     vector<RejectTypeModel> rejectTypesOfInterest;
 
 public:
-    UserModel(void){};
-    // ~UserModel() {};
+    UserModel(void) {};
 
     // Codigo
     void setCode(int code);
@@ -31,8 +29,8 @@ public:
     string getCpfCnpj(void);
 
     // Tipo
-    void setType(UserTypeEnum type);
-    UserTypeEnum getType(void);
+    void setType(int type);
+    int getType(void);
 
     // Nome
     void setName(string name);

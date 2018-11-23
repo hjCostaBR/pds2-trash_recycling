@@ -21,7 +21,7 @@ void MenuController::showMenuOptions(void) {
     cout << endl;
 }
 
-shared_ptr<Controller> MenuController::showOptionsAndGetSelectedController(void) {
+MenuItemSet MenuController::showOptionsAndGetSelectedController(void) {
 
     bool tried = false;
     string readInput;
@@ -57,24 +57,28 @@ shared_ptr<Controller> MenuController::showOptionsAndGetSelectedController(void)
          << selectedOption.getMenuString() << endl
          << endl;
 
-    // Retorna controller da opcao selecionada
-    return selectedOption.getController();
+    // Retorna opcao selecionada
+    return this->menuItems[selectedOptionCode];
 }
 
 void MenuController::initialize(void) {
 
-    shared_ptr<Controller> selectedItemController = nullptr;
+    MenuItemSet selectedMenuItem("", nullptr);
 
     do {
 
-        selectedItemController = this->showOptionsAndGetSelectedController();
+        selectedMenuItem = this->showOptionsAndGetSelectedController();
 
-        if (selectedItemController != nullptr) {
-            selectedItemController->initialize();
+        if (selectedMenuItem.getController() != nullptr) {
+            selectedMenuItem.getController()->initialize(selectedMenuItem.getControllerAction());
             cout << endl;
         }
 
-    } while (selectedItemController != nullptr);
+    } while (selectedMenuItem.getController() != nullptr);
+}
+
+void MenuController::initialize(int action) {
+    this->initialize();
 }
 
 #endif

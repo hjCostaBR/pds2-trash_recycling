@@ -14,10 +14,32 @@ using namespace std;
  */
 class Controller {
 
+protected:
+
+    /** Codigo da acao do controller a ser realizada. */
+    int action;
+
+
+    /**
+     * Interage com o usuario via cli para capturar 01 valor numerico.
+     *
+     * @param presentationMsg Mensagem de descricao do proposito do numero obtido.
+     * @param invalidInputMsg Mensagem para caso de insercao de valor invalido.
+     * @return Valor numerico valido obtido.
+     */
+    int getNumberFromStdIO(string presentationMsg, string invalidInputMsg) const;
+
 public:
+
+    Controller(void) {};
 
     /** Encapsula procedimento de inicializacao do controlador. */
     virtual void initialize() = 0;
+
+    /**
+     * Encapsula procedimento de inicializacao do controlador.
+     * @param action Codigo da acao do controller a ser realizada.
+     */
     virtual void initialize(int action) = 0;
 };
 

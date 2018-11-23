@@ -25,9 +25,6 @@ private:
     /** Forca valor das variaveis necessarias para autenticacao para seus valores 'default'. */
     void reset(void);
 
-    /** Captura codigo do usuario para o qual sera feito o login. */
-    void getLoginUserCode(void);
-
     /** Captura senha para autenticacao do usuario. */
     void getLoginUserPwd(void);
 
@@ -35,11 +32,19 @@ private:
     void authenticate(void);
 
 public:
+
     /** Contrutor. */
     LoginController() {};
 
-    /** Inicializa exibicao da tela de login. */
+    /**
+     * @inherit
+     */
     virtual void initialize(void);
+
+    /**
+     * @inherit
+     */
+    virtual void initialize(int action);
 };
 
 #endif

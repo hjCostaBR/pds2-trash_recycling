@@ -1,5 +1,5 @@
-#ifndef _PAGE_SET_CPP_
-#define _PAGE_SET_CPP_
+#ifndef _MENU_ITEM_SET_CPP_
+#define _MENU_ITEM_SET_CPP_
 
 #include <string>
 #include <memory>
@@ -14,5 +14,9 @@ string MenuItemSet::getMenuString(void) {
 shared_ptr<Controller> MenuItemSet::getController(void) {
     return this->controller;
 };
+
+int MenuItemSet::getControllerAction(void) {
+    return this->controllerAction;
+}
 
 #endif

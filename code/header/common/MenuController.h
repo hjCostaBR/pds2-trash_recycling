@@ -36,7 +36,7 @@ private:
     void showMenuOptions(void);
 
     /** Exibe opcoes do menu para capturar & retornar controller da opcao selecionada pelo usuario (se houver). */
-    shared_ptr<Controller> showOptionsAndGetSelectedController(void);
+    MenuItemSet showOptionsAndGetSelectedController(void);
 
 public:
 
@@ -53,7 +53,12 @@ public:
     /**
      * @inherit
      */
-    void initialize(void);
+    virtual void initialize(void);
+
+    /**
+     * @inherit
+     */
+    virtual void initialize(int action);
 };
 
 #endif

@@ -53,9 +53,9 @@ public:
         : menuString(menuString), controller(controller), controllerAction(controllerAction)
         {};
 
-    string getMenuString();
-    shared_ptr<Controller> getController();
-    int getControllerAction();
+    string getMenuString(void);
+    shared_ptr<Controller> getController(void);
+    int getControllerAction(void);
 };
 
 #endif

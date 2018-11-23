@@ -15,37 +15,6 @@ void LoginController::reset(void) {
     this->userLoginPwd = "";
 };
 
-void LoginController::getLoginUserCode(void) {
-
-    bool failure = false;
-    bool tried = false;
-    string readInput;
-    int insertedCode;
-
-    do {
-
-        // Notifica tentativa invalida (se necessario)
-        if (tried) cout << "Codigo invalido '" << readInput << "'!" << endl << endl;
-        tried = true;
-
-        // Captura entrada
-        cout << "Informe o Codigo do usuario: ";
-        cin >> readInput;
-
-        try {
-            insertedCode = stoi(readInput);
-            failure = false;
-
-        } catch (exception error) {
-            failure = true;
-        }
-
-    } while (failure);
-
-    // Define codigo do usuario (se houver)
-    if (insertedCode != 0) this->userLoginCode = insertedCode;
-};
-
 // @todo: Ocultar senha do usuario!!
 void LoginController::getLoginUserPwd(void) {
     string readInput;
@@ -71,13 +40,18 @@ void LoginController::initialize(void) {
          << endl;
 
     // Captura codigo & senha para login
-    this->getLoginUserCode();
+    this->userLoginCode = this->getNumberFromStdIO("Informe o Codigo do usuario", "Codigo invalido");
     if (this->userLoginCode) this->getLoginUserPwd();
+
     // @todo: Executa autenticacao
     if (this->userLoginPwd != "") this->authenticate();
 
     // Sair
     cout << "Usuario selecionou: 'sair'..." << endl;
 };
+
+void LoginController::initialize(int action) {
+    this->initialize();
+}
 
 #endif

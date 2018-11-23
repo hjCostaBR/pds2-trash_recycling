@@ -13,8 +13,7 @@ private:
     string storageSpecification;
 
 public:
-    RejectTypeModel(void){};
-    ~RejectTypeModel();
+    RejectTypeModel(void) {};
 
     // Codigo
     void setCode(int code);

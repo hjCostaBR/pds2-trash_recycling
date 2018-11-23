@@ -4,6 +4,7 @@
 #include <memory>
 #include "../../common/Controller.h"
 #include "../../common/MenuController.h"
+#include "./UserModel.h"
 
 /**
  * CONTROLLER
@@ -16,29 +17,21 @@ class UserController: public Controller {
 
 private:
 
-    // /** Codigo do usuario para o qual eh feita 01 tentativa de login. */
-    // int userLoginCode = 0;
-    //
-    // /** Senha do usuario para o qual eh feita 01 tentativa de login. */
-    // string userLoginPwd = "";
-    //
-    //
-    // /** Forca valor das variaveis necessarias para autenticacao para seus valores 'default'. */
-    // void reset(void);
-    //
-    // /** Captura codigo do usuario para o qual sera feito o login. */
-    // void getLoginUserCode(void);
-    //
-    // /** Captura senha para autenticacao do usuario. */
-    // void getLoginUserPwd(void);
-    //
-    // /** Autentica dados para login de usuario. */
-    // void authenticate(void);
+    /**
+     * Captura & retorna dados para inserir 01 novo usuario.
+     * @return Dados para inserir 01 novo usuario.
+     */
+    UserModel getDataToCreateUser(void) const;
 
 public:
 
     /** Contrutor. */
     UserController() {};
+
+    /**
+     * @inherit
+     */
+    virtual void initialize(void);
 
     /**
      * @inherit
