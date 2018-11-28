@@ -4,6 +4,7 @@
 #include <memory>
 #include "../../common/Controller.h"
 #include "../../common/MenuController.h"
+#include "../../common/enums.h"
 #include "./UserModel.h"
 
 /**
@@ -23,6 +24,19 @@ private:
      */
     UserModel getDataToCreateUser(void) const;
 
+    /**
+     * Captura & retorna tipo para insercao de novo usuario (pf /pj).
+     * @return Dados para inserir 01 novo usuario.
+     */
+    PersonTypeEnum getNewUserTypeFromStdIo(void) const;
+
+    /**
+     * Captura & retorna valor para CPF/CNPJ de 01 novo usuario a ser cadastrado.
+     * @param personType Tipo de pessoa (pf/pj).
+     * @return Cpf/Cnpj
+     */
+    string getCpfOrCnpjFromStdIo(PersonTypeEnum personType) const;
+
 public:
 
     /** Contrutor. */
@@ -31,12 +45,12 @@ public:
     /**
      * @inherit
      */
-    virtual void initialize(void);
+    virtual void initialize(void) override;
 
     /**
      * @inherit
      */
-    virtual void initialize(int action);
+    virtual void initialize(int action) override;
 };
 
 #endif

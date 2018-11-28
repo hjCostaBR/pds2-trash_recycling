@@ -32,6 +32,7 @@ protected:
 public:
 
     Controller(void) {};
+    ~Controller(void) {};
 
     /** Encapsula procedimento de inicializacao do controlador. */
     virtual void initialize() = 0;
