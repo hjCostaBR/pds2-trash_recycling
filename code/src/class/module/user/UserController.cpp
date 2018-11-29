@@ -153,7 +153,14 @@ void UserController::setCurrentUserType(void) {
     } while (reapeat);
 };
 
-void UserController::getDataToCreateUser(void) {
+void UserController::setCurrentUserName(void) {
+    cout << "Informe nome do usuario: ";
+    string readInput = "";
+    cin >> readInput;
+    if (readInput != "0") this->currentUser.setName(readInput);
+};
+
+bool UserController::getDataToCreateUser(void) {
 
     cout << "> CADASTRO" << endl
          << "pressione '0' para sair" << endl
@@ -165,7 +172,7 @@ void UserController::getDataToCreateUser(void) {
 
     // Define tipo de pessoa do usuario (pf/pj)
     this->setCurrentUserPersonType();
-    if (this->currentUserType == nullptr) return;
+    if (this->currentUserType == nullptr) return false;
 
     // Captura codigo
     int code = this->getNumberFromStdIO("Informe um Codigo para o usuario", "Codigo invalido");
@@ -174,18 +181,24 @@ void UserController::getDataToCreateUser(void) {
 
     // Captura documento (cpf/cnpj)
     this->setCurrentUserCpfOrCnpj();
-    if (this->currentUser.getCpfCnpj() == "") return;
+    if (this->currentUser.getCpfCnpj() == "") return false;
 
     // Captura tipo de usuario
     this->setCurrentUserType();
-    if (!this->currentUser.getType()) return;
+    if (!this->currentUser.getType()) return false;
 
     // Captura nome do usuario
-    // Captura lista de residuos de interesse
+    this->setCurrentUserName();
+    if (this->currentUser.getName() == "") return false;
 
-    // int type;
-    // string name;
-    // vector<RejectTypeModel> rejectTypesOfInterest;
+    // @todo: Captura lista de residuos de interesse
+    return true;
+}
+
+void UserController::createUser(void) const {
+
+    if (!this->getDataToCreateUser()) return;
+
 }
 
 void UserController::initialize(void) {
@@ -198,7 +211,7 @@ void UserController::initialize(int action) {
 
         // Add usuario
         case ControllerActionEnum::CREATE:
-            this->getDataToCreateUser();
+            this->createUser();
             break;
 
         // Acao invalida

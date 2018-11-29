@@ -25,10 +25,15 @@ private:
 
 
     /**
-     * Captura & retorna dados para inserir 01 novo usuario.
-     * @return Dados para inserir 01 novo usuario.
+     * Efetua cadastro de novo usuario.
      */
-    void getDataToCreateUser(void);
+    void createUser(void) const;
+
+    /**
+     * Captura & retorna dados para inserir 01 novo usuario.
+     * @return SE os dados necessarios foram completamente coletados.
+     */
+    bool getDataToCreateUser(void);
 
     /**
      * Captura & define tipo (pf /pj) para insercao de novo usuario.
@@ -44,6 +49,11 @@ private:
      * Captura & define tipo do usuario atual.
      */
     void setCurrentUserType(void);
+
+    /**
+     * Captura & define nome do usuario atual.
+     */
+    void setCurrentUserName(void);
 
 public:
 

@@ -5,12 +5,13 @@
 #include <vector>
 
 #include "../reject-type/RejectTypeModel.h"
+#include "../../common/Model.h"
 #include "../../common/enums.h"
 
 using namespace std;
 
-class UserModel
-{
+class UserModel: public Model {
+
 private:
     int code = 0;
     string cpfCnpj = "";
