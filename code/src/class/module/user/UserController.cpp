@@ -80,7 +80,7 @@ void UserController::setCurrentUserCpfOrCnpj(void) {
     } while (reapeat);
 
     // Tudo OK
-    if (readInput != "0") this->currentUser.setCpfCnpj(readInput);
+    if (readInput != "0") this->currentUser->setCpfCnpj(readInput);
 };
 
 void UserController::setCurrentUserType(void) {
@@ -142,13 +142,13 @@ void UserController::setCurrentUserType(void) {
             if (selectedTypeCode != validTypeCode) continue;
 
             // Opcao valida informada!
-            this->currentUser.setType(validUserType);
+            this->currentUser->setType(validUserType);
             cout << "Tipo selecionado: " << typeLabelMap.find(validUserType)->second << endl;
             break;
         }
 
         // Verificar: Alguma opcao valida encontrada?
-        if (!this->currentUser.getType()) reapeat = true;
+        if (!this->currentUser->getType()) reapeat = true;
 
     } while (reapeat);
 };
@@ -157,7 +157,7 @@ void UserController::setCurrentUserName(void) {
     cout << "Informe nome do usuario: ";
     string readInput = "";
     cin >> readInput;
-    if (readInput != "0") this->currentUser.setName(readInput);
+    if (readInput != "0") this->currentUser->setName(readInput);
 };
 
 bool UserController::getDataToCreateUser(void) {
@@ -167,7 +167,7 @@ bool UserController::getDataToCreateUser(void) {
          << endl;
 
     // Reseta dados
-    this->currentUser = UserModel();
+    this->currentUser = nullptr;
     this->currentUserType = nullptr;
 
     // Define tipo de pessoa do usuario (pf/pj)
@@ -177,29 +177,36 @@ bool UserController::getDataToCreateUser(void) {
     // Captura codigo
     int code = this->getNumberFromStdIO("Informe um Codigo para o usuario", "Codigo invalido");
     if (!code) return false;
-    this->currentUser.setCode(code);
+    this->currentUser->setCode(code);
 
     // Captura documento (cpf/cnpj)
     this->setCurrentUserCpfOrCnpj();
-    if (this->currentUser.getCpfCnpj() == "") return false;
+    if (this->currentUser->getCpfCnpj() == "") return false;
 
     // Captura tipo de usuario
     this->setCurrentUserType();
-    if (!this->currentUser.getType()) return false;
+    if (!this->currentUser->getType()) return false;
 
     // Captura nome do usuario
     this->setCurrentUserName();
-    if (this->currentUser.getName() == "") return false;
+    if (this->currentUser->getName() == "") return false;
 
     // @todo: Captura lista de residuos de interesse
     return true;
-}
+};
 
 void UserController::createUser(void) {
 
     if (!this->getDataToCreateUser()) return;
 
-}
+    try {
+        this->dao->insert(this->currentUser);
+        // @todo: Continhar daqui
+
+    } catch (exception error) {
+
+    }
+};
 
 void UserController::initialize(void) {
     throw bad_function_call();

@@ -20,7 +20,7 @@ class UserController: public Controller {
 private:
 
     /** Usuario sendo manipulado no momento. */
-    UserModel currentUser = UserModel();
+    shared_ptr<UserModel> currentUser = nullptr;
     /** DAO. */
     shared_ptr<UserDAO> dao = nullptr;
     /** Tipo de pessoa do usuario atual. */

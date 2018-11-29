@@ -2,8 +2,8 @@
 #define _USER_DAO_H_
 
 #include <memory>
-#include "../../common/DAO.h"
 #include "UserModel.h"
+#include "../../common/DAO.h"
 
 
 /**
@@ -15,10 +15,19 @@
  */
 class UserDAO: public DAO {
 
+private:
+
+    /** Nome do arquivo de armqazenamento de dados de usuario. */
+    static const string STORAGE_FILE;
+
 public:
 
     UserDAO(void) {};
-    void rename(void) override {};
+
+    /**
+     * @inherit
+     */
+    void openStorageFile(void) override;
 
     /**
      * @inherit
