@@ -18,24 +18,32 @@ class UserController: public Controller {
 
 private:
 
+    /** Usuario sendo manipulado no momento. */
+    UserModel currentUser = UserModel();
+    /** Tipo de pessoa do usuario atual. */
+    shared_ptr<PersonTypeEnum> currentUserType = nullptr;
+
+
     /**
      * Captura & retorna dados para inserir 01 novo usuario.
      * @return Dados para inserir 01 novo usuario.
      */
-    UserModel getDataToCreateUser(void) const;
+    void getDataToCreateUser(void);
 
     /**
-     * Captura & retorna tipo para insercao de novo usuario (pf /pj).
-     * @return Dados para inserir 01 novo usuario.
+     * Captura & define tipo (pf /pj) para insercao de novo usuario.
      */
-    PersonTypeEnum getNewUserTypeFromStdIo(void) const;
+    void setCurrentUserPersonType(void);
 
     /**
-     * Captura & retorna valor para CPF/CNPJ de 01 novo usuario a ser cadastrado.
-     * @param personType Tipo de pessoa (pf/pj).
-     * @return Cpf/Cnpj
+     * Captura & define valor para CPF/CNPJ de 01 novo usuario a ser cadastrado.
      */
-    string getCpfOrCnpjFromStdIo(PersonTypeEnum personType) const;
+    void setCurrentUserCpfOrCnpj(void);
+
+    /**
+     * Captura & define tipo do usuario atual.
+     */
+    void setCurrentUserType(void);
 
 public:
 

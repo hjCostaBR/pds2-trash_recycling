@@ -3,13 +3,15 @@
 
 #include <memory>
 #include <functional>
+#include <map>
+#include <algorithm>
 #include "../../../../header/module/user/UserController.h"
 #include "../../../../header/module/user/UserModel.h"
 #include "../../../../header/common/enums.h"
 
 using namespace std;
 
-PersonTypeEnum UserController::getNewUserTypeFromStdIo(void) const {
+void UserController::setCurrentUserPersonType(void) {
 
     bool reapeat = false;
     bool tried = false;
@@ -23,22 +25,26 @@ PersonTypeEnum UserController::getNewUserTypeFromStdIo(void) const {
         tried = true;
 
         // Captura entrada
-        cout << "Informe o tipo do novo usaurio (pf/pj): ";
+        cout << "Informe o tipo do novo usuario (pf/pj): ";
         cin >> readInput;
-        reapeat = (readInput != "pf" && readInput != "pj");
+        reapeat = (readInput != "pf" && readInput != "pj" && readInput != "0");
 
     } while (reapeat);
 
+
     // Tudo OK
-    return (readInput == "pf") ? PersonTypeEnum ::PF : PersonTypeEnum ::PJ;
+    if (readInput == "0") return;
+
+    this->currentUserType = (readInput == "pf")
+        ? make_shared<PersonTypeEnum>(PersonTypeEnum ::PF)
+        : make_shared<PersonTypeEnum>(PersonTypeEnum ::PJ);
 };
 
-string UserController::getCpfOrCnpjFromStdIo(PersonTypeEnum personType) const {
+void UserController::setCurrentUserCpfOrCnpj(void) {
 
-    string docType = (personType == PersonTypeEnum::PF) ? "CPF" : "CNPJ";
+    string docType = (*this->currentUserType == PersonTypeEnum::PF) ? "CPF" : "CNPJ";
 
     string readInput = "";
-    string cpfCnpj = "";
     bool tried = false;
     bool reapeat = false;
 
@@ -57,8 +63,8 @@ string UserController::getCpfOrCnpjFromStdIo(PersonTypeEnum personType) const {
         if (readInput == "0") break;
 
         // Valida entrada (comprimento)
-        if ((personType == PersonTypeEnum::PF && readInput.length() != 11)
-            || (personType == PersonTypeEnum::PJ && readInput.length() != 14)
+        if ((*this->currentUserType == PersonTypeEnum::PF && readInput.length() != 11)
+            || (*this->currentUserType == PersonTypeEnum::PJ && readInput.length() != 14)
         ) {
             reapeat = true;
             continue;
@@ -74,24 +80,112 @@ string UserController::getCpfOrCnpjFromStdIo(PersonTypeEnum personType) const {
     } while (reapeat);
 
     // Tudo OK
-    if (readInput != "0") cpfCnpj = readInput;
-    return cpfCnpj;
+    if (readInput != "0") this->currentUser.setCpfCnpj(readInput);
 };
 
-UserModel UserController::getDataToCreateUser(void) const {
+void UserController::setCurrentUserType(void) {
 
-    UserModel user = UserModel();
+    string readInput = "";
+    bool tried = false;
+    bool reapeat = false;
 
-    PersonTypeEnum personType = this->getNewUserTypeFromStdIo();
+    // Monta estrutura para exibir opcoes
+    vector<UserTypeEnum> userTypesList;
+    map<UserTypeEnum, int> typeCodeMap;
+    map<UserTypeEnum, string> typeLabelMap;
 
+    userTypesList.push_back(UserTypeEnum::RECEIVER);
+    typeCodeMap[UserTypeEnum::RECEIVER] = 1;
+    typeLabelMap[UserTypeEnum::RECEIVER] = "Receptor";
+
+    userTypesList.push_back(UserTypeEnum::DONATOR);
+    typeCodeMap[UserTypeEnum::DONATOR] = 2;
+    typeLabelMap[UserTypeEnum::DONATOR] = "Doador";
+
+    do {
+
+        // Notifica tentativa invalida (se necessario)
+        if (tried) cout << "Tipo invalido!" << endl << endl;
+        tried = true;
+        reapeat = false;
+
+        // Exibir opcoes
+        cout << "Selecione um tipo de usuario: " << endl;
+
+        function<void(UserTypeEnum)> showOneOption = [&typeLabelMap, &typeCodeMap] (const UserTypeEnum userType) {
+            cout << "\t" << typeCodeMap.find(userType)->second << " - " << typeLabelMap.find(userType)->second << endl;
+        };
+
+        for_each (userTypesList.begin(), userTypesList.end(), showOneOption);
+
+        // Capturar entrada
+        cin >> readInput;
+        cout << endl;
+        if (readInput == "0") break;
+
+        // Validar entrada: Tipo
+        int selectedTypeCode;
+
+        try {
+            selectedTypeCode = stoi(readInput);
+
+        } catch (exception error) {
+            reapeat = true;
+            continue;
+        }
+
+        for (uint i = 0; i < userTypesList.size(); i++) {
+
+            // Validar entrada: Valor
+            const UserTypeEnum validUserType = userTypesList[i];
+            const int validTypeCode = typeCodeMap.find(validUserType)->second;
+            if (selectedTypeCode != validTypeCode) continue;
+
+            // Opcao valida informada!
+            this->currentUser.setType(validUserType);
+            cout << "Tipo selecionado: " << typeLabelMap.find(validUserType)->second << endl;
+            break;
+        }
+
+        // Verificar: Alguma opcao valida encontrada?
+        if (!this->currentUser.getType()) reapeat = true;
+
+    } while (reapeat);
+};
+
+void UserController::getDataToCreateUser(void) {
+
+    cout << "> CADASTRO" << endl
+         << "pressione '0' para sair" << endl
+         << endl;
+
+    // Reseta dados
+    this->currentUser = UserModel();
+    this->currentUserType = nullptr;
+
+    // Define tipo de pessoa do usuario (pf/pj)
+    this->setCurrentUserPersonType();
+    if (this->currentUserType == nullptr) return;
+
+    // Captura codigo
     int code = this->getNumberFromStdIO("Informe um Codigo para o usuario", "Codigo invalido");
-    string cpfCnpj = this->getCpfOrCnpjFromStdIo(personType);
+    if (!code) return;
+    this->currentUser.setCode(code);
+
+    // Captura documento (cpf/cnpj)
+    this->setCurrentUserCpfOrCnpj();
+    if (this->currentUser.getCpfCnpj() == "") return;
+
+    // Captura tipo de usuario
+    this->setCurrentUserType();
+    if (!this->currentUser.getType()) return;
+
+    // Captura nome do usuario
+    // Captura lista de residuos de interesse
 
     // int type;
     // string name;
     // vector<RejectTypeModel> rejectTypesOfInterest;
-
-    return user;
 }
 
 void UserController::initialize(void) {
@@ -101,15 +195,21 @@ void UserController::initialize(void) {
 void UserController::initialize(int action) {
 
     switch (action) {
+
+        // Add usuario
         case ControllerActionEnum::CREATE:
             this->getDataToCreateUser();
             break;
 
+        // Acao invalida
         case ControllerActionEnum::DEFAULT:
         default:
             this->initialize();
             break;
     }
+
+    // Sair
+    cout << "Usuario selecionou: 'sair'..." << endl;
 };
 
 #endif

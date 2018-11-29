@@ -7,6 +7,7 @@
 #include <memory>
 
 #include "Controller.h"
+#include "enums.h"
 
 using namespace std;
 
@@ -38,7 +39,7 @@ public:
      * @param menuString Titulo/nome do item de menu.
      * @param controller Controller associado ao item de menu.
      */
-    MenuItemSet(string menuString, shared_ptr<Controller> controller)
+    MenuItemSet(const string menuString, const shared_ptr<Controller> controller)
         : menuString(menuString), controller(controller)
         {};
 
@@ -49,13 +50,13 @@ public:
      * @param controller Controller associado ao item de menu.
      * @param controllerAction Codigo da action do controller a ser executada (associada ao item de Menu).
      */
-    MenuItemSet(string menuString, shared_ptr<Controller> controller, int controllerAction)
+    MenuItemSet(const string menuString, const shared_ptr<Controller> controller, const ControllerActionEnum controllerAction)
         : menuString(menuString), controller(controller), controllerAction(controllerAction)
         {};
 
-    string getMenuString(void);
-    shared_ptr<Controller> getController(void);
-    int getControllerAction(void);
+    string getMenuString(void) const;
+    shared_ptr<Controller> getController(void) const;
+    int getControllerAction(void) const;
 };
 
 #endif

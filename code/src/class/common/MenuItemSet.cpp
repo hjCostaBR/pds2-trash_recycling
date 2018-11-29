@@ -7,15 +7,15 @@
 #include "../../../header/common/MenuItemSet.h"
 
 
-string MenuItemSet::getMenuString(void) {
+string MenuItemSet::getMenuString(void) const {
     return this->menuString;
 };
 
-shared_ptr<Controller> MenuItemSet::getController(void) {
+shared_ptr<Controller> MenuItemSet::getController(void) const {
     return this->controller;
 };
 
-int MenuItemSet::getControllerAction(void) {
+int MenuItemSet::getControllerAction(void) const {
     return this->controllerAction;
 }
 

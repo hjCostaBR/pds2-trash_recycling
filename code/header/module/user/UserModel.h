@@ -5,41 +5,43 @@
 #include <vector>
 
 #include "../reject-type/RejectTypeModel.h"
+#include "../../common/enums.h"
 
 using namespace std;
 
 class UserModel
 {
 private:
-    int code;
-    string cpfCnpj;
-    int type;
-    string name;
+    int code = 0;
+    string cpfCnpj = "";
+    int type = 0;
+    string name = "";
     vector<RejectTypeModel> rejectTypesOfInterest;
 
 public:
+
     UserModel(void) {};
 
     // Codigo
-    void setCode(int code);
-    int getCode(void);
+    int getCode() const { return code; }
+    void setCode(int code) { this->code = code; }
 
     // Cpf/Cnpj
-    void setCpfCnpj(string code);
-    string getCpfCnpj(void);
+    const string &getCpfCnpj() const { return cpfCnpj; }
+    void setCpfCnpj(const string &cpfCnpj) { this->cpfCnpj = cpfCnpj; }
 
     // Tipo
-    void setType(int type);
-    int getType(void);
+    int getType() const { return this->type; }
+    void setType(UserTypeEnum type) { this->type = type; }
 
     // Nome
-    void setName(string name);
-    string getName(void);
+    const string &getName() const { return name; }
+    void setName(const string &name) { this->name = name; }
 
     // Lista de Residuos
     void resetRejectTypesOfInterest(void);
     void addRejectTypeOfInterest(RejectTypeModel rejectType);
-    vector<RejectTypeModel> getRejectTypesOfInterest(void);
+    const vector<RejectTypeModel> &getRejectTypesOfInterest() const { return rejectTypesOfInterest; }
 };
 
 #endif
