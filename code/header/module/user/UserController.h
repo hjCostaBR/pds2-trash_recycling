@@ -6,6 +6,7 @@
 #include "../../common/MenuController.h"
 #include "../../common/enums.h"
 #include "./UserModel.h"
+#include "./UserDAO.h"
 
 /**
  * CONTROLLER
@@ -20,6 +21,8 @@ private:
 
     /** Usuario sendo manipulado no momento. */
     UserModel currentUser = UserModel();
+    /** DAO. */
+    shared_ptr<UserDAO> dao = nullptr;
     /** Tipo de pessoa do usuario atual. */
     shared_ptr<PersonTypeEnum> currentUserType = nullptr;
 
@@ -27,7 +30,7 @@ private:
     /**
      * Efetua cadastro de novo usuario.
      */
-    void createUser(void) const;
+    void createUser(void);
 
     /**
      * Captura & retorna dados para inserir 01 novo usuario.
@@ -58,7 +61,7 @@ private:
 public:
 
     /** Contrutor. */
-    UserController() {};
+    UserController(const shared_ptr<UserDAO> dao): dao(dao) {};
 
     /**
      * @inherit

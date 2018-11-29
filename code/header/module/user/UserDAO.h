@@ -1,6 +1,7 @@
 #ifndef _USER_DAO_H_
 #define _USER_DAO_H_
 
+#include <memory>
 #include "../../common/DAO.h"
 #include "UserModel.h"
 
@@ -16,12 +17,13 @@ class UserDAO: public DAO {
 
 public:
 
-    UserDAO() {};
+    UserDAO(void) {};
+    void rename(void) override {};
 
     /**
      * @inherit
      */
-    UserModel insert(const UserModel model) override;
+    shared_ptr<UserModel> insert(const shared_ptr<UserModel> model);
 };
 
 #endif

@@ -27,11 +27,15 @@ int main(int argc, char const *argv[]) {
          << "-- SISTEMA DE CONTROLE DE RECICLAGEM DE LIXO --"
          << endl << endl;
 
+    // Prepara controller de usuarios
+    auto userDao = make_shared<UserDAO>();
+    auto userController = make_shared<UserController>(userDao);
+
     // Exibir menu principal
     vector<MenuItemSet> menuItems;
 
     menuItems.push_back(MenuItemSet("Login", make_shared<LoginController>()));
-    menuItems.push_back(MenuItemSet("Cadastro", make_shared<UserController>(), ControllerActionEnum::CREATE));
+    menuItems.push_back(MenuItemSet("Cadastro", userController, ControllerActionEnum::CREATE));
     menuItems.push_back(MenuItemSet("Sair", nullptr));
     
     MenuController menuController("Menu Principal", menuItems);

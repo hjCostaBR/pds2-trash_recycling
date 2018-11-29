@@ -176,7 +176,7 @@ bool UserController::getDataToCreateUser(void) {
 
     // Captura codigo
     int code = this->getNumberFromStdIO("Informe um Codigo para o usuario", "Codigo invalido");
-    if (!code) return;
+    if (!code) return false;
     this->currentUser.setCode(code);
 
     // Captura documento (cpf/cnpj)
@@ -195,7 +195,7 @@ bool UserController::getDataToCreateUser(void) {
     return true;
 }
 
-void UserController::createUser(void) const {
+void UserController::createUser(void) {
 
     if (!this->getDataToCreateUser()) return;
 

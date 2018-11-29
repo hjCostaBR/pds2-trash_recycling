@@ -1,29 +1,25 @@
 #ifndef _DAO_H_
 #define _DAO_H_
 
-#include <iostream>
-#include "Model.h"
-
-using namespace std;
+#include "IModel.h"
 
 /**
  * DAO
- * Classes generica a ser extendida por classes que implementem a funcao de DAO no sistema
+ * Clase generica a ser extendida por classes que implementem a funcao de DAO no sistema
  * Trash Recycling System
  *
  * @author hjcostabr
  */
 class DAO {
 
-protected:
-
 public:
 
     DAO(void) {};
     ~DAO(void) {};
+    virtual void rename(void) = 0;
 
     /** Encapsula procedimento de inicializacao do controlador. */
-    virtual Model insert(const Model model) = 0;
+    virtual shared_ptr<IModel> insert(const shared_ptr<IModel> model) {};
 };
 
 #endif

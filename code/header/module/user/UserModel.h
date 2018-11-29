@@ -5,12 +5,12 @@
 #include <vector>
 
 #include "../reject-type/RejectTypeModel.h"
-#include "../../common/Model.h"
+#include "../../common/IModel.h"
 #include "../../common/enums.h"
 
 using namespace std;
 
-class UserModel: public Model {
+class UserModel: public IModel {
 
 private:
     int code = 0;
@@ -22,6 +22,7 @@ private:
 public:
 
     UserModel(void) {};
+    void rename(void) override {};
 
     // Codigo
     int getCode() const { return code; }
