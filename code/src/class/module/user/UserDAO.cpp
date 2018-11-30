@@ -5,15 +5,15 @@
 #include <iostream>
 #include <fstream>
 #include "../../../../header/module/user/UserDAO.h"
+#include "../../../../header/common/DAO.h"
 
 using namespace std;
 
 const string UserDAO::STORAGE_FILE = "user.txt";
-const string STORAGE_FILE_REL_PATH = "../../../../../storage/";
 
 void UserDAO::openStorageFile(void) {
     if (this->storageFile.is_open()) return;
-    this->storageFile.open(STORAGE_FILE_REL_PATH + UserDAO::STORAGE_FILE);
+    this->storageFile.open(DAO::STORAGE_DIR_PATH + UserDAO::STORAGE_FILE, ios::in);
 }
 
 shared_ptr<UserModel> UserDAO::insert(const shared_ptr<UserModel> model) {

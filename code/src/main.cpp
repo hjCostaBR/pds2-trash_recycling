@@ -37,7 +37,7 @@ int main(int argc, char const *argv[]) {
     menuItems.push_back(MenuItemSet("Login", make_shared<LoginController>()));
     menuItems.push_back(MenuItemSet("Cadastro", userController, ControllerActionEnum::CREATE));
     menuItems.push_back(MenuItemSet("Sair", nullptr));
-    
+
     MenuController menuController("Menu Principal", menuItems);
     menuController.initialize();
 

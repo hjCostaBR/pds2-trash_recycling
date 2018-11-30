@@ -167,7 +167,7 @@ bool UserController::getDataToCreateUser(void) {
          << endl;
 
     // Reseta dados
-    this->currentUser = nullptr;
+    this->currentUser = make_shared<UserModel>();
     this->currentUserType = nullptr;
 
     // Define tipo de pessoa do usuario (pf/pj)

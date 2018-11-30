@@ -1,6 +1,7 @@
 #ifndef _DAO_H_
 #define _DAO_H_
 
+#include <memory>
 #include <fstream>
 #include "IModel.h"
 
@@ -14,6 +15,11 @@
 class DAO {
 
 protected:
+
+    /** Path relativo a pasta da chamada para execuaco para a pasta de armazenamento. */
+    static const string STORAGE_DIR_PATH;
+
+    /** Arquivo de armazenamento de dados manipulados por esta DAO. */
     ofstream storageFile;
 
 public:
