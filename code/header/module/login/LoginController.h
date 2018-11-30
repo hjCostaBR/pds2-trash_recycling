@@ -33,12 +33,6 @@ private:
     // void getLoginUserPwd(void);
 
     /**
-     * Autentica dados para login de usuario.
-     * @return Usuario logado (em caso de sucesso).
-     */
-    shared_ptr<UserModel> authenticate(void);
-
-    /**
      * Encapsula procedimento de interacao com usuario para realizar login.
      * @return Usuario logado (em caso de sucesso).
      */
@@ -58,12 +52,12 @@ public:
     /**
      * @inherit
      */
-    virtual void initialize(void);
+    virtual void runAction(void);
 
     /**
      * @inherit
      */
-    virtual void initialize(int action);
+    virtual void runAction(int action);
 };
 
 #endif

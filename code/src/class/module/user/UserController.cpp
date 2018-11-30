@@ -226,11 +226,11 @@ bool UserController::createUser(void) {
     } while (true);
 };
 
-void UserController::initialize(void) {
+void UserController::runAction(void) {
     throw bad_function_call();
 };
 
-void UserController::initialize(int action) {
+void UserController::runAction(int action) {
 
     bool exit = true;
 
@@ -246,7 +246,7 @@ void UserController::initialize(int action) {
         // Acao invalida
         case ControllerActionEnum::DEFAULT:
         default:
-            this->initialize();
+            this->runAction();
             break;
     }
 

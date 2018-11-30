@@ -34,14 +34,19 @@ public:
     Controller(void) {};
     ~Controller(void) {};
 
-    /** Encapsula procedimento de inicializacao do controlador. */
-    virtual void initialize() = 0;
+    /**
+     * Encapsula procedimento de inicializacao do controlador.
+     * @return Flag: Se execucao do programa do programa deve ser encerrada.
+     */
+    virtual bool runAction() = 0;
 
     /**
      * Encapsula procedimento de inicializacao do controlador.
+     *
      * @param action Codigo da acao do controller a ser realizada.
+     * @return Flag: Se execucao do programa do programa deve ser encerrada.
      */
-    virtual void initialize(int action) = 0;
+    virtual bool runAction(int action) = 0;
 };
 
 #endif

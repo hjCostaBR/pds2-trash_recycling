@@ -23,13 +23,6 @@ void LoginController::reset(void) {
 //     if (readInput != "0") this->userLoginPwd = readInput;
 // };
 
-shared_ptr<UserModel> LoginController::authenticate(void) {
-    auto foundUser = this->userDao->getExistingUser(this->userLoginCode, "");
-    if (foundUser == nullptr) return nullptr;
-    cout << "Login realizado com sucesso: Seja bem vindo(a) " << foundUser->getName() << "!" << endl;
-    return foundUser;
-};
-
 // @todo: Validar senha
 shared_ptr<UserModel> LoginController::login() {
 
@@ -52,8 +45,13 @@ shared_ptr<UserModel> LoginController::login() {
             // if (this->userLoginPwd != "") return false;
 
             // Executa autenticacao
-            auto loggedUser = this->authenticate();
-            if (loggedUser != nullptr) return loggedUser;
+            auto loggedUser = this->userDao->getExistingUser(this->userLoginCode, "");
+
+            if (loggedUser != nullptr) {
+                cout << "Login realizado com sucesso: Seja bem vindo(a) " << loggedUser->getName() << "!" << endl << endl;
+                return loggedUser;
+            }
+
             cout << "Usuario nao encontrado!" << endl;
 
         } catch (exception error) {
@@ -100,23 +98,24 @@ void LoginController::showLoggedOptions(const shared_ptr<UserModel> loggedUser) 
 
     // Exibir menu
     MenuController menuController("Menu Principal", menuItems);
-    menuController.initialize();
+    menuController.runAction();
 };
 
-void LoginController::initialize(void) {
+void LoginController::runAction(void) {
 
     auto loggedUser = this->login();
 
-    if (loggedUser != nullptr) {
-        this->showLoggedOptions(loggedUser);
+    if (loggedUser == nullptr) {
+        cout << "Usuario selecionou: 'sair'..." << endl;
         return;
     }
 
-    cout << "Usuario selecionou: 'sair'..." << endl;
+    this->showLoggedOptions(loggedUser);
+    exit(0);
 };
 
-void LoginController::initialize(int action) {
-    this->initialize();
+void LoginController::runAction(int action) {
+    this->runAction();
 }
 
 #endif

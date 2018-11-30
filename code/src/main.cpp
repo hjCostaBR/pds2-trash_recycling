@@ -40,7 +40,7 @@ int main(int argc, char const *argv[]) {
     menuItems.push_back(MenuItemSet("Sair", nullptr));
 
     MenuController menuController("Menu Inicial", menuItems);
-    menuController.initialize();
+    menuController.runAction();
 
     // Fim da execucao
     cout << endl << "FIM" << endl;

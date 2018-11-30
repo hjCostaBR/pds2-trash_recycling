@@ -53,12 +53,12 @@ public:
     /**
      * @inherit
      */
-    virtual void initialize(void);
+    virtual void runAction(void);
 
     /**
      * @inherit
      */
-    virtual void initialize(int action);
+    virtual void runAction(int action);
 };
 
 #endif
