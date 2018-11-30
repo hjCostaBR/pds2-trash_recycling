@@ -34,15 +34,21 @@ private:
 
     /**
      * Autentica dados para login de usuario.
-     * @return Status de sucesso na operacao.
+     * @return Usuario logado (em caso de sucesso).
      */
-    bool authenticate(void);
+    shared_ptr<UserModel> authenticate(void);
 
-    /** Encapsula procedimento de interacao com usuario para realizar login. */
-    bool login(void);
+    /**
+     * Encapsula procedimento de interacao com usuario para realizar login.
+     * @return Usuario logado (em caso de sucesso).
+     */
+    shared_ptr<UserModel> login(void);
 
-    /** Monta & exibe opcoes para usuario logado. */
-    void showLoggedOptions(void);
+    /**
+     * Monta & exibe opcoes para usuario logado.
+     * @param loggedUser Usuario logado.
+     */
+    void showLoggedOptions(const shared_ptr<UserModel> loggedUser);
 
 public:
 

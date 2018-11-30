@@ -37,6 +37,20 @@
 
 
 =======================================
+- Estoria: Cadastro de novo Usuario
+
+	- Como 01 usuario, eu desejo realizar o meu proprio cadastro no sistema
+		- Neste procedimento eu vou
+			- Informar SE serei 01 doador ou 01 receptor de residuos
+			- Informar meu nome
+			- Informar SE meu cadastro sera de PF OU de PJ
+				- SE meu cadastro for de PF, devo informar meu CPF
+				- SENAO devo informar meu CNPJ
+
+			- Informar os tipos de residuos que eu tenho interesse em doar/receber, dentre a lista de tipos de residuos cadastrados
+
+
+=======================================
 - Estoria: Login de Usuario
 
 	- Como 01 usuario, eu desejo realizar login dentro do sistema
@@ -79,20 +93,6 @@
 			- CASO seja subtipo, devo selecionar de qual dos tipos ja cadastrados o novo tipo sera subtipo
 
 		- Forma de armazenamento adequada para o tipo/subtipo
-
-
-=======================================
-- Estoria: Cadastro de novo Usuario
-
-	- Como 01 usuario, eu desejo realizar o meu proprio cadastro no sistema
-		- Neste procedimento eu vou
-			- Informar SE serei 01 doador ou 01 receptor de residuos
-			- Informar meu nome
-			- Informar SE meu cadastro sera de PF OU de PJ
-				- SE meu cadastro for de PF, devo informar meu CPF
-				- SENAO devo informar meu CNPJ
-
-			- Informar os tipos de residuos que eu tenho interesse em doar/receber, dentre a lista de tipos de residuos cadastrados
 
 
 =======================================

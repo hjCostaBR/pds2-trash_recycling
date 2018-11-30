@@ -23,15 +23,15 @@ void LoginController::reset(void) {
 //     if (readInput != "0") this->userLoginPwd = readInput;
 // };
 
-bool LoginController::authenticate(void) {
+shared_ptr<UserModel> LoginController::authenticate(void) {
     auto foundUser = this->userDao->getExistingUser(this->userLoginCode, "");
-    if (foundUser == nullptr) return false;
+    if (foundUser == nullptr) return nullptr;
     cout << "Login realizado com sucesso: Seja bem vindo(a) " << foundUser->getName() << "!" << endl;
-    return true;
+    return foundUser;
 };
 
 // @todo: Validar senha
-bool LoginController::login() {
+shared_ptr<UserModel> LoginController::login() {
 
     do {
 
@@ -45,14 +45,15 @@ bool LoginController::login() {
 
             // Captura codigo & senha para login
             this->userLoginCode = this->getNumberFromStdIO("Informe o Codigo do usuario", "Codigo invalido");
-            if (!this->userLoginCode) return false;
+            if (!this->userLoginCode) return nullptr;
 
             // @todo: Validar senha
             // this->getLoginUserPwd();
             // if (this->userLoginPwd != "") return false;
 
             // Executa autenticacao
-            if (this->authenticate()) return true;
+            auto loggedUser = this->authenticate();
+            if (loggedUser != nullptr) return loggedUser;
             cout << "Usuario nao encontrado!" << endl;
 
         } catch (exception error) {
@@ -63,19 +64,51 @@ bool LoginController::login() {
         string tryAgain;
         cin >> tryAgain;
         cout << endl;
-        if (tryAgain != "s") return false;
+        if (tryAgain != "s") return nullptr;
 
     } while (true);
 };
 
-void LoginController::showLoggedOptions(void) {
-    cout << "TODO: Mostrar menu 'logado'..." << endl;
+void LoginController::showLoggedOptions(const shared_ptr<UserModel> loggedUser) {
+
+    vector<MenuItemSet> menuItems;
+
+    // Incluir opcao: Add residuo
+    if (loggedUser->getType() == UserTypeEnum::ADMIN)
+        menuItems.push_back(MenuItemSet("Novo Tipo de Residuo", nullptr));
+
+    // Incluir opcao: Listar residuos
+    menuItems.push_back(MenuItemSet("Listar Tipos de Residuo", nullptr));
+
+    // Incluir opcao: Agendar coleta
+    if (loggedUser->getType() != UserTypeEnum::ADMIN)
+        menuItems.push_back(MenuItemSet("Agendar Coleta de Residuos", nullptr));
+
+    // Incluir opcao: Visualizar agendamentos
+    if (loggedUser->getType() != UserTypeEnum::ADMIN)
+        menuItems.push_back(MenuItemSet("Minhas coletas agendadas", nullptr));
+
+    // Incluir opcao: Listar usuario cadastrados
+    if (loggedUser->getType() == UserTypeEnum::ADMIN)
+        menuItems.push_back(MenuItemSet("Listar usuarios", nullptr));
+
+    // Incluir opcao: Atualizar dados pessoais
+    menuItems.push_back(MenuItemSet("Atualizar dados pessoais", nullptr));
+
+    // Incluir opcao: Sair
+    menuItems.push_back(MenuItemSet("Sair", nullptr));
+
+    // Exibir menu
+    MenuController menuController("Menu Principal", menuItems);
+    menuController.initialize();
 };
 
 void LoginController::initialize(void) {
 
-    if (this->login()) {
-        this->showLoggedOptions();
+    auto loggedUser = this->login();
+
+    if (loggedUser != nullptr) {
+        this->showLoggedOptions(loggedUser);
         return;
     }
 

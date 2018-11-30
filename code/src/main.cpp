@@ -39,7 +39,7 @@ int main(int argc, char const *argv[]) {
     menuItems.push_back(MenuItemSet("Cadastro", userController, ControllerActionEnum::CREATE));
     menuItems.push_back(MenuItemSet("Sair", nullptr));
 
-    MenuController menuController("Menu Principal", menuItems);
+    MenuController menuController("Menu Inicial", menuItems);
     menuController.initialize();
 
     // Fim da execucao
