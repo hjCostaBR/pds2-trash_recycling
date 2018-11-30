@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "../reject-type/RejectTypeModel.h"
-#include "../../common/IModel.h"
+#include "../../common/interface/IModel.h"
 #include "../../common/enums.h"
 
 using namespace std;

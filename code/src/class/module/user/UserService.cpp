@@ -26,10 +26,11 @@ bool UserService::validateStoredRegister(const vector<string> lineProps) const {
     catch (exception err) { return false; }
 
     // Valida tipo
-    if (!this->validateUserType(lineProps[2])) return false;
+    try { !this->validateUserType(stoi(lineProps[0])); }
+    catch (exception err) { return false; }
 
     // Valida cpf/cnpj
-    try { PersonTypeEnum aux = this->getUserPersonType(lineProps[1]); }
+    try { PersonTypeEnum aux = this->getUserPersonType(string(lineProps[1])); }
     catch (exception err) { return false; }
 
     return true;

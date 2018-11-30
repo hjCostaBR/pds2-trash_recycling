@@ -5,7 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include "../../../../header/common/DAO.h"
+#include "../../../../header/common/class/DAO.h"
 #include "../../../../header/module/user/UserDAO.h"
 #include "../../../../header/module/user/UserService.h"
 

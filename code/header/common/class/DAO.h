@@ -4,7 +4,7 @@
 #include <vector>
 #include <memory>
 #include <fstream>
-#include "IModel.h"
+#include "../interface/IModel.h"
 
 /**
  * DAO

@@ -5,9 +5,9 @@
 #include <memory>
 
 #include "../header/common/enums.h"
-#include "../header/common/MenuItemSet.h"
-#include "../header/common/Controller.h"
-#include "../header/common/MenuController.h"
+#include "../header/common/class/MenuItemSet.h"
+#include "../header/common/class/Controller.h"
+#include "../header/common/class/MenuController.h"
 #include "../header/module/login/LoginController.h"
 #include "../header/module/user/UserController.h"
 

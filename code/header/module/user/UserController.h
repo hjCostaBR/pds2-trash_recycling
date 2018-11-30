@@ -2,8 +2,8 @@
 #define _USER_CONTROLLER_H_
 
 #include <memory>
-#include "../../common/Controller.h"
-#include "../../common/MenuController.h"
+#include "../../common/class/Controller.h"
+#include "../../common/class/MenuController.h"
 #include "../../common/enums.h"
 #include "./UserModel.h"
 #include "./UserDAO.h"

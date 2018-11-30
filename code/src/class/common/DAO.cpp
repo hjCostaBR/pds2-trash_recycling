@@ -2,7 +2,7 @@
 #define _DAO_CPP_
 
 #include <exception>
-#include "../../../header/common/DAO.h"
+#include "../../../header/common/class/DAO.h"
 
 using namespace std;
 

@@ -2,7 +2,7 @@
 #define _USER_SERVICE_H_
 
 #include <string>
-#include "../../common/IService.h"
+#include "../../common/interface/IService.h"
 #include "../../common/enums.h"
 
 using namespace std;

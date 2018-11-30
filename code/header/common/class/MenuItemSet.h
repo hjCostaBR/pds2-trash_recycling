@@ -7,7 +7,7 @@
 #include <memory>
 
 #include "Controller.h"
-#include "enums.h"
+#include "../enums.h"
 
 using namespace std;
 

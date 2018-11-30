@@ -2,7 +2,7 @@
 #define _USER_DAO_H_
 
 #include <memory>
-#include "../../common/DAO.h"
+#include "../../common/class/DAO.h"
 #include "UserModel.h"
 #include "UserService.h"
 
