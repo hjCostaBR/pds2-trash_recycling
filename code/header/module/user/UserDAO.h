@@ -20,14 +20,35 @@ private:
     /** Nome do arquivo de armqazenamento de dados de usuario. */
     static const string STORAGE_FILE;
 
-public:
+    /**
+     * Pesquisa & retorna 01 registro identificado pelo codigo OU cpf/cnpj.
+     *
+     * @param code Codigo
+     * @param cpfCnpj
+     * @return Instancia do objeto encontrado.
+     */
+    shared_ptr<UserModel> getExistingUser(const int code, const string cpfCnpj) const;
 
-    UserDAO(void) {};
+protected:
 
     /**
      * @inherit
      */
     string getStorageFileName(void) override;
+
+    /**
+     * @inherit
+     */
+    shared_ptr<UserModel> getModelFromRegisterLine(const vector<string> lineProps) override const;
+
+    /**
+     * @inherit
+     */
+    bool validateStoragedRegister(const vector<string> lineProps) override const;
+
+public:
+
+    UserDAO(void) {};
 
     /**
      * @inherit

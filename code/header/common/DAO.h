@@ -1,6 +1,7 @@
 #ifndef _DAO_H_
 #define _DAO_H_
 
+#include <vector>
 #include <memory>
 #include <fstream>
 #include "IModel.h"
@@ -33,13 +34,31 @@ protected:
     /** Strema de LEITURA do arquivo de armazenamento desta DAO. */
     ifstream readingStream;
 
+
+    /** Define & retorna nome do arquivo de armazenamento utilizado pela DAO. */
+    virtual string getStorageFileName(void) = 0;
+
+    /**
+     * Transforma dados de 01 registro armazenado numa instancia do modelo gerido pela DAO.
+     *
+     * @param lineProps Propriedades do registro armazenado.
+     * @return
+     */
+    virtual shared_ptr<IModel> getModelFromStorageLine(const vector<string> lineProps) const {};
+
+    /**
+     * Informa se dados contidos numa linha do arquivo de armazenamento correspondem a 01 registro valido.
+     *
+     * @param lineProps
+     * @return
+     */
+    virtual bool validateStoragedRegister(const vector<string> lineProps) const = 0;
+
 public:
 
     DAO(void) {};
     ~DAO(void);
 
-    /** Define & retorna nome do arquivo de armazenamento utilizado pela DAO. */
-    virtual string getStorageFileName(void) = 0;
 
     /**
      * Abre arquivo de armazenamento usado pela DAO para ESCRITA.

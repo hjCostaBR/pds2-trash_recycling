@@ -16,40 +16,98 @@ string UserDAO::getStorageFileName(void) {
     return UserDAO::STORAGE_FILE;
 };
 
-shared_ptr<UserModel> UserDAO::insert(const shared_ptr<UserModel> user) {
+shared_ptr<UserModel> UserDAO::getExistingUser(const int code, const string cpfCnpj) const {
 
-    if (user == nullptr)
-        throw invalid_argument("Falha ao tentar inserir usuario cujo os dados nao foram informados");
-
-    // Valida se usuario eh repetido
     this->openStorageForReading();
 
-    int i = 0;
+    int lineCount = 0;
     string fileLine;
 
     while (getline(this->readingStream, fileLine)) {
-        i++;
-        cout << "pipa " << i << ": " << fileLine << endl;
 
-        istringstream iss(fileLine);
+        lineCount++;
 
-        int code;
-        iss >> code;
+        // Extrai propriedades da linha
+        stringstream ss(fileLine);
+        string item;
+        vector<string> lineProps;
 
-        string cpfCnpj;
-        iss >> cpfCnpj;
+        while (getline(ss, item, ';')) {
+            lineProps.push_back(item);
+        }
 
+        // Valida valores extraidos
+        if (!this->validateStoragedRegister(lineProps)) {
+            cout << endl << "** WARNING: Cadastro de usuário invalido (linha: " + lineCount + ") **" << endl << endl;
+            continue;
+        }
+
+        // Verifica se usuario pesquisado foi encontrado
+        if (code == stoi(lineProps[0]) || cpfCnpj == lineProps[1])
+            return this->getModelFromRegisterLine(lineProps);
     }
 
-    /*this->writingStream
+    return nullptr;
+};
+
+bool UserDAO::validateStoragedRegister(const vector<string> lineProps) const {
+
+    if (lineProps.size() < 4)
+        return false;
+    
+    int type;
+
+    try {
+        int code = stoi(lineProps[0]);
+        type = stoi(lineProps[2]);
+
+    } catch (exception err) {
+        return false;
+    }
+
+    if (type != UserTypeEnum::ADMIN
+        && type != UserTypeEnum::RECEIVER
+        && type != UserTypeEnum::DONATOR
+    ) {
+        return false;
+    }
+
+    return true;
+};
+
+shared_ptr<UserModel> UserDAO::getModelFromRegisterLine(const vector<string> lineProps) const {
+
+    if (!this->validateStoragedRegister(lineProps))
+        throw invalid_argument("Tentativa de gerar usuario a partir de dados invalidos");
+
+    auto user = make_shared<UserModel>();
+    user->setCode(stoi(lineProps[0]));
+    user->setCpfCnpj(lineProps[1]);
+    user->setType((UserTypeEnum)stoi(lineProps[2]));
+    user->setName(lineProps[3]);
+    return user;
+};
+
+shared_ptr<UserModel> UserDAO::insert(const shared_ptr<UserModel> user) {
+
+    // Validacao
+    if (user == nullptr) throw invalid_argument("Falha ao tentar inserir usuario cujo os dados nao foram informados");
+    auto existingUser = this->getExistingUser(user->getCode(), user->getCpfCnpj());
+    if (existingUser != nullptr) throw domain_error("Tentativa de inserir usuario que ja existe");
+
+    // Add usuario
+    this->openStorageForWriting();
+
+    this->writingStream
         << user->getCode() << ";"
         << user->getCpfCnpj() << ";"
         << user->getType() << ";"
         << user->getName() << ";"
         // << user->getRejectTypesOfInterest() << ";"
-        << endl;*/
+        << endl;
 
+    // Tudo OK
     return user;
-}
+};
 
 #endif
