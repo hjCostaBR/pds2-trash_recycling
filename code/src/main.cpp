@@ -28,7 +28,8 @@ int main(int argc, char const *argv[]) {
          << endl << endl;
 
     // Prepara controller de usuarios
-    auto userDao = make_shared<UserDAO>();
+    auto userService = make_shared<UserService>();
+    auto userDao = make_shared<UserDAO>(userService);
     auto userController = make_shared<UserController>(userDao);
 
     // Exibir menu principal
