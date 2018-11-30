@@ -66,12 +66,12 @@ public:
     /**
      * @inherit
      */
-    virtual bool runAction(void) override;
+    bool runAction(int action) override;
 
     /**
      * @inherit
      */
-    virtual bool runAction(int action) override;
+    bool runAction(int action, shared_ptr<UserModel> currentUser) override;
 };
 
 #endif

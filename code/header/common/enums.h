@@ -23,7 +23,10 @@ enum PersonTypeEnum {
  */
 enum ControllerActionEnum {
     DEFAULT = 110,
-    CREATE = 111
+    CREATE = 111,
+    RETRIVE = 112,
+    UPDATE = 113,
+    DELETE = 114
 };
 
 /**

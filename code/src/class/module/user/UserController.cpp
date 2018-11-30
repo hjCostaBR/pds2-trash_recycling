@@ -226,31 +226,24 @@ bool UserController::createUser(void) {
     } while (true);
 };
 
-bool UserController::runAction(void) {
-    throw bad_function_call();
-};
-
 bool UserController::runAction(int action) {
+
+    if (action != ControllerActionEnum::CREATE) throw invalid_argument("Acao invalida para controlador de usuarios (1)");
 
     bool exit = true;
 
-    switch (action) {
-
-        // Add usuario
-        case ControllerActionEnum::CREATE:
-            if (!this->createUser()) break;
-            exit = false;
-            cout << "Usuario criado com sucesso!" << endl;
-            break;
-
-        // Acao invalida
-        case ControllerActionEnum::DEFAULT:
-        default:
-            this->runAction();
-            break;
+    if (this->createUser()) {
+        exit = false;
+        cout << "Usuario criado com sucesso!" << endl;
     }
 
     if (exit) cout << "Usuario selecionou: 'sair'..." << endl;
+    return false;
+};
+
+bool UserController::runAction(int action, shared_ptr<UserModel> currentUser) {
+    if (action != ControllerActionEnum::UPDATE) throw invalid_argument("Acao invalida para controlador de usuarios (2)");
+    cout << "CHEOU em Atualizar usuario..." << endl;
     return false;
 };
 

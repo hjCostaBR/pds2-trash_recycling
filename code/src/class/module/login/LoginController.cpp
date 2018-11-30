@@ -4,9 +4,10 @@
 #include <stdio.h>
 #include <memory>
 
-#include "../../../../header/module/login/LoginController.h"
 #include "../../../../header/common/class/MenuItemSet.h"
 #include "../../../../header/common/class/MenuController.h"
+#include "../../../../header/module/login/LoginController.h"
+#include "../../../../header/module/user/UserController.h"
 
 using namespace std;
 
@@ -91,7 +92,11 @@ void LoginController::showLoggedOptions(const shared_ptr<UserModel> loggedUser) 
         menuItems.push_back(MenuItemSet("Listar usuarios", nullptr));
 
     // Incluir opcao: Atualizar dados pessoais
-    menuItems.push_back(MenuItemSet("Atualizar dados pessoais", nullptr));
+    auto userService = make_shared<UserService>();
+    auto userDao = make_shared<UserDAO>(userService);
+    auto userController = make_shared<UserController>(userDao);
+
+    menuItems.push_back(MenuItemSet("Atualizar dados pessoais", userController, ControllerActionEnum::UPDATE, loggedUser));
 
     // Incluir opcao: Sair
     menuItems.push_back(MenuItemSet("Sair", nullptr));
@@ -113,9 +118,5 @@ bool LoginController::runAction(void) {
     this->showLoggedOptions(loggedUser);
     return true;
 };
-
-bool LoginController::runAction(int action) {
-    return this->runAction();
-}
 
 #endif

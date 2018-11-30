@@ -2,6 +2,8 @@
 #define _CONTROLLER_H_
 
 #include <iostream>
+#include <memory>
+#include "../../../header/module/user/UserModel.h"
 
 using namespace std;
 
@@ -13,6 +15,11 @@ using namespace std;
  * @author hjcostabr
  */
 class Controller {
+
+private:
+
+    /** Emite falha generica para chamada invalida de metodos desta classe. */
+    void throwBadFunctionCall(void) const;
 
 protected:
 
@@ -38,7 +45,7 @@ public:
      * Encapsula procedimento de inicializacao do controlador.
      * @return Flag: Se execucao do programa do programa deve ser encerrada.
      */
-    virtual bool runAction() = 0;
+    virtual bool runAction();
 
     /**
      * Encapsula procedimento de inicializacao do controlador.
@@ -46,7 +53,16 @@ public:
      * @param action Codigo da acao do controller a ser realizada.
      * @return Flag: Se execucao do programa do programa deve ser encerrada.
      */
-    virtual bool runAction(int action) = 0;
+    virtual bool runAction(int action);
+
+    /**
+     * Encapsula procedimento de inicializacao do controlador.
+     *
+     * @param action Codigo da acao do controller a ser realizada.
+     * @param currentUser Usuario atual que executa a acao.
+     * @return Flag: Se execucao do programa do programa deve ser encerrada.
+     */
+    virtual bool runAction(int action, shared_ptr<UserModel> currentUser);
 };
 
 #endif

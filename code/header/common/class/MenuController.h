@@ -53,12 +53,7 @@ public:
     /**
      * @inherit
      */
-    virtual bool runAction(void) override;
-
-    /**
-     * @inherit
-     */
-    virtual bool runAction(int action) override;
+    bool runAction(int action) override;
 };
 
 #endif

@@ -6,6 +6,7 @@
 #include <iostream>
 #include <memory>
 
+#include "../../module/user/UserModel.h"
 #include "Controller.h"
 #include "../enums.h"
 
@@ -29,7 +30,10 @@ private:
     shared_ptr<Controller> controller;
 
     /** Codigo da action do controller a ser executada (associada ao item de Menu). */
-    int controllerAction;
+    ControllerActionEnum controllerAction;
+
+    /** Usuario atual que executa a acao.. */
+    shared_ptr<UserModel> currentUser;
 
 public:
 
@@ -52,6 +56,23 @@ public:
      */
     MenuItemSet(const string menuString, const shared_ptr<Controller> controller, const ControllerActionEnum controllerAction)
         : menuString(menuString), controller(controller), controllerAction(controllerAction)
+        {};
+
+    /**
+     * Construtor.
+     *
+     * @param menuString Titulo/nome do item de menu.
+     * @param controller Controller associado ao item de menu.
+     * @param controllerAction Codigo da action do controller a ser executada (associada ao item de Menu).
+     * @param currentUser Usuario atual que executa a acao.
+     */
+    MenuItemSet(
+        const string menuString,
+        const shared_ptr<Controller> controller,
+        const ControllerActionEnum controllerAction,
+        const shared_ptr<UserModel> currentUser
+
+    ) : menuString(menuString), controller(controller), controllerAction(controllerAction), currentUser(currentUser)
         {};
 
     string getMenuString(void) const;

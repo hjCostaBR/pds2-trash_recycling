@@ -3,9 +3,14 @@
 
 #include <iostream>
 #include <string>
+#include <functional>
 #include "../../../header/common/class/Controller.h"
 
 using namespace std;
+
+void throwBadFunctionCall(void) const {
+    throw bad_function_call("Chamada de metodo nao extendido por controller filho");
+}
 
 int Controller::getNumberFromStdIO(string presentationMsg, string invalidInputMsg) const {
 
@@ -36,5 +41,17 @@ int Controller::getNumberFromStdIO(string presentationMsg, string invalidInputMs
 
     return number;
 };
+
+bool Controller::runAction(void) {
+    this->throwBadFunctionCall();
+};
+
+bool Controller::runAction(const int action) {
+    this->throwBadFunctionCall();
+}
+
+bool Controller::runAction(const int action, const shared_ptr<UserModel> currentUser) {
+    this->throwBadFunctionCall();
+}
 
 #endif

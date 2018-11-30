@@ -72,8 +72,4 @@ bool MenuController::runAction(void) {
     } while (true);
 }
 
-bool MenuController::runAction(int action) {
-    return this->runAction();
-}
-
 #endif
