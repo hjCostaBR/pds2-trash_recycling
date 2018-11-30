@@ -30,36 +30,32 @@ private:
     shared_ptr<PersonTypeEnum> currentUserType = nullptr;
 
 
-    /**
-     * Efetua cadastro de novo usuario.
-     */
+    /** Captura & define tipo (pf /pj) para insercao de novo usuario. */
+    void setCurrentUserPersonType(void);
+
+    /** Captura & define valor para CPF/CNPJ de 01 novo usuario a ser cadastrado. */
+    void setCurrentUserCpfOrCnpj(void);
+
+    /** Captura & define tipo do usuario atual. */
+    void setCurrentUserType(void);
+
+    /** Captura & define nome do usuario atual. */
+    void setCurrentUserName(void);
+
+    /** Efetua cadastro de novo usuario. */
     bool createUser(void);
 
     /**
-     * Captura & retorna dados para inserir 01 novo usuario.
+     * Captura & retorna dados para inserir/atualizar dados de 01 usuario.
      * @return SE os dados necessarios foram completamente coletados.
      */
-    bool getDataToCreateUser(void);
+    bool getDataForUserFromStdIo(void);
 
-    /**
-     * Captura & define tipo (pf /pj) para insercao de novo usuario.
-     */
-    void setCurrentUserPersonType(void);
+    /** Atualiza cadastro de usuario registrado. */
+    bool updateUser(shared_ptr<UserModel> currentUser);
 
-    /**
-     * Captura & define valor para CPF/CNPJ de 01 novo usuario a ser cadastrado.
-     */
-    void setCurrentUserCpfOrCnpj(void);
-
-    /**
-     * Captura & define tipo do usuario atual.
-     */
-    void setCurrentUserType(void);
-
-    /**
-     * Captura & define nome do usuario atual.
-     */
-    void setCurrentUserName(void);
+    /** Exibe cabecalho para exibicao tabular de dados de usuario. */
+    void showUserDataTableHeader(void) const;
 
 public:
 

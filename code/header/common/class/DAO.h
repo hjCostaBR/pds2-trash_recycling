@@ -65,12 +65,21 @@ public:
     void openStorageForReading(void);
 
     /**
-     * Encapsula procedimento de inicializacao do controlador.
+     * Implementa logica para insercao de novo registro.
      *
      * @param model Dados a serem inseridos.
      * @return Registro recem inserido.
      */
     virtual shared_ptr<IModel> insert(const shared_ptr<IModel> model) {};
+
+    /**
+     * Implementa logica para atualizacao 01 registro ja cadstrado.
+     *
+     * @param int code Codigo do registro a ser atualizado.
+     * @param model Dados a serem persistidos.
+     * @return Registro recem atualizado.
+     */
+    virtual shared_ptr<IModel> update(const int code, const shared_ptr<IModel> model);
 };
 
 #endif

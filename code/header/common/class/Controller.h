@@ -35,6 +35,13 @@ protected:
      */
     int getNumberFromStdIO(string presentationMsg, string invalidInputMsg) const;
 
+    /**
+     * Captura 01 resposta de sim/nao de 01 usuario via terminal.
+     * @param presentationMsg Mensagem descritiva da pergunta.
+     * @return SE a resposta foi 'sim'.
+     */
+    bool aksYesOrNoQuestionThroughStdIO(string presentationMsg) const;
+
 public:
 
     Controller(void) {};

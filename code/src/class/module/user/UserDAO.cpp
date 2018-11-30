@@ -86,4 +86,26 @@ shared_ptr<UserModel> UserDAO::insert(const shared_ptr<UserModel> user) {
     return user;
 };
 
+shared_ptr<UserModel> UserDAO::insert(const int code, const shared_ptr<UserModel> user) {
+
+    // Validacao
+    if (user == nullptr) throw invalid_argument("Falha ao tentar atualizar usuario cujo os dados nao foram informados");
+    auto existingUser = this->getExistingUser(user->getCode(), user->getCpfCnpj());
+    if (existingUser == nullptr) throw domain_error("Tentativa de atualizar usuario que NAO existe");
+
+    // Add usuario
+    this->openStorageForWriting();
+
+    this->writingStream
+        << user->getCode() << ";"
+        << user->getCpfCnpj() << ";"
+        << user->getType() << ";"
+        << user->getName() << ";"
+        // << user->getRejectTypesOfInterest() << ";"
+        << endl;
+
+    // Tudo OK
+    return user;
+};
+
 #endif

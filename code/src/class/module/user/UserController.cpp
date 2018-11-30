@@ -159,10 +159,9 @@ void UserController::setCurrentUserName(void) {
     if (readInput != "0") this->currentUser->setName(string(readInput));
 };
 
-bool UserController::getDataToCreateUser(void) {
+bool UserController::getDataForUserFromStdIo(void) {
 
-    cout << "> CADASTRO" << endl
-         << "pressione '0' para sair" << endl
+    cout << "pressione '0' para sair" << endl
          << endl;
 
     // Reseta dados
@@ -198,7 +197,8 @@ bool UserController::createUser(void) {
 
     do {
 
-        if (!this->getDataToCreateUser()) return false;
+        cout << "> CADASTRO" << endl;
+        if (!this->getDataForUserFromStdIo()) return false;
 
         try {
             this->dao->insert(this->currentUser);
@@ -215,11 +215,48 @@ bool UserController::createUser(void) {
             cout << "Falha inesperada ao tentar adicionar usuario" << endl;
         }
 
-        cout << "Realizar nova tentativa? (s/n): ";
-        string tryAgain;
-        cin >> tryAgain;
-        cout << endl;
-        if (tryAgain != "s") return false;
+        if (!this->aksYesOrNoQuestionThroughStdIO("Realizar nova tentativa?")) return false;
+
+    } while (true);
+};
+
+void UserController::showUserDataTableHeader(void) const {
+    cout << "|\tCodigo\t|"
+         << "\tCPF/CNPJ\t|"
+         << "\tTipo\t|"
+         << "\tNome\t\t|"
+         << endl;
+};
+
+bool UserController::updateUser(shared_ptr<UserModel> currentUser) {
+
+    // Exibir dados atuais
+    cout << "Dados atuais cadastrados:" << endl;
+    this->showUserDataTableHeader();
+    this->service->showRegisterData(currentUser);
+    cout << endl;
+
+    // Confirmar desejo pela alteracao
+    if (!this->aksYesOrNoQuestionThroughStdIO("Alterar cadastro?")) return false;
+
+    do {
+        try {
+            if (!this->getDataForUserFromStdIo()) return false;
+            this->dao->update(currentUser->getCode(), this->currentUser);
+            return true;
+
+        } catch (invalid_argument error) {
+            cout << "Ops! Dados de usuario invalidos" << endl;
+
+        } catch (domain_error error) {
+            string docType = (*this->currentUserType == PersonTypeEnum::PF) ? "CPF" : "CNPJ";
+            cout << "Ops! Codigo ou " << docType << " ja cadastrado(s) para outro usuario." << endl;
+
+        } catch (exception error) {
+            cout << "Falha inesperada ao tentar adicionar usuario" << endl;
+        }
+
+        if (!this->aksYesOrNoQuestionThroughStdIO("Realizar nova tentativa?")) return false;
 
     } while (true);
 };
@@ -240,8 +277,17 @@ bool UserController::runAction(int action) {
 };
 
 bool UserController::runAction(int action, shared_ptr<UserModel> currentUser) {
+
     if (action != ControllerActionEnum::UPDATE) throw invalid_argument("Acao invalida para controlador de usuarios (2)");
-    cout << "CHEGOU em Atualizar usuario..." << endl;
+
+    bool exit = true;
+
+    if (this->updateUser(currentUser)) {
+        exit = false;
+        cout << "Usuario atualizado com sucesso!" << endl;
+    }
+
+    if (exit) cout << "Usuario selecionou: 'sair'..." << endl;
     return false;
 };
 

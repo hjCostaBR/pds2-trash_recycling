@@ -46,6 +46,11 @@ public:
     shared_ptr<UserModel> insert(const shared_ptr<UserModel> model);
 
     /**
+     * @inherit
+     */
+    shared_ptr<UserModel> update(const int code, const shared_ptr<UserModel> user);
+
+    /**
      * Pesquisa & retorna 01 registro identificado pelo codigo OU cpf/cnpj.
      *
      * @param code Codigo

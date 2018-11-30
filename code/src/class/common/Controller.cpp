@@ -42,6 +42,14 @@ int Controller::getNumberFromStdIO(string presentationMsg, string invalidInputMs
     return number;
 };
 
+bool Controller::aksYesOrNoQuestionThroughStdIO(string presentationMsg) const {
+    cout << presentationMsg << " (s/n): ";
+    string answer;
+    cin >> answer;
+    cout << endl;
+    return (answer == "s");
+};
+
 bool Controller::runAction(void) {
     this->throwBadFunctionCall();
 };
