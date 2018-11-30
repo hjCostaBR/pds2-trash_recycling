@@ -143,7 +143,7 @@ void UserController::setCurrentUserType(void) {
 
             // Opcao valida informada!
             this->currentUser->setType(validUserType);
-            cout << "Tipo selecionado: " << typeLabelMap.find(validUserType)->second << endl;
+            cout << "Tipo selecionado: " << typeLabelMap.find(validUserType)->second << endl << endl;
             break;
         }
 

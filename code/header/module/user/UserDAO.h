@@ -27,7 +27,7 @@ public:
     /**
      * @inherit
      */
-    void openStorageFile(void) override;
+    string getStorageFileName(void) override;
 
     /**
      * @inherit
