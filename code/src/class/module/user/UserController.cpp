@@ -92,15 +92,12 @@ void UserController::setCurrentUserType(void) {
     // Monta estrutura para exibir opcoes
     vector<UserTypeEnum> userTypesList;
     map<UserTypeEnum, int> typeCodeMap;
-    map<UserTypeEnum, string> typeLabelMap;
 
     userTypesList.push_back(UserTypeEnum::RECEIVER);
     typeCodeMap[UserTypeEnum::RECEIVER] = 1;
-    typeLabelMap[UserTypeEnum::RECEIVER] = "Receptor";
 
     userTypesList.push_back(UserTypeEnum::DONATOR);
     typeCodeMap[UserTypeEnum::DONATOR] = 2;
-    typeLabelMap[UserTypeEnum::DONATOR] = "Doador";
 
     do {
 
@@ -112,8 +109,9 @@ void UserController::setCurrentUserType(void) {
         // Exibir opcoes
         cout << "Selecione um tipo de usuario: " << endl;
 
-        function<void(UserTypeEnum)> showOneOption = [&typeLabelMap, &typeCodeMap] (const UserTypeEnum userType) {
-            cout << "\t" << typeCodeMap.find(userType)->second << " - " << typeLabelMap.find(userType)->second << endl;
+        function<void(UserTypeEnum)> showOneOption = [&typeCodeMap, this] (const UserTypeEnum userType) {
+            cout << "\t" << typeCodeMap.find(userType)->second
+                << " - " << this->service->getUserTypeLabel(userType) << endl;
         };
 
         for_each (userTypesList.begin(), userTypesList.end(), showOneOption);
@@ -143,7 +141,7 @@ void UserController::setCurrentUserType(void) {
 
             // Opcao valida informada!
             this->currentUser->setType(validUserType);
-            cout << "Tipo selecionado: " << typeLabelMap.find(validUserType)->second << endl << endl;
+            cout << "Tipo selecionado: " << this->service->getUserTypeLabel(validUserType) << endl << endl;
             break;
         }
 

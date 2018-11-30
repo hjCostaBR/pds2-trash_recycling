@@ -94,7 +94,7 @@ void LoginController::showLoggedOptions(const shared_ptr<UserModel> loggedUser) 
     // Incluir opcao: Atualizar dados pessoais
     auto userService = make_shared<UserService>();
     auto userDao = make_shared<UserDAO>(userService);
-    auto userController = make_shared<UserController>(userDao);
+    auto userController = make_shared<UserController>(userDao, userService);
 
     menuItems.push_back(MenuItemSet("Atualizar dados pessoais", userController, ControllerActionEnum::UPDATE, loggedUser));
 

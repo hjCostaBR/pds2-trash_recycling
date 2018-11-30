@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include "IModel.h"
 
 using namespace std;
 
@@ -26,6 +27,12 @@ public:
      * @return
      */
     virtual bool validateStoredRegister(const vector<string> lineProps) const = 0;
+
+    /**
+     * Exibe dados de 01 registro.
+     * @param register
+     */
+    virtual void showRegisterData(const shared_ptr<IModel> register) const {};
 };
 
 #endif

@@ -30,7 +30,7 @@ int main(int argc, char const *argv[]) {
     // Prepara controller de usuarios
     auto userService = make_shared<UserService>();
     auto userDao = make_shared<UserDAO>(userService);
-    auto userController = make_shared<UserController>(userDao);
+    auto userController = make_shared<UserController>(userDao, userService);
 
     // Exibir menu principal
     vector<MenuItemSet> menuItems;

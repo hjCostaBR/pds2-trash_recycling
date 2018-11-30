@@ -19,10 +19,13 @@ class UserController: public Controller {
 
 private:
 
-    /** Usuario sendo manipulado no momento. */
-    shared_ptr<UserModel> currentUser = nullptr;
     /** DAO. */
     shared_ptr<UserDAO> dao = nullptr;
+    /** Servico. */
+    shared_ptr<UserService> service = nullptr;
+
+    /** Usuario sendo manipulado no momento. */
+    shared_ptr<UserModel> currentUser = nullptr;
     /** Tipo de pessoa do usuario atual. */
     shared_ptr<PersonTypeEnum> currentUserType = nullptr;
 
@@ -61,7 +64,9 @@ private:
 public:
 
     /** Contrutor. */
-    UserController(const shared_ptr<UserDAO> dao): dao(dao) {};
+    UserController(const shared_ptr<UserDAO> dao, const shared_ptr<UserService> service)
+        : dao(dao), service(service)
+        {};
 
     /**
      * @inherit
