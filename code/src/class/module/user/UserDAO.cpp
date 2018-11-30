@@ -5,8 +5,9 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include "../../../../header/module/user/UserDAO.h"
 #include "../../../../header/common/DAO.h"
+#include "../../../../header/module/user/UserDAO.h"
+#include "../../../../header/module/user/UserService.h"
 
 using namespace std;
 
@@ -37,7 +38,7 @@ shared_ptr<UserModel> UserDAO::getExistingUser(const int code, const string cpfC
         }
 
         // Valida valores extraidos
-        if (!this->validateStoragedRegister(lineProps)) {
+        if (!this->service->validateStoredRegister(lineProps)) {
             cout << endl << "** WARNING: Cadastro de usuário invalido (linha: " << lineCount << ") **" << endl << endl;
             continue;
         }
@@ -50,34 +51,9 @@ shared_ptr<UserModel> UserDAO::getExistingUser(const int code, const string cpfC
     return nullptr;
 };
 
-bool UserDAO::validateStoragedRegister(const vector<string> lineProps) const {
-
-    if (lineProps.size() < 4)
-        return false;
-
-    int type;
-
-    try {
-        int code = stoi(lineProps[0]);
-        type = stoi(lineProps[2]);
-
-    } catch (exception err) {
-        return false;
-    }
-
-    if (type != UserTypeEnum::ADMIN
-        && type != UserTypeEnum::RECEIVER
-        && type != UserTypeEnum::DONATOR
-    ) {
-        return false;
-    }
-
-    return true;
-};
-
 shared_ptr<UserModel> UserDAO::getModelFromStorageLine(const vector<string> lineProps) {
 
-    if (!this->validateStoragedRegister(lineProps))
+    if (!this->service->validateStoredRegister(lineProps))
         throw invalid_argument("Tentativa de gerar usuario a partir de dados invalidos");
 
     auto user = make_shared<UserModel>();

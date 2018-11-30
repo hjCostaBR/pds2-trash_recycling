@@ -46,14 +46,6 @@ protected:
      */
     virtual shared_ptr<IModel> getModelFromStorageLine(const vector<string> lineProps) const {};
 
-    /**
-     * Informa se dados contidos numa linha do arquivo de armazenamento correspondem a 01 registro valido.
-     *
-     * @param lineProps
-     * @return
-     */
-    virtual bool validateStoragedRegister(const vector<string> lineProps) const = 0;
-
 public:
 
     DAO(void) {};

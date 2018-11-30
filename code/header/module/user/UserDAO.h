@@ -2,8 +2,9 @@
 #define _USER_DAO_H_
 
 #include <memory>
-#include "UserModel.h"
 #include "../../common/DAO.h"
+#include "UserModel.h"
+#include "UserService.h"
 
 
 /**
@@ -19,6 +20,10 @@ private:
 
     /** Nome do arquivo de armqazenamento de dados de usuario. */
     static const string STORAGE_FILE;
+
+    /** Classe de servico. */
+    shared_ptr<UserService> service = nullptr;
+
 
     /**
      * Pesquisa & retorna 01 registro identificado pelo codigo OU cpf/cnpj.
@@ -41,14 +46,9 @@ protected:
      */
     shared_ptr<UserModel> getModelFromStorageLine(const vector<string> lineProps);
 
-    /**
-     * @inherit
-     */
-    bool validateStoragedRegister(const vector<string> lineProps) const override;
-
 public:
 
-    UserDAO(void) {};
+    UserDAO(shared_ptr<UserService> service): service(service) {};
 
     /**
      * @inherit
