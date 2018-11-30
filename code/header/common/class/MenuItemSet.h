@@ -30,10 +30,10 @@ private:
     shared_ptr<Controller> controller;
 
     /** Codigo da action do controller a ser executada (associada ao item de Menu). */
-    ControllerActionEnum controllerAction;
+    int controllerAction = 0;
 
     /** Usuario atual que executa a acao.. */
-    shared_ptr<UserModel> currentUser;
+    shared_ptr<UserModel> currentUser = nullptr;
 
 public:
 
@@ -78,6 +78,7 @@ public:
     string getMenuString(void) const;
     shared_ptr<Controller> getController(void) const;
     int getControllerAction(void) const;
+    shared_ptr<UserModel> getUser(void) const;
 };
 
 #endif

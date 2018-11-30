@@ -19,4 +19,8 @@ int MenuItemSet::getControllerAction(void) const {
     return this->controllerAction;
 }
 
+shared_ptr<UserModel> MenuItemSet::getUser(void) const {
+    return this->currentUser;
+};
+
 #endif

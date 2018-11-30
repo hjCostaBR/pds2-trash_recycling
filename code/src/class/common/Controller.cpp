@@ -1,15 +1,15 @@
 #ifndef _CONTROLLER_CPP_
 #define _CONTROLLER_CPP_
 
-#include <iostream>
 #include <string>
+#include <iostream>
 #include <functional>
 #include "../../../header/common/class/Controller.h"
 
 using namespace std;
 
-void throwBadFunctionCall(void) const {
-    throw bad_function_call("Chamada de metodo nao extendido por controller filho");
+void Controller::throwBadFunctionCall(void) const {
+    throw bad_function_call();
 }
 
 int Controller::getNumberFromStdIO(string presentationMsg, string invalidInputMsg) const {

@@ -26,7 +26,6 @@ protected:
     /** Codigo da acao do controller a ser realizada. */
     int action;
 
-
     /**
      * Interage com o usuario via cli para capturar 01 valor numerico.
      *

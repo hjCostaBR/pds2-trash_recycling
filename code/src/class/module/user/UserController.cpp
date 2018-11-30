@@ -243,7 +243,7 @@ bool UserController::runAction(int action) {
 
 bool UserController::runAction(int action, shared_ptr<UserModel> currentUser) {
     if (action != ControllerActionEnum::UPDATE) throw invalid_argument("Acao invalida para controlador de usuarios (2)");
-    cout << "CHEOU em Atualizar usuario..." << endl;
+    cout << "CHEGOU em Atualizar usuario..." << endl;
     return false;
 };
 

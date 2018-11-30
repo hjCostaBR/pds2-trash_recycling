@@ -64,9 +64,33 @@ MenuItemSet MenuController::showOptionsAndGetSelectedController(void) {
 bool MenuController::runAction(void) {
 
     do {
+
         auto selectedMenuItem = this->showOptionsAndGetSelectedController();
-        if (selectedMenuItem.getController() == nullptr) return false;
-        if (selectedMenuItem.getController()->runAction(selectedMenuItem.getControllerAction())) return true;
+
+        // Valida se ha controlador
+        auto controller = selectedMenuItem.getController();
+        if (controller == nullptr) return false;
+
+        // Chamada SEM parametros
+        auto controllerAction = selectedMenuItem.getControllerAction();
+
+        if (!controllerAction) {
+            if (controller->runAction()) return true;
+            cout << endl;
+            continue;
+        }
+
+        // Chamada COM action
+        auto currentUser = selectedMenuItem.getUser();
+
+        if (currentUser == nullptr) {
+            if (controller->runAction(controllerAction)) return true;
+            cout << endl;
+            continue;
+        }
+
+        // Chamada COM action + usuario
+        if (controller->runAction(controllerAction, currentUser)) return true;
         cout << endl;
 
     } while (true);
