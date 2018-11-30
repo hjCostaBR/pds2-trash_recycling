@@ -16,7 +16,7 @@ string UserDAO::getStorageFileName(void) {
     return UserDAO::STORAGE_FILE;
 };
 
-shared_ptr<UserModel> UserDAO::getExistingUser(const int code, const string cpfCnpj) const {
+shared_ptr<UserModel> UserDAO::getExistingUser(const int code, const string cpfCnpj) {
 
     this->openStorageForReading();
 
@@ -38,13 +38,13 @@ shared_ptr<UserModel> UserDAO::getExistingUser(const int code, const string cpfC
 
         // Valida valores extraidos
         if (!this->validateStoragedRegister(lineProps)) {
-            cout << endl << "** WARNING: Cadastro de usuário invalido (linha: " + lineCount + ") **" << endl << endl;
+            cout << endl << "** WARNING: Cadastro de usuário invalido (linha: " << lineCount << ") **" << endl << endl;
             continue;
         }
 
         // Verifica se usuario pesquisado foi encontrado
         if (code == stoi(lineProps[0]) || cpfCnpj == lineProps[1])
-            return this->getModelFromRegisterLine(lineProps);
+            return this->getModelFromStorageLine(lineProps);
     }
 
     return nullptr;
@@ -54,7 +54,7 @@ bool UserDAO::validateStoragedRegister(const vector<string> lineProps) const {
 
     if (lineProps.size() < 4)
         return false;
-    
+
     int type;
 
     try {
@@ -75,7 +75,7 @@ bool UserDAO::validateStoragedRegister(const vector<string> lineProps) const {
     return true;
 };
 
-shared_ptr<UserModel> UserDAO::getModelFromRegisterLine(const vector<string> lineProps) const {
+shared_ptr<UserModel> UserDAO::getModelFromStorageLine(const vector<string> lineProps) {
 
     if (!this->validateStoragedRegister(lineProps))
         throw invalid_argument("Tentativa de gerar usuario a partir de dados invalidos");

@@ -27,7 +27,7 @@ private:
      * @param cpfCnpj
      * @return Instancia do objeto encontrado.
      */
-    shared_ptr<UserModel> getExistingUser(const int code, const string cpfCnpj) const;
+    shared_ptr<UserModel> getExistingUser(const int code, const string cpfCnpj);
 
 protected:
 
@@ -39,12 +39,12 @@ protected:
     /**
      * @inherit
      */
-    shared_ptr<UserModel> getModelFromRegisterLine(const vector<string> lineProps) override const;
+    shared_ptr<UserModel> getModelFromStorageLine(const vector<string> lineProps);
 
     /**
      * @inherit
      */
-    bool validateStoragedRegister(const vector<string> lineProps) override const;
+    bool validateStoragedRegister(const vector<string> lineProps) const override;
 
 public:
 
