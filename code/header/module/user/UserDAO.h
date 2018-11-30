@@ -24,16 +24,6 @@ private:
     /** Classe de servico. */
     shared_ptr<UserService> service = nullptr;
 
-
-    /**
-     * Pesquisa & retorna 01 registro identificado pelo codigo OU cpf/cnpj.
-     *
-     * @param code Codigo
-     * @param cpfCnpj
-     * @return Instancia do objeto encontrado.
-     */
-    shared_ptr<UserModel> getExistingUser(const int code, const string cpfCnpj);
-
 protected:
 
     /**
@@ -54,6 +44,15 @@ public:
      * @inherit
      */
     shared_ptr<UserModel> insert(const shared_ptr<UserModel> model);
+
+    /**
+     * Pesquisa & retorna 01 registro identificado pelo codigo OU cpf/cnpj.
+     *
+     * @param code Codigo
+     * @param cpfCnpj
+     * @return Instancia do objeto encontrado.
+     */
+    shared_ptr<UserModel> getExistingUser(const int code, const string cpfCnpj);
 };
 
 #endif
