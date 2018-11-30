@@ -61,24 +61,19 @@ MenuItemSet MenuController::showOptionsAndGetSelectedController(void) {
     return this->menuItems[selectedOptionCode];
 }
 
-void MenuController::runAction(void) {
-
-    MenuItemSet selectedMenuItem("", nullptr);
+bool MenuController::runAction(void) {
 
     do {
+        auto selectedMenuItem = this->showOptionsAndGetSelectedController();
+        if (selectedMenuItem.getController() == nullptr) return false;
+        if (selectedMenuItem.getController()->runAction(selectedMenuItem.getControllerAction())) return true;
+        cout << endl;
 
-        selectedMenuItem = this->showOptionsAndGetSelectedController();
-
-        if (selectedMenuItem.getController() != nullptr) {
-            selectedMenuItem.getController()->runAction(selectedMenuItem.getControllerAction());
-            cout << endl;
-        }
-
-    } while (selectedMenuItem.getController() != nullptr);
+    } while (true);
 }
 
-void MenuController::runAction(int action) {
-    this->runAction();
+bool MenuController::runAction(int action) {
+    return this->runAction();
 }
 
 #endif

@@ -101,21 +101,21 @@ void LoginController::showLoggedOptions(const shared_ptr<UserModel> loggedUser) 
     menuController.runAction();
 };
 
-void LoginController::runAction(void) {
+bool LoginController::runAction(void) {
 
     auto loggedUser = this->login();
 
     if (loggedUser == nullptr) {
         cout << "Usuario selecionou: 'sair'..." << endl;
-        return;
+        return false;
     }
 
     this->showLoggedOptions(loggedUser);
-    exit(0);
+    return true;
 };
 
-void LoginController::runAction(int action) {
-    this->runAction();
+bool LoginController::runAction(int action) {
+    return this->runAction();
 }
 
 #endif

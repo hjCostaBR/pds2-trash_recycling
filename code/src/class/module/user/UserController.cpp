@@ -226,11 +226,11 @@ bool UserController::createUser(void) {
     } while (true);
 };
 
-void UserController::runAction(void) {
+bool UserController::runAction(void) {
     throw bad_function_call();
 };
 
-void UserController::runAction(int action) {
+bool UserController::runAction(int action) {
 
     bool exit = true;
 
@@ -251,6 +251,7 @@ void UserController::runAction(int action) {
     }
 
     if (exit) cout << "Usuario selecionou: 'sair'..." << endl;
+    return false;
 };
 
 #endif

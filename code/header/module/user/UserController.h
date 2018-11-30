@@ -66,12 +66,12 @@ public:
     /**
      * @inherit
      */
-    virtual void runAction(void) override;
+    virtual bool runAction(void) override;
 
     /**
      * @inherit
      */
-    virtual void runAction(int action) override;
+    virtual bool runAction(int action) override;
 };
 
 #endif

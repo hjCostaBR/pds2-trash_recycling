@@ -52,12 +52,12 @@ public:
     /**
      * @inherit
      */
-    virtual void runAction(void);
+    virtual bool runAction(void);
 
     /**
      * @inherit
      */
-    virtual void runAction(int action);
+    virtual bool runAction(int action);
 };
 
 #endif
