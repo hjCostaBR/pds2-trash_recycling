@@ -86,14 +86,26 @@ shared_ptr<UserModel> UserDAO::insert(const shared_ptr<UserModel> user) {
     return user;
 };
 
-shared_ptr<UserModel> UserDAO::insert(const int code, const shared_ptr<UserModel> user) {
+shared_ptr<UserModel> UserDAO::insert(const shared_ptr<UserModel> user) {
 
     // Validacao
-    if (user == nullptr) throw invalid_argument("Falha ao tentar atualizar usuario cujo os dados nao foram informados");
-    auto existingUser = this->getExistingUser(user->getCode(), user->getCpfCnpj());
-    if (existingUser == nullptr) throw domain_error("Tentativa de atualizar usuario que NAO existe");
+    bool invalidArgument = (user == nullptr);
+    shared_ptr<UserModel> existingUser;
 
-    // Add usuario
+    if (!invalidArgument) {
+        existingUser = this->getExistingUser(user->getCode(), user->getCpfCnpj());
+        invalidArgument = (existingUser == nullptr);
+    }
+
+    if (invalidArgument) throw invalid_argument("Usuario nao existe");
+
+    if (existingUser->getCode() != user->getCode() || existingUser->getCpfCnpj() != user->getCpfCnpj())
+        throw domain_error("Dados repetidos");
+
+    // Remove linha atual do usuario
+    // @todo...
+
+    // Add nova linha para o usuario
     this->openStorageForWriting();
 
     this->writingStream

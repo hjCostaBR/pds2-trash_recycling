@@ -253,7 +253,7 @@ bool UserController::updateUser(shared_ptr<UserModel> currentUser) {
             cout << "Ops! Codigo ou " << docType << " ja cadastrado(s) para outro usuario." << endl;
 
         } catch (exception error) {
-            cout << "Falha inesperada ao tentar adicionar usuario" << endl;
+            cout << "Falha inesperada ao tentar atualizar usuario" << endl;
         }
 
         if (!this->aksYesOrNoQuestionThroughStdIO("Realizar nova tentativa?")) return false;
