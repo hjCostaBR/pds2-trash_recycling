@@ -30,7 +30,7 @@ private:
     /**
      * Efetua cadastro de novo usuario.
      */
-    void createUser(void);
+    bool createUser(void);
 
     /**
      * Captura & retorna dados para inserir 01 novo usuario.

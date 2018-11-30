@@ -155,9 +155,10 @@ void UserController::setCurrentUserType(void) {
 
 void UserController::setCurrentUserName(void) {
     cout << "Informe nome do usuario: ";
-    string readInput = "";
-    cin >> readInput;
-    if (readInput != "0") this->currentUser->setName(readInput);
+    char readInput[100];
+    cin.ignore();
+    cin.getline(readInput, sizeof(readInput));
+    if (readInput != "0") this->currentUser->setName(string(readInput));
 };
 
 bool UserController::getDataToCreateUser(void) {
@@ -195,17 +196,34 @@ bool UserController::getDataToCreateUser(void) {
     return true;
 };
 
-void UserController::createUser(void) {
+bool UserController::createUser(void) {
 
-    if (!this->getDataToCreateUser()) return;
+    do {
 
-    try {
-        this->dao->insert(this->currentUser);
-        // @todo: Continhar daqui
+        if (!this->getDataToCreateUser()) return false;
 
-    } catch (exception error) {
+        try {
+            this->dao->insert(this->currentUser);
+            return true;
 
-    }
+        } catch (invalid_argument error) {
+            cout << "Ops! Dados de usuario invalidos" << endl;
+
+        } catch (domain_error error) {
+            string docType = (*this->currentUserType == PersonTypeEnum::PF) ? "CPF" : "CNPJ";
+            cout << "Ops! Codigo ou " << docType << " ja cadastrado(s) para outro usuario." << endl;
+
+        } catch (exception error) {
+            cout << "Falha inesperada ao tentar adicionar usuario" << endl;
+        }
+
+        cout << "Realizar nova tentativa? (s/n): ";
+        string tryAgain;
+        cin >> tryAgain;
+        cout << endl;
+        if (tryAgain != "s") return false;
+
+    } while (true);
 };
 
 void UserController::initialize(void) {
@@ -214,11 +232,15 @@ void UserController::initialize(void) {
 
 void UserController::initialize(int action) {
 
+    bool exit = true;
+
     switch (action) {
 
         // Add usuario
         case ControllerActionEnum::CREATE:
-            this->createUser();
+            if (!this->createUser()) break;
+            exit = false;
+            cout << "Usuario criado com sucesso!" << endl;
             break;
 
         // Acao invalida
@@ -228,8 +250,7 @@ void UserController::initialize(int action) {
             break;
     }
 
-    // Sair
-    cout << "Usuario selecionou: 'sair'..." << endl;
+    if (exit) cout << "Usuario selecionou: 'sair'..." << endl;
 };
 
 #endif

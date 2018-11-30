@@ -24,7 +24,7 @@ void DAO::closeStorage(bool input) {
 void DAO::openStorageForWriting(void) {
     this->closeStorage(true);
     const string storageFile = this->getStorageFileName();
-    this->writingStream.open(DAO::STORAGE_DIR_PATH + storageFile, ios::in);
+    this->writingStream.open(DAO::STORAGE_DIR_PATH + storageFile, ios::app);
     if (!this->writingStream.good()) throw runtime_error("Falha ao tentar abrir arquivo de armazenamento para escrita (" + storageFile + ")");
 }
 
