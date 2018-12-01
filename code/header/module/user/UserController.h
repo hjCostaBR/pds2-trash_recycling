@@ -60,6 +60,9 @@ private:
     /** Exibe cabecalho para exibicao tabular de dados de usuario. */
     void showUserDataTableHeader(void) const;
 
+    /** Exibe listagem de usuarios cadastrados. */
+    void showUsersList(void) const;
+
 public:
 
     /** Contrutor. */

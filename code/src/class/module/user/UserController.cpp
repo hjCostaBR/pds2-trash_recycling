@@ -273,9 +273,30 @@ bool UserController::updateUser(shared_ptr<UserModel> currentUser) {
     } while (true);
 };
 
+void UserController::showUsersList(void) const {
+
+};
+
 bool UserController::runAction(int action) {
-    if (action != ControllerActionEnum::CREATE) throw invalid_argument("Acao invalida para controlador de usuarios (1)");
-    if (!this->createUser()) "Usuario selecionou: 'sair'..." << endl;
+
+    if (action != ControllerActionEnum::CREATE && action != ControllerActionEnum::RETRIVE)
+        throw invalid_argument("Acao invalida para controlador de usuarios (1)");
+
+    bool exit = false;
+
+    switch (action) {
+        case ControllerActionEnum::CREATE:
+            exit = (!this->createUser());
+            break;
+
+        case ControllerActionEnum::RETRIVE:
+            this->showUsersList();
+            exit = false;
+            break;
+    }
+
+
+    if (exit) cout << "Usuario selecionou: 'sair'..." << endl;
     return false;
 };
 
