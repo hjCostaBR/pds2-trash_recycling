@@ -62,6 +62,10 @@ FindResult<UserModel> UserDAO::findOne(const int code, const string cpfCnpj) {
     return result;
 };
 
+FindResult<UserModel> UserDAO::findOne(const string cpfCnpj) {
+    return this->findOne(0, cpfCnpj);
+};
+
 FindResult<UserModel> UserDAO::findOne(const int code) {
     return this->findOne(code, "");
 };
@@ -106,37 +110,35 @@ shared_ptr<UserModel> UserDAO::insert(const shared_ptr<UserModel> user) {
 
 shared_ptr<UserModel> UserDAO::update(const shared_ptr<UserModel> user) {
 
-    // Validacao
-    bool invalidArgument = (user == nullptr);
-    shared_ptr<UserModel> existingUser;
+    if (user == nullptr) throw invalid_argument("Dados insuficientes");
 
-    if (!invalidArgument) {
-        auto existingUserSearch = this->findOne(user->getCode());
-        existingUser = existingUserSearch.foundRegister;
-        invalidArgument = (existingUser == nullptr);
-    }
+    // Verifica SE usuario existe
+    auto existingUserSearch = this->findOne(user->getCode());
+    if (existingUserSearch.foundRegister == nullptr) throw invalid_argument("Usuario nao existe");
 
-    if (invalidArgument) throw invalid_argument("Usuario nao existe");
+    // Verifica SE cpf/cnpj esta disponivel
+    auto docValidationSearch = this->findOne(user->getCpfCnpj());
+    auto docValidationFoundUser = existingUserSearch.foundRegister;
 
-    if (existingUser->getCode() != user->getCode() || existingUser->getCpfCnpj() != user->getCpfCnpj())
+    if (docValidationFoundUser != nullptr && docValidationFoundUser->getCode() != user->getCode())
         throw domain_error("Dados repetidos");
 
     // Remove linha atual do usuario
-    // @todo...
+    this->deleteOne(existingUserSearch.line);
 
     // Add nova linha para o usuario
-    this->openStorageForWriting();
-
-    this->writingStream
-        << user->getCode() << ";"
-        << user->getCpfCnpj() << ";"
-        << user->getType() << ";"
-        << user->getName() << ";"
-        // << user->getRejectTypesOfInterest() << ";"
-        << endl;
-
-    // Tudo OK
-    return user;
+    // this->openStorageForWriting();
+    //
+    // this->writingStream
+    //     << user->getCode() << ";"
+    //     << user->getCpfCnpj() << ";"
+    //     << user->getType() << ";"
+    //     << user->getName() << ";"
+    //     // << user->getRejectTypesOfInterest() << ";"
+    //     << endl;
+    //
+    // // Tudo OK
+    // return user;
 };
 
 #endif

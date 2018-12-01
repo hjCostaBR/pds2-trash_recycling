@@ -250,7 +250,7 @@ bool UserController::updateUser(shared_ptr<UserModel> currentUser) {
 
         } catch (domain_error error) {
             string docType = (*this->currentUserType == PersonTypeEnum::PF) ? "CPF" : "CNPJ";
-            cout << "Ops! Codigo ou " << docType << " ja cadastrado(s) para outro usuario." << endl;
+            cout << "Ops! " << docType << " ja cadastrado para outro usuario." << endl;
 
         } catch (exception error) {
             cout << "Falha inesperada ao tentar atualizar usuario" << endl;
