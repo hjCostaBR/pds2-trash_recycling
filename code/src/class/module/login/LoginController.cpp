@@ -89,14 +89,14 @@ void LoginController::showLoggedOptions(const shared_ptr<UserModel> loggedUser) 
         menuItems.push_back(MenuItemSet("Minhas coletas agendadas", nullptr));
 
     // Incluir opcao: Listar usuario cadastrados
-    if (loggedUser->getType() == UserTypeEnum::ADMIN)
-        menuItems.push_back(MenuItemSet("Listar usuarios", nullptr));
-
-    // Incluir opcao: Atualizar dados pessoais
     auto userService = make_shared<UserService>();
     auto userDao = make_shared<UserDAO>(userService);
     auto userController = make_shared<UserController>(userDao, userService);
 
+    if (loggedUser->getType() == UserTypeEnum::ADMIN)
+        menuItems.push_back(MenuItemSet("Listar usuarios", userController, ControllerActionEnum::RETRIVE));
+
+    // Incluir opcao: Atualizar dados pessoais
     menuItems.push_back(MenuItemSet("Atualizar dados pessoais", userController, ControllerActionEnum::UPDATE, loggedUser));
 
     // Incluir opcao: Sair
