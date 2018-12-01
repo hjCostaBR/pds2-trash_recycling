@@ -60,14 +60,6 @@ public:
     FindResult<UserModel> findOne(const int code);
 
     /**
-     * Pesquisa & retorna 01 registro identificado pelo cpf / cnpj.
-     *
-     * @param cpfCnpj Cpf/Cnpj do registro a ser encontrado.
-     * @return Estrutura contendo o registro encontrado + a linha do arquivo em que ele esta.
-     */
-    FindResult<UserModel> findOne(const string cpfCnpj);
-
-    /**
      * Pesquisa & retorna 01 registro identificado pelo codigo, cpf ou cnpj.
      *
      * @param code Codito do registro a ser encontrado.

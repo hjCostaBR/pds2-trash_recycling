@@ -57,9 +57,9 @@ void DAO::deleteOne(const int line) {
     tempFile.close();
     this->closeStorage(false);
 
-    const string storageFile = this->getStorageFileName();
+    const char* storageFile = this->getStorageFileName().c_str();
     remove(storageFile);
-    rename(tempFilePath, storageFile);
+    rename(tempFilePath.c_str(), storageFile);
 };
 
 DAO::~DAO(void) {

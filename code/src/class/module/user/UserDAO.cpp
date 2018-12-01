@@ -66,10 +66,6 @@ FindResult<UserModel> UserDAO::findOne(const int code) {
     return this->findOne(code, "");
 };
 
-FindResult<UserModel> UserDAO::findOne(const string cpfCnpj) {
-    return this->findOne(0, cpfCnpj);
-};
-
 shared_ptr<UserModel> UserDAO::getModelFromStorageLine(const vector<string> lineProps) {
 
     if (!this->service->validateStoredRegister(lineProps))
