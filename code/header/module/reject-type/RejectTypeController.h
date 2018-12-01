@@ -21,8 +21,6 @@ private:
 
     /** DAO. */
     shared_ptr<RejectTypeDAO> dao = nullptr;
-    /** Servico. */
-    shared_ptr<RejectTypeService> service = nullptr;
 
     /** Dados do registro sendo manipulado no momento. */
     shared_ptr<RejectTypeModel> currentRejectType = nullptr;
@@ -54,9 +52,7 @@ private:
 public:
 
     /** Contrutor. */
-    RejectTypeController(const shared_ptr<RejectTypeDAO> dao, const shared_ptr<RejectTypeService> service)
-        : dao(dao), service(service)
-        {};
+    RejectTypeController(const shared_ptr<RejectTypeDAO> dao) : dao(dao) {};
 
     /**
      * @inherit

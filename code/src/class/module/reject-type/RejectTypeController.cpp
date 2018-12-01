@@ -26,7 +26,7 @@ bool RejectTypeController::create(void) {
 
         } catch (domain_error error) {
             // @todo: Definir msg de notificacao
-            cout << "Ops! Codigo ou (...) ja cadastrado(s) para outro usuario." << endl;
+            cout << "Ops! Codigo ja cadastrado(s) para outro Tipo de Residuo." << endl;
 
         } catch (exception error) {
             cout << "Falha inesperada ao tentar adicionar Tipo de Residuo" << endl;

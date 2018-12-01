@@ -15,17 +15,15 @@ using namespace std;
 
 const string RejectTypeDAO::STORAGE_FILE = "reject-type.txt";
 
-void RejectTypeDAO::writeRegisterIntoStorage(shared_ptr<RejectTypeModel> user) {
+void RejectTypeDAO::writeRegisterIntoStorage(shared_ptr<RejectTypeModel> rejectType) {
 
-    /*this->openStorageForWriting();
+    this->openStorageForWriting();
 
     this->writingStream
-            << user->getCode() << ";"
-            << user->getCpfCnpj() << ";"
-            << user->getType() << ";"
-            << user->getName() << ";"
-            // << user->getRejectTypesOfInterest() << ";"
-            << endl;*/
+            << rejectType->getCode() << ";"
+            << rejectType->getName() << ":"
+            << rejectType->getStorageSpecification() << ";"
+            << endl;
 }
 
 string RejectTypeDAO::getStorageFileName(void) {
@@ -57,7 +55,7 @@ shared_ptr<RejectTypeModel> RejectTypeDAO::insert(const shared_ptr<RejectTypeMod
 
     if (existingRejType != nullptr) throw domain_error("Tipo de Residuo ja existe");
 
-    // Add usuario
+    // Add
     this->writeRegisterIntoStorage(rejectType);
 
     // Tudo OK

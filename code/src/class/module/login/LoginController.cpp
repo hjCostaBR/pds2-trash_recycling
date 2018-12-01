@@ -8,6 +8,7 @@
 #include "../../../../header/common/class/MenuController.h"
 #include "../../../../header/module/login/LoginController.h"
 #include "../../../../header/module/user/UserController.h"
+#include "../../../../header/module/reject-type/RejectTypeController.h"
 
 using namespace std;
 
@@ -74,8 +75,12 @@ void LoginController::showLoggedOptions(const shared_ptr<UserModel> loggedUser) 
     vector<MenuItemSet> menuItems;
 
     // Incluir opcao: Add residuo
-    if (loggedUser->getType() == UserTypeEnum::ADMIN)
-        menuItems.push_back(MenuItemSet("Novo Tipo de Residuo", nullptr));
+    if (loggedUser->getType() == UserTypeEnum::ADMIN) {
+        auto rejectTypeService = make_shared<RejectTypeService>();
+        auto rejectTypeDao = make_shared<RejectTypeDAO>(rejectTypeService);
+        auto rejectTypeController = make_shared<RejectTypeController>(rejectTypeDao);
+        menuItems.push_back(MenuItemSet("Novo Tipo de Residuo", rejectTypeController, ControllerActionEnum::CREATE));
+    }
 
     // Incluir opcao: Listar residuos
     menuItems.push_back(MenuItemSet("Listar Tipos de Residuo", nullptr));
