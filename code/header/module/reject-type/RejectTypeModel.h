@@ -1,12 +1,12 @@
-#ifndef _R_TYPE_MODEL_H_
-#define _R_TYPE_MODEL_H_
+#ifndef _REJECTTYPE_MODEL_H_
+#define _REJECTTYPE_MODEL_H_
 
 #include <string>
 
 using namespace std;
 
-class RejectTypeModel
-{
+class RejectTypeModel {
+
 private:
     int code;
     string name;

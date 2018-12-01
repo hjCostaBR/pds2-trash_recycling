@@ -7,7 +7,6 @@
 #include "../../common/class/DAO.h"
 #include "../../common/FindResult.h"
 
-
 /**
  * DAO
  * Gerencia acesso a 'camada de dados' relacionados a entidade USUARIO no sistema
@@ -19,17 +18,17 @@ class UserDAO: public DAO {
 
 private:
 
-    /** Nome do arquivo de armqazenamento de dados de usuario. */
+    /** Nome do arquivo de armqazenamento de dados. */
     static const string STORAGE_FILE;
 
     /** Classe de servico. */
     shared_ptr<UserService> service = nullptr;
 
     /**
-     * Encapsula procedimento de escrita de 01 registro de usuario no arquivo de armazenamento.
+     * Encapsula procedimento de escrita de 01 registro no arquivo de armazenamento.
      * @param user Dados a serem escritos.
      */
-    void writeUserRegisterIntoStorage(shared_ptr<UserModel> user);
+    void writeRegisterIntoStorage(shared_ptr<UserModel> user);
 
 protected:
 

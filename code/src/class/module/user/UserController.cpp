@@ -193,7 +193,7 @@ bool UserController::getDataForUserFromStdIo(const bool insert, const bool admin
     return true;
 };
 
-bool UserController::createUser(void) {
+bool UserController::create(void) {
 
     do {
 
@@ -225,7 +225,7 @@ bool UserController::createUser(void) {
     } while (true);
 };
 
-void UserController::showUserDataTableHeader(void) const {
+void UserController::showDataTableHeader(void) const {
     cout << "|\tCodigo\t|"
          << "\tCPF/CNPJ\t|"
          << "\tTipo\t\t|"
@@ -233,11 +233,11 @@ void UserController::showUserDataTableHeader(void) const {
          << endl;
 };
 
-bool UserController::updateUser(shared_ptr<UserModel> currentUser) {
+bool UserController::update(shared_ptr<UserModel> currentUser) {
 
     // Exibir dados atuais
     cout << "Dados atuais cadastrados:" << endl;
-    this->showUserDataTableHeader();
+    this->showDataTableHeader();
     this->service->showRegisterData(currentUser);
     cout << endl;
 
@@ -286,7 +286,7 @@ bool UserController::runAction(int action) {
 
     switch (action) {
         case ControllerActionEnum::CREATE:
-            exit = (!this->createUser());
+            exit = (!this->create());
             break;
 
         case ControllerActionEnum::RETRIVE:
@@ -302,7 +302,7 @@ bool UserController::runAction(int action) {
 
 bool UserController::runAction(int action, shared_ptr<UserModel> currentUser) {
     if (action != ControllerActionEnum::UPDATE) throw invalid_argument("Acao invalida para controlador de usuarios (2)");
-    if (!this->updateUser(currentUser)) cout << "Usuario selecionou: 'sair'..." << endl;
+    if (!this->update(currentUser)) cout << "Usuario selecionou: 'sair'..." << endl;
     return false;
 };
 

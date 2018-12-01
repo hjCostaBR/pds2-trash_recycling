@@ -94,7 +94,7 @@ shared_ptr<UserModel> UserDAO::insert(const shared_ptr<UserModel> user) {
     if (existingUser != nullptr) throw domain_error("Tentativa de inserir usuario que ja existe");
 
     // Add usuario
-    this->writeUserRegisterIntoStorage(user);
+    this->writeRegisterIntoStorage(user);
 
     // Tudo OK
     return user;
@@ -119,13 +119,13 @@ shared_ptr<UserModel> UserDAO::update(const shared_ptr<UserModel> user) {
     this->deleteOne(existingUserSearch.line);
 
     // Add nova linha para usuario
-    this->writeUserRegisterIntoStorage(user);
+    this->writeRegisterIntoStorage(user);
 
     // Tudo OK
     return user;
 };
 
-void UserDAO::writeUserRegisterIntoStorage(shared_ptr<UserModel> user) {
+void UserDAO::writeRegisterIntoStorage(shared_ptr<UserModel> user) {
 
     this->openStorageForWriting();
 

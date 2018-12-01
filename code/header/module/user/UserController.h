@@ -24,7 +24,7 @@ private:
     /** Servico. */
     shared_ptr<UserService> service = nullptr;
 
-    /** Usuario sendo manipulado no momento. */
+    /** Dados do registro sendo manipulado no momento. */
     shared_ptr<UserModel> currentUser = nullptr;
     /** Tipo de pessoa do usuario atual. */
     shared_ptr<PersonTypeEnum> currentUserType = nullptr;
@@ -43,10 +43,10 @@ private:
     void setCurrentUserName(void);
 
     /** Efetua cadastro de novo usuario. */
-    bool createUser(void);
+    bool create(void);
 
     /**
-     * Captura & retorna dados para inserir/atualizar dados de 01 usuario.
+     * Captura & retorna dados para inserir/atualizar 01 registro.
      *
      * @param insert Flag: Determina se a coleta de dados eh para realizar insercao (SE nao for, sera atualizacao).
      * @param admin Flag: Determina SE o usuario atual que realiza a operacao eh ADMIN.
@@ -54,10 +54,10 @@ private:
      */
     bool getDataForUserFromStdIo(const bool insert, const bool admin);
 
-    /** Atualiza cadastro de usuario registrado. */
+    /** Atualiza cadastro de 01 registro ja armazenado. */
     bool updateUser(shared_ptr<UserModel> currentUser);
 
-    /** Exibe cabecalho para exibicao tabular de dados de usuario. */
+    /** Exibe cabecalho para exibicao tabular de dados. */
     void showUserDataTableHeader(void) const;
 
     /** Exibe listagem de usuarios cadastrados. */
