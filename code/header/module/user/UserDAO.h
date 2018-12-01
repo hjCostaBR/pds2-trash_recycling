@@ -2,9 +2,10 @@
 #define _USER_DAO_H_
 
 #include <memory>
-#include "../../common/class/DAO.h"
 #include "UserModel.h"
 #include "UserService.h"
+#include "../../common/class/DAO.h"
+#include "../../common/FindResult.h"
 
 
 /**
@@ -48,16 +49,32 @@ public:
     /**
      * @inherit
      */
-    shared_ptr<UserModel> update(const int code, const shared_ptr<UserModel> user);
+    shared_ptr<UserModel> update(const shared_ptr<UserModel> user);
 
     /**
-     * Pesquisa & retorna 01 registro identificado pelo codigo OU cpf/cnpj.
+     * Pesquisa & retorna 01 registro identificado pelo codigo.
      *
-     * @param code Codigo
-     * @param cpfCnpj
-     * @return Instancia do objeto encontrado.
+     * @param code Codito do registro a ser encontrado.
+     * @return Estrutura contendo o registro encontrado + a linha do arquivo em que ele esta.
      */
-    shared_ptr<UserModel> getExistingUser(const int code, const string cpfCnpj);
+    FindResult<UserModel> findOne(const int code);
+
+    /**
+     * Pesquisa & retorna 01 registro identificado pelo cpf / cnpj.
+     *
+     * @param cpfCnpj Cpf/Cnpj do registro a ser encontrado.
+     * @return Estrutura contendo o registro encontrado + a linha do arquivo em que ele esta.
+     */
+    FindResult<UserModel> findOne(const string cpfCnpj);
+
+    /**
+     * Pesquisa & retorna 01 registro identificado pelo codigo, cpf ou cnpj.
+     *
+     * @param code Codito do registro a ser encontrado.
+     * @param cpfCnpj Cpf/Cnpj do registro a ser encontrado.
+     * @return Estrutura contendo o registro encontrado + a linha do arquivo em que ele esta.
+     */
+    FindResult<UserModel> findOne(const int code, const string cpfCnpj);
 };
 
 #endif

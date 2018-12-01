@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include "../../../../header/common/FindResult.h"
 #include "../../../../header/common/class/DAO.h"
 #include "../../../../header/module/user/UserDAO.h"
 #include "../../../../header/module/user/UserService.h"
@@ -17,10 +18,17 @@ string UserDAO::getStorageFileName(void) {
     return UserDAO::STORAGE_FILE;
 };
 
-shared_ptr<UserModel> UserDAO::getExistingUser(const int code, const string cpfCnpj) {
+FindResult<UserModel> UserDAO::findOne(const int code, const string cpfCnpj) {
 
+    // Abre arquivo
     this->openStorageForReading();
 
+    // Inicializa dados de retorno
+    FindResult<UserModel> result;
+    result.foundRegister = nullptr;
+    result.line = 0;
+
+    // Efetua busca
     int lineCount = 0;
     string fileLine;
 
@@ -44,11 +52,22 @@ shared_ptr<UserModel> UserDAO::getExistingUser(const int code, const string cpfC
         }
 
         // Verifica se usuario pesquisado foi encontrado
-        if (code == stoi(lineProps[0]) || cpfCnpj == lineProps[1])
-            return this->getModelFromStorageLine(lineProps);
+        if (code == stoi(lineProps[0]) || cpfCnpj == lineProps[1]) {
+            result.foundRegister = this->getModelFromStorageLine(lineProps);
+            result.line = lineCount;
+            return result;
+        }
     }
 
-    return nullptr;
+    return result;
+};
+
+FindResult<UserModel> UserDAO::findOne(const int code) {
+    return this->findOne(code, "");
+};
+
+FindResult<UserModel> UserDAO::findOne(const string cpfCnpj) {
+    return this->findOne(0, cpfCnpj);
 };
 
 shared_ptr<UserModel> UserDAO::getModelFromStorageLine(const vector<string> lineProps) {
@@ -68,7 +87,10 @@ shared_ptr<UserModel> UserDAO::insert(const shared_ptr<UserModel> user) {
 
     // Validacao
     if (user == nullptr) throw invalid_argument("Falha ao tentar inserir usuario cujo os dados nao foram informados");
-    auto existingUser = this->getExistingUser(user->getCode(), user->getCpfCnpj());
+
+    auto existingUserSearch = this->findOne(user->getCode(), user->getCpfCnpj());
+    auto existingUser = existingUserSearch.foundRegister;
+
     if (existingUser != nullptr) throw domain_error("Tentativa de inserir usuario que ja existe");
 
     // Add usuario
@@ -86,14 +108,15 @@ shared_ptr<UserModel> UserDAO::insert(const shared_ptr<UserModel> user) {
     return user;
 };
 
-shared_ptr<UserModel> UserDAO::insert(const shared_ptr<UserModel> user) {
+shared_ptr<UserModel> UserDAO::update(const shared_ptr<UserModel> user) {
 
     // Validacao
     bool invalidArgument = (user == nullptr);
     shared_ptr<UserModel> existingUser;
 
     if (!invalidArgument) {
-        existingUser = this->getExistingUser(user->getCode(), user->getCpfCnpj());
+        auto existingUserSearch = this->findOne(user->getCode());
+        existingUser = existingUserSearch.foundRegister;
         invalidArgument = (existingUser == nullptr);
     }
 

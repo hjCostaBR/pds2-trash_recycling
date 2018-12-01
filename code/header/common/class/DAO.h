@@ -35,6 +35,26 @@ protected:
     ifstream readingStream;
 
 
+    /**
+     * Abre arquivo de armazenamento usado pela DAO para ESCRITA.
+     * @param filePath Path do arquivo.
+     */
+    void openStorageForWriting(void);
+
+    /**
+     * Abre arquivo de armazenamento usado pela DAO para LEITURA.
+     * @param filePath Path do arquivo.
+     */
+    void openStorageForReading(void);
+
+    /**
+     * Remove 01 linha de 01 arquivo de texto.
+     *
+     * @param filePath
+     * @param line
+     */
+    void deleteFileLine(const string filePath, const int line) {};
+
     /** Define & retorna nome do arquivo de armazenamento utilizado pela DAO. */
     virtual string getStorageFileName(void) = 0;
 
@@ -51,19 +71,6 @@ public:
     DAO(void) {};
     ~DAO(void);
 
-
-    /**
-     * Abre arquivo de armazenamento usado pela DAO para ESCRITA.
-     * @param filePath Path do arquivo.
-     */
-    void openStorageForWriting(void);
-
-    /**
-     * Abre arquivo de armazenamento usado pela DAO para LEITURA.
-     * @param filePath Path do arquivo.
-     */
-    void openStorageForReading(void);
-
     /**
      * Implementa logica para insercao de novo registro.
      *
@@ -75,11 +82,10 @@ public:
     /**
      * Implementa logica para atualizacao 01 registro ja cadstrado.
      *
-     * @param int code Codigo do registro a ser atualizado.
      * @param model Dados a serem persistidos.
      * @return Registro recem atualizado.
      */
-    virtual shared_ptr<IModel> update(const int code, const shared_ptr<IModel> model);
+    virtual shared_ptr<IModel> update(const shared_ptr<IModel> model) {};
 };
 
 #endif

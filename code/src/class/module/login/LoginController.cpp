@@ -46,7 +46,8 @@ shared_ptr<UserModel> LoginController::login() {
             // if (this->userLoginPwd != "") return false;
 
             // Executa autenticacao
-            auto loggedUser = this->userDao->getExistingUser(this->userLoginCode, "");
+            auto searchResult = this->userDao->findOne(this->userLoginCode, "");
+            auto loggedUser = searchResult.foundRegister;
 
             if (loggedUser != nullptr) {
                 cout << "Login realizado com sucesso: Seja bem vindo(a) " << loggedUser->getName() << "!" << endl << endl;

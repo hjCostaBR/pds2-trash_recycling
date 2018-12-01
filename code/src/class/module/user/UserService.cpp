@@ -12,7 +12,7 @@ bool UserService::validateStoredRegister(const vector<string> lineProps) const {
         return false;
 
     // Valida codigo
-    try { int code = stoi(lineProps[0]); }
+    try { stoi(lineProps[0]); }
     catch (exception err) { return false; }
 
     // Valida tipo
@@ -20,7 +20,7 @@ bool UserService::validateStoredRegister(const vector<string> lineProps) const {
     catch (exception err) { return false; }
 
     // Valida cpf/cnpj
-    try { PersonTypeEnum aux = this->getUserPersonType(string(lineProps[1])); }
+    try { this->getUserPersonType(string(lineProps[1])); }
     catch (exception err) { return false; }
 
     return true;

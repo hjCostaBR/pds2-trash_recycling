@@ -242,7 +242,7 @@ bool UserController::updateUser(shared_ptr<UserModel> currentUser) {
     do {
         try {
             if (!this->getDataForUserFromStdIo()) return false;
-            this->dao->update(currentUser->getCode(), this->currentUser);
+            this->dao->update(this->currentUser);
             return true;
 
         } catch (invalid_argument error) {
