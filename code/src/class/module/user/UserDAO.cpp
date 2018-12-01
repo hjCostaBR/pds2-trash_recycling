@@ -94,15 +94,7 @@ shared_ptr<UserModel> UserDAO::insert(const shared_ptr<UserModel> user) {
     if (existingUser != nullptr) throw domain_error("Tentativa de inserir usuario que ja existe");
 
     // Add usuario
-    this->openStorageForWriting();
-
-    this->writingStream
-        << user->getCode() << ";"
-        << user->getCpfCnpj() << ";"
-        << user->getType() << ";"
-        << user->getName() << ";"
-        // << user->getRejectTypesOfInterest() << ";"
-        << endl;
+    this->writeUserRegisterIntoStorage(user);
 
     // Tudo OK
     return user;
@@ -126,19 +118,24 @@ shared_ptr<UserModel> UserDAO::update(const shared_ptr<UserModel> user) {
     // Remove linha atual do usuario
     this->deleteOne(existingUserSearch.line);
 
-    // Add nova linha para o usuario
-    // this->openStorageForWriting();
-    //
-    // this->writingStream
-    //     << user->getCode() << ";"
-    //     << user->getCpfCnpj() << ";"
-    //     << user->getType() << ";"
-    //     << user->getName() << ";"
-    //     // << user->getRejectTypesOfInterest() << ";"
-    //     << endl;
-    //
-    // // Tudo OK
-    // return user;
+    // Add nova linha para usuario
+    this->writeUserRegisterIntoStorage(user);
+
+    // Tudo OK
+    return user;
 };
+
+void UserDAO::writeUserRegisterIntoStorage(shared_ptr<UserModel> user) {
+
+    this->openStorageForWriting();
+
+    this->writingStream
+        << user->getCode() << ";"
+        << user->getCpfCnpj() << ";"
+        << user->getType() << ";"
+        << user->getName() << ";"
+        // << user->getRejectTypesOfInterest() << ";"
+        << endl;
+}
 
 #endif

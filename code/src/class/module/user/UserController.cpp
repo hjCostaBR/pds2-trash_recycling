@@ -206,6 +206,7 @@ bool UserController::createUser(void) {
 
         try {
             this->dao->insert(this->currentUser);
+            cout << "Usuario criado com sucesso!" << endl;
             return true;
 
         } catch (invalid_argument error) {
@@ -253,6 +254,7 @@ bool UserController::updateUser(shared_ptr<UserModel> currentUser) {
                 return false;
 
             this->dao->update(this->currentUser);
+            cout << "Dados atualizados com sucesso!" << endl;
             return true;
 
         } catch (invalid_argument error) {
@@ -272,32 +274,14 @@ bool UserController::updateUser(shared_ptr<UserModel> currentUser) {
 };
 
 bool UserController::runAction(int action) {
-
     if (action != ControllerActionEnum::CREATE) throw invalid_argument("Acao invalida para controlador de usuarios (1)");
-
-    bool exit = true;
-
-    if (this->createUser()) {
-        exit = false;
-        cout << "Usuario criado com sucesso!" << endl;
-    }
-
-    if (exit) cout << "Usuario selecionou: 'sair'..." << endl;
+    if (!this->createUser()) "Usuario selecionou: 'sair'..." << endl;
     return false;
 };
 
 bool UserController::runAction(int action, shared_ptr<UserModel> currentUser) {
-
     if (action != ControllerActionEnum::UPDATE) throw invalid_argument("Acao invalida para controlador de usuarios (2)");
-
-    bool exit = true;
-
-    if (this->updateUser(currentUser)) {
-        exit = false;
-        cout << "Usuario atualizado com sucesso!" << endl;
-    }
-
-    if (exit) cout << "Usuario selecionou: 'sair'..." << endl;
+    if (!this->updateUser(currentUser)) cout << "Usuario selecionou: 'sair'..." << endl;
     return false;
 };
 
