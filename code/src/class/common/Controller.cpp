@@ -5,6 +5,7 @@
 #include <iostream>
 #include <functional>
 #include "../../../header/common/class/Controller.h"
+#include "../../../header/common/interface/IModel.h"
 
 using namespace std;
 
@@ -50,6 +51,14 @@ bool Controller::aksYesOrNoQuestionThroughStdIO(string presentationMsg) const {
     return (answer == "s");
 };
 
+string Controller::getStringFromStdIO(const string presentationMsg) {
+    cout << presentationMsg;
+    char readInput[100];
+    cin.ignore();
+    cin.getline(readInput, sizeof(readInput));
+    return string(readInput);
+}
+
 bool Controller::runAction(void) {
     this->throwBadFunctionCall();
 };
@@ -58,7 +67,7 @@ bool Controller::runAction(const int action) {
     this->throwBadFunctionCall();
 }
 
-bool Controller::runAction(const int action, const shared_ptr<UserModel> currentUser) {
+bool Controller::runAction(const int action, const shared_ptr<IModel> currentUser) {
     this->throwBadFunctionCall();
 }
 

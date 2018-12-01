@@ -55,10 +55,10 @@ private:
     bool getDataForUserFromStdIo(const bool insert, const bool admin);
 
     /** Atualiza cadastro de 01 registro ja armazenado. */
-    bool updateUser(shared_ptr<UserModel> currentUser);
+    bool update(shared_ptr<UserModel> currentUser);
 
     /** Exibe cabecalho para exibicao tabular de dados. */
-    void showUserDataTableHeader(void) const;
+    void showDataTableHeader(void) const;
 
     /** Exibe listagem de usuarios cadastrados. */
     void showUsersList(void) const;
@@ -78,7 +78,7 @@ public:
     /**
      * @inherit
      */
-    virtual bool runAction(int action, shared_ptr<UserModel> currentUser) override;
+    virtual bool runAction(int action, shared_ptr<UserModel> currentUser);
 };
 
 #endif

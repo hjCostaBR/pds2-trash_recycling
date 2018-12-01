@@ -5,6 +5,7 @@
 #include <memory>
 #include <fstream>
 #include "../interface/IModel.h"
+#include "../interface/IService.h"
 
 /**
  * DAO
@@ -30,6 +31,7 @@ protected:
 
     /** Path relativo a pasta da chamada para execuaco para a pasta de armazenamento. */
     static const string STORAGE_DIR_PATH;
+
 
     /** Strema de ESCRITA do arquivo de armazenamento desta DAO. */
     ofstream writingStream;

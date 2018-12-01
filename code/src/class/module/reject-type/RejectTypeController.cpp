@@ -8,37 +8,55 @@ using namespace std;
 
 bool RejectTypeController::create(void) {
 
-    /*do {
+    do {
 
         cout << "> CADASTRO" << endl;
 
-        this->currentUser = make_shared<RejectTypeModel>();
-        this->currentUserType = nullptr;
+        this->currentRejectType = make_shared<RejectTypeModel>();
 
-        if (!this->getDataForUserFromStdIo(true, false)) return false;
+        if (!this->getDataFromStdIo(true)) return false;
 
         try {
-            this->dao->insert(this->currentUser);
-            cout << "Usuario criado com sucesso!" << endl;
+            this->dao->insert(this->currentRejectType);
+            cout << "Tipo de Residuo criado com sucesso!" << endl;
             return true;
 
         } catch (invalid_argument error) {
-            cout << "Ops! Dados de usuario invalidos" << endl;
+            cout << "Ops! Dados de Tipo de Residuo invalidos" << endl;
 
         } catch (domain_error error) {
-            string docType = (*this->currentUserType == PersonTypeEnum::PF) ? "CPF" : "CNPJ";
-            cout << "Ops! Codigo ou " << docType << " ja cadastrado(s) para outro usuario." << endl;
+            // @todo: Definir msg de notificacao
+            cout << "Ops! Codigo ou (...) ja cadastrado(s) para outro usuario." << endl;
 
         } catch (exception error) {
-            cout << "Falha inesperada ao tentar adicionar usuario" << endl;
+            cout << "Falha inesperada ao tentar adicionar Tipo de Residuo" << endl;
         }
 
         if (!this->aksYesOrNoQuestionThroughStdIO("Realizar nova tentativa?")) return false;
 
-    } while (true);*/
+    } while (true);
 };
 
-bool RejectTypeController::getDataFromStdIo(const bool insert, const bool admin) {
+bool RejectTypeController::getDataFromStdIo(const bool insert) {
+
+    cout << "pressione '0' para sair" << endl << endl;
+
+    // Captura codigo (se necessario)
+    if (insert) {
+        int code = this->getNumberFromStdIO("Informe um Codigo para o Tipo de Residuo", "Codigo invalido");
+        if (!code) return false;
+        this->currentRejectType->setCode(code);
+    }
+
+    // Define nome
+    this->setCurrentRejectTypeName();
+    if (this->currentRejectType->getName() == "") return false;
+
+    // Define instrucoes de armazenamento
+    this->setCurrentRejectTypeStorageSpecification();
+    if (this->currentRejectType->getName() == "") return false;
+
+    return true;
 
 };
 
@@ -92,26 +110,8 @@ void RejectTypeController::showDataTableHeader(void) const {
 };
 
 bool RejectTypeController::runAction(int action) {
-
-    /*if (action != ControllerActionEnum::CREATE && action != ControllerActionEnum::RETRIVE)
-        throw invalid_argument("Acao invalida para controlador de usuarios (1)");
-
-    bool exit = false;
-
-    switch (action) {
-        case ControllerActionEnum::CREATE:
-            exit = (!this->create());
-            break;
-
-        case ControllerActionEnum::RETRIVE:
-            this->showUsersList();
-            exit = false;
-            break;
-    }
-
-
-    if (exit) cout << "Usuario selecionou: 'sair'..." << endl;
-     */
+    if (action != ControllerActionEnum::CREATE) throw invalid_argument("Acao invalida para controlador de tipos de residuo (1)");
+    if (!this->create()) cout << "Usuario selecionou: 'sair'..." << endl;
     return false;
 };
 
@@ -119,6 +119,16 @@ bool RejectTypeController::runAction(int action, shared_ptr<RejectTypeModel> cur
     // if (action != ControllerActionEnum::UPDATE) throw invalid_argument("Acao invalida para controlador de usuarios (2)");
     // if (!this->updateUser(currentUser)) cout << "Usuario selecionou: 'sair'..." << endl;
     return false;
+};
+
+void RejectTypeController::setCurrentRejectTypeName(void) {
+    const readInput = this->getStringFromStdIO("Informe nome do tipo de residuo: ");
+    if (readInput != "0") this->currentRejectType->setName(readInput);
+};
+
+void RejectTypeController::setCurrentRejectTypeStorageSpecification(void) {
+    const readInput = this->getStringFromStdIO("Informe descricao de armazenamento para este tipo de residuo (max 100 caracteres): ");
+    if (readInput != "0") this->currentRejectType->setStorageSpecification(readInput);
 };
 
 #endif

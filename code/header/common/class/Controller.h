@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <memory>
+#include "../interface/IModel.h"
 
 using namespace std;
 
@@ -41,6 +42,14 @@ protected:
      */
     bool aksYesOrNoQuestionThroughStdIO(string presentationMsg) const;
 
+    /**
+     * Captura & retorna 01 string inserido pelo usuario do sistema via terminal.
+     *
+     * @param presentationMsg Mensagem descritiva do valor a ser capturado.
+     * @return Valor capturado.
+     */
+    string getStringFromStdIO(const string presentationMsg);
+
 public:
 
     Controller(void) {};
@@ -67,7 +76,7 @@ public:
      * @param currentUser Usuario atual que executa a acao.
      * @return Flag: Se execucao do programa do programa deve ser encerrada.
      */
-    virtual bool runAction(int action, shared_ptr<UserModel> currentUser);
+    virtual bool runAction(int action, shared_ptr<IModel> currentUser);
 };
 
 #endif

@@ -35,16 +35,21 @@ private:
      * Captura & retorna dados para inserir/atualizar 01 registro.
      *
      * @param insert Flag: Determina se a coleta de dados eh para realizar insercao (SE nao for, sera atualizacao).
-     * @param admin Flag: Determina SE o usuario atual que realiza a operacao eh ADMIN.
      * @return
      */
-    bool getDataFromStdIo(const bool insert, const bool admin);
+    bool getDataFromStdIo(const bool insert);
 
     /** Atualiza cadastro de 01 registro ja armazenado. */
     bool update(shared_ptr<RejectTypeModel> currentRejectType);
 
     /** Exibe cabecalho para exibicao tabular de dados. */
     void showDataTableHeader(void) const;
+
+    /** Captura & define nome para o registro em edicao no momento. */
+    void setCurrentRejectTypeName(void);
+
+    /** Captura & define instrucoes de armazenamento para registro em edicao no momento. */
+    void setCurrentRejectTypeStorageSpecification(void);
 
 public:
 
@@ -61,7 +66,7 @@ public:
     /**
      * @inherit
      */
-    virtual bool runAction(int action, shared_ptr<RejectTypeModel> currentUser) override;
+    virtual bool runAction(int action, shared_ptr<RejectTypeModel> currentUser);
 };
 
 #endif

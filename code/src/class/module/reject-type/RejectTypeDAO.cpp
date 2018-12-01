@@ -47,22 +47,21 @@ shared_ptr<RejectTypeModel> RejectTypeDAO::getModelFromStorageLine(const vector<
     return nullptr;
 };
 
-shared_ptr<RejectTypeModel> RejectTypeDAO::insert(const shared_ptr<RejectTypeModel> user) {
+shared_ptr<RejectTypeModel> RejectTypeDAO::insert(const shared_ptr<RejectTypeModel> rejectType) {
 
     // Validacao
-    // if (user == nullptr) throw invalid_argument("Falha ao tentar inserir usuario cujo os dados nao foram informados");
-    //
-    // auto existingUserSearch = this->findOne(user->getCode(), user->getCpfCnpj());
-    // auto existingUser = existingUserSearch.foundRegister;
-    //
-    // if (existingUser != nullptr) throw domain_error("Tentativa de inserir usuario que ja existe");
-    //
-    // // Add usuario
-    // this->writeRegisterIntoStorage(user);
-    //
-    // // Tudo OK
-    // return user;
-    return nullptr;
+    if (rejectType == nullptr) throw invalid_argument("Dados nao informados");
+
+    auto existingRejTypeSearch = this->findOne(rejectType->getCode());
+    auto existingRejType = existingRejTypeSearch.foundRegister;
+
+    if (existingRejType != nullptr) throw domain_error("Tipo de Residuo ja existe");
+
+    // Add usuario
+    this->writeRegisterIntoStorage(rejectType);
+
+    // Tudo OK
+    return rejectType;
 };
 
 shared_ptr<RejectTypeModel> RejectTypeDAO::update(const shared_ptr<RejectTypeModel> user) {
@@ -92,9 +91,47 @@ shared_ptr<RejectTypeModel> RejectTypeDAO::update(const shared_ptr<RejectTypeMod
 };
 
 FindResult<RejectTypeModel> RejectTypeDAO::findOne(const int code) {
-    // return this->findOne(code, "");
-    FindResult<RejectTypeModel> foo;
-    return foo;
+
+    // Abre arquivo
+    this->openStorageForReading();
+
+    // Inicializa dados de retorno
+    FindResult<RejectTypeModel> result;
+    result.foundRegister = nullptr;
+    result.line = 0;
+
+    // Efetua busca
+    int lineCount = 0;
+    string fileLine;
+
+    while (getline(this->readingStream, fileLine)) {
+
+        lineCount++;
+
+        // Extrai propriedades da linha
+        stringstream ss(fileLine);
+        string item;
+        vector<string> lineProps;
+
+        while (getline(ss, item, ';')) {
+            lineProps.push_back(item);
+        }
+
+        // Valida valores extraidos
+        if (!this->service->validateStoredRegister(lineProps)) {
+            cout << endl << "** WARNING: Cadastro de Tipo de Residuo invalido (linha: " << lineCount << ") **" << endl << endl;
+            continue;
+        }
+
+        // Verifica se usuario pesquisado foi encontrado
+        if (code == stoi(lineProps[0])) {
+            result.foundRegister = this->getModelFromStorageLine(lineProps);
+            result.line = lineCount;
+            return result;
+        }
+    }
+
+    return result;
 };
 
 #endif

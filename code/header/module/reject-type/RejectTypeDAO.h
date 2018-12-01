@@ -1,6 +1,12 @@
 #ifndef _REJECTTYPE_DAO_H_
 #define _REJECTTYPE_DAO_H_
 
+#include <memory>
+#include <string>
+#include "RejectTypeService.h"
+#include "../../common/class/DAO.h"
+#include "../../common/FindResult.h"
+
 /**
  * DAO
  * Gerencia acesso a 'camada de dados' relacionados a entidade TIPO de RESIDUO no sistema

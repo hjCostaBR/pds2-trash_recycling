@@ -152,11 +152,8 @@ void UserController::setCurrentUserType(void) {
 };
 
 void UserController::setCurrentUserName(void) {
-    cout << "Informe nome do usuario: ";
-    char readInput[100];
-    cin.ignore();
-    cin.getline(readInput, sizeof(readInput));
-    if (readInput != "0") this->currentUser->setName(string(readInput));
+    const readInput = this->getStringFromStdIO("Informe nome do usuario: ");
+    if (readInput != "0") this->currentUser->setName(readInput);
 };
 
 bool UserController::getDataForUserFromStdIo(const bool insert, const bool admin) {
