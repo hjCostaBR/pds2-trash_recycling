@@ -19,9 +19,9 @@ private:
 
     /**
      * Fecha o arquivo de armazenamento da DAO (SE estiver aberto).
-     * @param input Flag: Determina se o stream a ser encerrado eh de leitura (SE nao for, sera de escrita).
+     * @param writing Flag: Determina se o stream a ser encerrado eh de leitura (SE nao for, sera de escrita).
      */
-    void closeStorage(bool input);
+    void closeStorage(bool writing);
 
 protected:
 
@@ -48,12 +48,10 @@ protected:
     void openStorageForReading(void);
 
     /**
-     * Remove 01 linha de 01 arquivo de texto.
-     *
-     * @param filePath
+     * Remove do armazenamento 01 registro identificado pelo numero de sua linha.
      * @param line
      */
-    void deleteFileLine(const string filePath, const int line) {};
+    void deleteOne(const int line);
 
     /** Define & retorna nome do arquivo de armazenamento utilizado pela DAO. */
     virtual string getStorageFileName(void) = 0;

@@ -8,14 +8,14 @@ using namespace std;
 
 const string DAO::STORAGE_DIR_PATH = "../storage/";
 
-void DAO::closeStorage(bool input) {
+void DAO::closeStorage(bool writing) {
 
-    if (input && this->writingStream.is_open()) {
+    if (writing && this->writingStream.is_open()) {
         this->writingStream.close();
         return;
     }
 
-    if (!input && this->readingStream.is_open()) {
+    if (!writing && this->readingStream.is_open()) {
         this->readingStream.close();
         return;
     }
@@ -34,6 +34,33 @@ void DAO::openStorageForReading(void) {
     this->readingStream.open(DAO::STORAGE_DIR_PATH + storageFile, ios::out);
     if (!this->writingStream.good()) throw runtime_error("Falha ao tentar abrir arquivo de armazenamento para leitura (" + storageFile + ")");
 }
+
+void DAO::deleteOne(const int line) {
+
+    // Abre arquivos (permanente & temporario)
+    this->openStorageForReading();
+    const string tempFilePath = "temp.txt";
+    ofstream tempFile;
+    tempFile.open(tempFilePath, ios::out);
+
+    // Transcreve armazenamento para arquivo temporario & remove linha
+    string fileLine;
+    int i = 0;
+
+    while (getline(this->readingStream, fileLine)) {
+        i++;
+        if (i == line) continue;
+        tempFile << fileLine << endl;
+    }
+
+    // Substitui armazenamento pelo arquivo temporario
+    tempFile.close();
+    this->closeStorage(false);
+
+    const string storageFile = this->getStorageFileName();
+    remove(storageFile);
+    rename(tempFilePath, storageFile);
+};
 
 DAO::~DAO(void) {
     this->closeStorage(true);
