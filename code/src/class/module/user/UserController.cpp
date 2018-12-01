@@ -152,7 +152,7 @@ void UserController::setCurrentUserType(void) {
 };
 
 void UserController::setCurrentUserName(void) {
-    const readInput = this->getStringFromStdIO("Informe nome do usuario: ");
+    const string readInput = this->getStringFromStdIO("Informe nome do usuario: ");
     if (readInput != "0") this->currentUser->setName(readInput);
 };
 

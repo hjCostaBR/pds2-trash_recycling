@@ -16,16 +16,16 @@ public:
     RejectTypeModel(void) {};
 
     // Codigo
-    void setCode(int code);
-    int getCode(void);
+    int getCode() const { return code; }
+    void setCode(int code) { RejectTypeModel::code = code; }
 
     // Nome
-    void setName(string name);
-    string getName(void);
+    const string getName() const { return name; }
+    void setName(const string name) { RejectTypeModel::name = name; }
 
     // Instrucoes de armazenamento
-    void setStorageSpecification(string specification);
-    string getStorageSpecification(void);
+    const string getStorageSpecification() const { return storageSpecification; }
+    void setStorageSpecification(const string storageSpecification) { RejectTypeModel::storageSpecification = storageSpecification; }
 };
 
 #endif

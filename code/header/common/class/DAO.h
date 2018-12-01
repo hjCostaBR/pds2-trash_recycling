@@ -32,7 +32,6 @@ protected:
     /** Path relativo a pasta da chamada para execuaco para a pasta de armazenamento. */
     static const string STORAGE_DIR_PATH;
 
-
     /** Strema de ESCRITA do arquivo de armazenamento desta DAO. */
     ofstream writingStream;
 

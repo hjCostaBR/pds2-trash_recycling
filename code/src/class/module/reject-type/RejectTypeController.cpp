@@ -54,7 +54,7 @@ bool RejectTypeController::getDataFromStdIo(const bool insert) {
 
     // Define instrucoes de armazenamento
     this->setCurrentRejectTypeStorageSpecification();
-    if (this->currentRejectType->getName() == "") return false;
+    if (this->currentRejectType->getStorageSpecification() == "") return false;
 
     return true;
 
@@ -122,12 +122,12 @@ bool RejectTypeController::runAction(int action, shared_ptr<RejectTypeModel> cur
 };
 
 void RejectTypeController::setCurrentRejectTypeName(void) {
-    const readInput = this->getStringFromStdIO("Informe nome do tipo de residuo: ");
+    const string readInput = this->getStringFromStdIO("Informe nome do tipo de residuo: ");
     if (readInput != "0") this->currentRejectType->setName(readInput);
 };
 
 void RejectTypeController::setCurrentRejectTypeStorageSpecification(void) {
-    const readInput = this->getStringFromStdIO("Informe descricao de armazenamento para este tipo de residuo (max 100 caracteres): ");
+    const string readInput = this->getStringFromStdIO("Informe descricao de armazenamento para este tipo de residuo (max 100 caracteres): ");
     if (readInput != "0") this->currentRejectType->setStorageSpecification(readInput);
 };
 

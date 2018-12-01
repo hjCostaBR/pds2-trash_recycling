@@ -24,6 +24,7 @@ private:
     /** Classe de servico. */
     shared_ptr<UserService> service = nullptr;
 
+
     /**
      * Encapsula procedimento de escrita de 01 registro no arquivo de armazenamento.
      * @param user Dados a serem escritos.
