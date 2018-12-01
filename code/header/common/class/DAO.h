@@ -17,6 +17,9 @@ class DAO {
 
 private:
 
+    /** Monta & retorno path para arquivo de armazenamento utilizado por esta DAO. */
+    string getStorageFilePath(void);
+
     /**
      * Fecha o arquivo de armazenamento da DAO (SE estiver aberto).
      * @param writing Flag: Determina se o stream a ser encerrado eh de leitura (SE nao for, sera de escrita).

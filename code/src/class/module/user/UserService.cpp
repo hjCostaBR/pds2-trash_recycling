@@ -30,8 +30,11 @@ void UserService::showRegisterData(const shared_ptr<UserModel> user) const {
 
     cout << "|\t" << user->getCode()
          << "\t|\t" << user->getCpfCnpj()
-         << "\t|\t" << this->getUserTypeLabel((UserTypeEnum)user->getType())
-         << "\t|\t" << user->getName()
+         << "\t|\t" << this->getUserTypeLabel((UserTypeEnum)user->getType());
+
+    if ((UserTypeEnum)user->getType() == UserTypeEnum::DONATOR) cout << "\t";
+
+    cout << "\t|\t" << user->getName()
          << "\t|" << endl;
 };
 

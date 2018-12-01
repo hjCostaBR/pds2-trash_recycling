@@ -25,7 +25,7 @@ void UserController::setCurrentUserPersonType(void) {
         tried = true;
 
         // Captura entrada
-        cout << "Informe o tipo do novo usuario (pf/pj): ";
+        cout << "Informe o tipo de pessoa do cadastro (pf/pj): ";
         cin >> readInput;
         reapeat = (readInput != "pf" && readInput != "pj" && readInput != "0");
 
@@ -159,31 +159,31 @@ void UserController::setCurrentUserName(void) {
     if (readInput != "0") this->currentUser->setName(string(readInput));
 };
 
-bool UserController::getDataForUserFromStdIo(void) {
+bool UserController::getDataForUserFromStdIo(const bool insert, const bool admin) {
 
     cout << "pressione '0' para sair" << endl
          << endl;
-
-    // Reseta dados
-    this->currentUser = make_shared<UserModel>();
-    this->currentUserType = nullptr;
 
     // Define tipo de pessoa do usuario (pf/pj)
     this->setCurrentUserPersonType();
     if (this->currentUserType == nullptr) return false;
 
-    // Captura codigo
-    int code = this->getNumberFromStdIO("Informe um Codigo para o usuario", "Codigo invalido");
-    if (!code) return false;
-    this->currentUser->setCode(code);
+    // Captura codigo (se necessario)
+    if (insert) {
+        int code = this->getNumberFromStdIO("Informe um Codigo para o usuario", "Codigo invalido");
+        if (!code) return false;
+        this->currentUser->setCode(code);
+    }
 
     // Captura documento (cpf/cnpj)
     this->setCurrentUserCpfOrCnpj();
     if (this->currentUser->getCpfCnpj() == "") return false;
 
-    // Captura tipo de usuario
-    this->setCurrentUserType();
-    if (!this->currentUser->getType()) return false;
+    // Captura tipo de usuario (se necessario)
+    if (!admin) {
+        this->setCurrentUserType();
+        if (!this->currentUser->getType()) return false;
+    }
 
     // Captura nome do usuario
     this->setCurrentUserName();
@@ -198,7 +198,11 @@ bool UserController::createUser(void) {
     do {
 
         cout << "> CADASTRO" << endl;
-        if (!this->getDataForUserFromStdIo()) return false;
+
+        this->currentUser = make_shared<UserModel>();
+        this->currentUserType = nullptr;
+
+        if (!this->getDataForUserFromStdIo(true, false)) return false;
 
         try {
             this->dao->insert(this->currentUser);
@@ -223,7 +227,7 @@ bool UserController::createUser(void) {
 void UserController::showUserDataTableHeader(void) const {
     cout << "|\tCodigo\t|"
          << "\tCPF/CNPJ\t|"
-         << "\tTipo\t|"
+         << "\tTipo\t\t|"
          << "\tNome\t\t|"
          << endl;
 };
@@ -241,7 +245,13 @@ bool UserController::updateUser(shared_ptr<UserModel> currentUser) {
 
     do {
         try {
-            if (!this->getDataForUserFromStdIo()) return false;
+
+            this->currentUser = currentUser;
+            this->currentUserType = nullptr;
+
+            if (!this->getDataForUserFromStdIo(false, (UserTypeEnum)currentUser->getType() == UserTypeEnum::ADMIN))
+                return false;
+
             this->dao->update(this->currentUser);
             return true;
 

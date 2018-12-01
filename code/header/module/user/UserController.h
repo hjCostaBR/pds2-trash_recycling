@@ -47,9 +47,12 @@ private:
 
     /**
      * Captura & retorna dados para inserir/atualizar dados de 01 usuario.
-     * @return SE os dados necessarios foram completamente coletados.
+     *
+     * @param insert Flag: Determina se a coleta de dados eh para realizar insercao (SE nao for, sera atualizacao).
+     * @param admin Flag: Determina SE o usuario atual que realiza a operacao eh ADMIN.
+     * @return
      */
-    bool getDataForUserFromStdIo(void);
+    bool getDataForUserFromStdIo(const bool insert, const bool admin);
 
     /** Atualiza cadastro de usuario registrado. */
     bool updateUser(shared_ptr<UserModel> currentUser);

@@ -8,13 +8,19 @@ using namespace std;
 
 const string DAO::STORAGE_DIR_PATH = "../storage/";
 
+string DAO::getStorageFilePath(void) {
+    return DAO::STORAGE_DIR_PATH + this->getStorageFileName();
+};
+
 void DAO::closeStorage(bool writing) {
 
+    // Fecha stream de escrita
     if (writing && this->writingStream.is_open()) {
         this->writingStream.close();
         return;
     }
 
+    // Fecha stream de leitura
     if (!writing && this->readingStream.is_open()) {
         this->readingStream.close();
         return;
@@ -22,17 +28,21 @@ void DAO::closeStorage(bool writing) {
 }
 
 void DAO::openStorageForWriting(void) {
+
     this->closeStorage(true);
-    const string storageFile = this->getStorageFileName();
-    this->writingStream.open(DAO::STORAGE_DIR_PATH + storageFile, ios::app);
-    if (!this->writingStream.good()) throw runtime_error("Falha ao tentar abrir arquivo de armazenamento para escrita (" + storageFile + ")");
+    this->writingStream.open(this->getStorageFilePath(), ios::app);
+
+    if (!this->writingStream.good())
+        throw runtime_error("Falha ao tentar abrir arquivo de armazenamento para escrita (" + this->getStorageFileName() + ")");
 }
 
 void DAO::openStorageForReading(void) {
+
     this->closeStorage(false);
-    const string storageFile = this->getStorageFileName();
-    this->readingStream.open(DAO::STORAGE_DIR_PATH + storageFile, ios::out);
-    if (!this->writingStream.good()) throw runtime_error("Falha ao tentar abrir arquivo de armazenamento para leitura (" + storageFile + ")");
+    this->readingStream.open(this->getStorageFilePath(), ios::out);
+
+    if (!this->writingStream.good())
+        throw runtime_error("Falha ao tentar abrir arquivo de armazenamento para leitura (" + this->getStorageFileName() + ")");
 }
 
 void DAO::deleteOne(const int line) {
@@ -57,9 +67,10 @@ void DAO::deleteOne(const int line) {
     tempFile.close();
     this->closeStorage(false);
 
-    const char* storageFile = this->getStorageFileName().c_str();
-    remove(storageFile);
-    rename(tempFilePath.c_str(), storageFile);
+    const string storagePath = this->getStorageFilePath();
+    const char* storagePathStr = storagePath.c_str();
+    remove(storagePathStr);
+    rename(tempFilePath.c_str(), storagePathStr);
 };
 
 DAO::~DAO(void) {
