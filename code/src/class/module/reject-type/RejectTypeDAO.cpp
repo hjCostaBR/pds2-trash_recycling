@@ -132,4 +132,41 @@ FindResult<RejectTypeModel> RejectTypeDAO::findOne(const int code) {
     return result;
 };
 
+vector<FindResult<RejectTypeModel>> RejectTypeDAO::findAll(void) {
+
+    this->openStorageForReading();
+
+    vector<FindResult<RejectTypeModel>> returnList;
+    int lineCount = 0;
+    string fileLine;
+
+    while (getline(this->readingStream, fileLine)) {
+
+        lineCount++;
+
+        // Extrai propriedades da linha
+        stringstream ss(fileLine);
+        string item;
+        vector<string> lineProps;
+
+        while (getline(ss, item, ';')) {
+            lineProps.push_back(item);
+        }
+
+        // Valida valores extraidos
+        if (!this->service->validateStoredRegister(lineProps)) {
+            cout << endl << "** WARNING: Cadastro de Tipo de Residuo invalido (linha: " << lineCount << ") **" << endl << endl;
+            continue;
+        }
+
+        // Add item na lista de retorno
+        FindResult<RejectTypeModel> result;
+        result.foundRegister = this->getModelFromStorageLine(lineProps);
+        result.line = lineCount;
+        returnList.push_back(result);
+    }
+
+    return returnList;
+};
+
 #endif

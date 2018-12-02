@@ -270,7 +270,7 @@ bool UserController::update(shared_ptr<UserModel> currentUser) {
     } while (true);
 };
 
-void UserController::showUsersList(void) const {
+void UserController::showList(void) const {
 
 };
 
@@ -287,7 +287,7 @@ bool UserController::runAction(int action) {
             break;
 
         case ControllerActionEnum::RETRIVE:
-            this->showUsersList();
+            this->showList();
             exit = false;
             break;
     }

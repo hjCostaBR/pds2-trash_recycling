@@ -63,6 +63,12 @@ public:
      * @return Estrutura contendo o registro encontrado + a linha do arquivo em que ele esta.
      */
     FindResult<RejectTypeModel> findOne(const int code);
+
+    /**
+     * Captura & retorna lista com todos os registros armazenados.
+     * @return
+     */
+    vector<FindResult<RejectTypeModel>> findAll(void);
 };
 
 #endif

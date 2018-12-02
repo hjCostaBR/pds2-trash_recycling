@@ -1,6 +1,7 @@
 #ifndef _REJECTTYPE_CONTROLLER_CPP_
 #define _REJECTTYPE_CONTROLLER_CPP_
 
+#include "../../../../header/module/user/UserModel.h"
 #include "../../../../header/module/reject-type/RejectTypeController.h"
 #include "../../../../header/module/reject-type/RejectTypeModel.h"
 
@@ -102,11 +103,19 @@ bool RejectTypeController::update(shared_ptr<RejectTypeModel> currentUser) {
 };
 
 void RejectTypeController::showDataTableHeader(void) const {
-    /*cout << "|\tCodigo\t|"
-         << "\tCPF/CNPJ\t|"
-         << "\tTipo\t\t|"
-         << "\tNome\t\t|"
-         << endl;*/
+    cout << "| Codigo\t|"
+         << " Nome\t|"
+         << " Instrucao de armazenamento\t\t|"
+         << endl;
+};
+
+bool RejectTypeController::showList(const shared_ptr<UserModel> currentUser) const {
+
+    this->showDataTableHeader();
+    this->service->showRegistersListData(this->dao->findAll());
+
+    // @todo: Arrumar isso
+    return false;
 };
 
 bool RejectTypeController::runAction(int action) {
@@ -115,9 +124,9 @@ bool RejectTypeController::runAction(int action) {
     return false;
 };
 
-bool RejectTypeController::runAction(int action, shared_ptr<RejectTypeModel> currentUser) {
-    // if (action != ControllerActionEnum::UPDATE) throw invalid_argument("Acao invalida para controlador de usuarios (2)");
-    // if (!this->updateUser(currentUser)) cout << "Usuario selecionou: 'sair'..." << endl;
+bool RejectTypeController::runAction(int action, shared_ptr<UserModel> currentUser) {
+    if (action != ControllerActionEnum::RETRIVE) throw invalid_argument("Acao invalida para controlador de Tipos de Residuo (2)");
+    if (!this->showList(currentUser)) cout << "Usuario selecionou: 'sair'..." << endl;
     return false;
 };
 

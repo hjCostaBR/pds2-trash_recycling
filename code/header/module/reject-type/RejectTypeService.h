@@ -3,8 +3,10 @@
 
 #include <string>
 #include <memory>
+#include <vector>
 #include "../user/UserModel.h"
 #include "../../common/interface/IService.h"
+#include "../../common/FindResult.h"
 #include "../../common/enums.h"
 
 using namespace std;
@@ -23,6 +25,12 @@ public:
      * @inherit
      */
     virtual void showRegisterData(const shared_ptr<RejectTypeModel> register) const;
+
+    /**
+     * Monta & Exibe 01 tabela listando dados de varios registros.
+     * @param rejTypesList Itens a serem exibidos.
+     */
+    void showRegistersListData(const vector<FindResult<RejectTypeModel>> rejTypesList) const;
 };
 
 #endif

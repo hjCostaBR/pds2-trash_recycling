@@ -2,6 +2,7 @@
 #define _REJECTTYPE_SERVICE_CPP_
 
 #include "../../../../header/module/reject-type/RejectTypeService.h"
+#include "../../../../header/common/FindResult.h"
 
 bool RejectTypeService::validateStoredRegister(const vector<string> lineProps) const {
 
@@ -24,15 +25,18 @@ bool RejectTypeService::validateStoredRegister(const vector<string> lineProps) c
 };
 
 void RejectTypeService::showRegisterData(const shared_ptr<RejectTypeModel> rejectType) const {
-
-    // cout << "|\t" << user->getCode()
-    //      << "\t|\t" << user->getCpfCnpj()
-    //      << "\t|\t" << this->getUserTypeLabel((UserTypeEnum)user->getType());
-    //
-    // if ((UserTypeEnum)user->getType() == UserTypeEnum::DONATOR) cout << "\t";
-    //
-    // cout << "\t|\t" << user->getName()
-    //      << "\t|" << endl;
+    cout << "|\t" << rejectType->getCode() << "\t"
+         << "| " << rejectType->getStorageSpecification();
 };
+
+void RejectTypeService::showRegistersListData(const vector<FindResult<RejectTypeModel>> rejTypesList) const {
+
+    cout << "|\tResiduos:\t|" << endl;
+
+    for (uint i = 0; i < rejTypesList.size(); i++) {
+        this->showRegisterData(rejTypesList[i].foundRegister);
+    }
+
+}
 
 #endif

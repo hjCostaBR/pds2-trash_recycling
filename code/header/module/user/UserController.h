@@ -61,7 +61,7 @@ private:
     void showDataTableHeader(void) const;
 
     /** Exibe listagem de usuarios cadastrados. */
-    void showUsersList(void) const;
+    void showList(void) const;
 
 public:
 
@@ -73,7 +73,7 @@ public:
     /**
      * @inherit
      */
-    virtual bool runAction(int action) override;
+    bool runAction(int action) override;
 
     /**
      * @inherit

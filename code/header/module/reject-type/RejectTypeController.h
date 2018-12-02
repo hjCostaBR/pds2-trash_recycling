@@ -4,6 +4,7 @@
 #include <memory>
 #include "../../common/class/Controller.h"
 #include "../../common/class/MenuController.h"
+#include "../../module/user/UserModel.h"
 #include "./RejectTypeModel.h"
 #include "./RejectTypeDAO.h"
 #include "./RejectTypeService.h"
@@ -21,6 +22,9 @@ private:
 
     /** DAO. */
     shared_ptr<RejectTypeDAO> dao = nullptr;
+
+    /** Classe de servico. */
+    shared_ptr<RejectTypeService> service = nullptr;
 
     /** Dados do registro sendo manipulado no momento. */
     shared_ptr<RejectTypeModel> currentRejectType = nullptr;
@@ -49,10 +53,18 @@ private:
     /** Captura & define instrucoes de armazenamento para registro em edicao no momento. */
     void setCurrentRejectTypeStorageSpecification(void);
 
+    /**
+     * Monta & exibe listagem de registros + opcoes de acao.
+     * @return Flag: SE o usuario selecionou 'sair'.
+     */
+    bool showList(const shared_ptr<UserModel> currentUser) const;
+
 public:
 
     /** Contrutor. */
-    RejectTypeController(const shared_ptr<RejectTypeDAO> dao) : dao(dao) {};
+    RejectTypeController(const shared_ptr<RejectTypeDAO> dao, const shared_ptr<RejectTypeService> service)
+        : dao(dao), service(service)
+        {};
 
     /**
      * @inherit
@@ -62,7 +74,7 @@ public:
     /**
      * @inherit
      */
-    virtual bool runAction(int action, shared_ptr<RejectTypeModel> currentUser);
+    virtual bool runAction(int action, shared_ptr<UserModel> currentUser);
 };
 
 #endif
