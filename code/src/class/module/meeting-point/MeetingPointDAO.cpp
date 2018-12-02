@@ -15,13 +15,13 @@ using namespace std;
 
 const string MeetingPointDAO::STORAGE_FILE = "meeting-point.txt";
 
-void MeetingPointDAO::writeRegisterIntoStorage(shared_ptr<MeetingPointModel> rejectType) {
+void MeetingPointDAO::writeRegisterIntoStorage(shared_ptr<MeetingPointModel> mPoint) {
 
     this->openStorageForWriting();
 
     this->writingStream
-            << rejectType->getCode() << ";"
-            << rejectType->getName() << ";"
+            << mPoint->getCode() << ";"
+            << mPoint->getName() << ";"
             << endl;
 }
 
@@ -29,10 +29,10 @@ string MeetingPointDAO::getStorageFileName(void) {
     return MeetingPointDAO::STORAGE_FILE;
 };
 
-shared_ptr<MeetingPointModel> MeetingPointDAO::insert(const shared_ptr<MeetingPointModel> rejectType) {
-    if (rejectType == nullptr) throw invalid_argument("Dados nao informados");
-    this->writeRegisterIntoStorage(rejectType);
-    return rejectType;
+shared_ptr<MeetingPointModel> MeetingPointDAO::insert(const shared_ptr<MeetingPointModel> mPoint) {
+    if (mPoint == nullptr) throw invalid_argument("Dados nao informados");
+    this->writeRegisterIntoStorage(mPoint);
+    return mPoint;
 };
 
 shared_ptr<MeetingPointModel> MeetingPointDAO::update(const shared_ptr<MeetingPointModel> mPoint) {

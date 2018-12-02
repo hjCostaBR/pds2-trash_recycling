@@ -6,58 +6,53 @@
 
 #include "../reject-type/RejectTypeModel.h"
 #include "../user/UserModel.h"
-#include "../../meeting-point/MeetingPointModel/MeetingPointModel.h"
+#include "../meeting-point/MeetingPointModel.h"
 
 using namespace std;
 
-class SchedulingModel
-{
+class SchedulingModel {
+
 private:
-    int code;
-    string date;
-    string time;
-    MeetingPointModel meetingPoint;
-    UserModel donator;
-    UserModel receiver;
-    vector<RejectTypeModel> rejectsToBeExchanged;
-    boolean done;
+    int code = 0;
+    string date = "";
+    int meetingPointCode = 0;
+    int donatorCode = 0;
+    int receiverCode = 0;
+    vector<int> rejectsToBeExchangedCodes;
+    bool done = false;
 
 public:
+
+    /** Construtor. */
     SchedulingModel(void){};
-    // ~SchedulingModel() {};
 
     // Codigo
-    void setCode(int code);
-    int getCode(void);
+    int getCode() const { return code; }
+    void setCode(int code) { this->code = code; }
 
     // Data
-    void setDate(string date);
-    string getDate(void);
-
-    // Horario
-    void setTime(string time);
-    string getTime(void);
+    const string getDate() const { return date; }
+    void setDate(const string &date) { this->date = date; }
 
     // Ponto de Coleta
-    void setMeetingPointModel(MeetingPointModel meetingPoint);
-    MeetingPointModel getMeetingPointModel(void);
+    int getMeetingPointCode() const { return meetingPointCode; }
+    void setMeetingPointCode(int meetingPointCode) { this->meetingPointCode = meetingPointCode; }
 
     // Doador
-    void setDonator(UserModel donator);
-    UserModel getDonator(void);
+    int getDonatorCode() const { return donatorCode; }
+    void setDonatorCode(int donatorCode) { this->donatorCode = donatorCode; }
 
-    // Recebedor
-    void setReceiver(UserModel receiver);
-    UserModel getReceiver(void);
+    // Receptor
+    int getReceiverCode() const { return receiverCode; }
+    void setReceiverCode(int receiverCode) { this->receiverCode = receiverCode; }
 
-    // Residuos a serem trocados
-    void resetRejectsToBeExchanged(void);
-    void addRejectToBeExchanged(RejectTypeModel rejectToBeExchanged);
-    vector<RejectTypeModel> getRejectsToBeExchanged(void);
+    // Lista de Residuos
+    const vector<int> getRejectsToBeExchangedCodes() const { return rejectsToBeExchangedCodes; }
+    void addRejectToBeExchangedCode(const int rejectCode) { this->rejectsToBeExchangedCodes.push_back(rejectCode); }
 
-    // Flag: Realizado?
-    void setIsDone(bool done);
-    bool isDone(void);
+    // Realizado?
+    bool isDone() const { return done; }
+    void setDone(bool done) { this->done = done; }
 };
 
 #endif
