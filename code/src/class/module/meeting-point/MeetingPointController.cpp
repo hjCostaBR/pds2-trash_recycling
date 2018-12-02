@@ -53,109 +53,118 @@ bool MeetingPointController::getDataFromStdIo(const bool insert) {
 
 bool MeetingPointController::update(shared_ptr<MeetingPointModel> rejType) {
 
-    // cout << endl << "> EDITAR TIPO de RESIDUO" << endl << endl;
-    //
-    // // Exibir dados atuais
-    // cout << "Dados atuais cadastrados:" << endl;
-    // this->service->showDataTableHeader();
-    // this->service->showRegisterData(rejType);
-    // cout << endl;
-    //
-    // // Confirmar desejo pela alteracao
-    // if (!this->aksYesOrNoQuestionThroughStdIO("Alterar cadastro?")) return false;
-    // cin.ignore();
-    //
-    // do {
-    //     try {
-    //
-    //         this->currentMeetingPoint = rejType;
-    //         if (!this->getDataFromStdIo(false)) return false;
-    //
-    //         this->dao->update(this->currentMeetingPoint);
-    //         cout << "Dados atualizados com sucesso!" << endl;
-    //         return true;
-    //
-    //     } catch (invalid_argument error) {
-    //         cout << "Ops! Dados de Tipo de Residuo invalidos" << endl;
-    //
-    //     } catch (exception error) {
-    //         cout << "Falha inesperada ao tentar atualizar Tipo de Residuo" << endl;
-    //     }
-    //
-    //     if (!this->aksYesOrNoQuestionThroughStdIO("Realizar nova tentativa?")) return false;
-    //
-    // } while (true);
+    cout << endl << "> EDITAR PONTO de COLETA" << endl << endl;
+
+    // Exibir dados atuais
+    cout << "Dados atuais cadastrados:" << endl;
+    this->service->showDataTableHeader();
+    this->service->showRegisterData(rejType);
+    cout << endl;
+
+    // Confirmar desejo pela alteracao
+    if (!this->aksYesOrNoQuestionThroughStdIO("Alterar cadastro?")) return false;
+    cin.ignore();
+
+    do {
+        try {
+
+            this->currentMeetingPoint = rejType;
+            if (!this->getDataFromStdIo(false)) return false;
+
+            this->dao->update(this->currentMeetingPoint);
+            cout << "Dados atualizados com sucesso!" << endl;
+            return true;
+
+        } catch (invalid_argument error) {
+            cout << "Ops! Dados de Ponto de Coleta invalidos" << endl;
+
+        } catch (exception error) {
+            cout << "Falha inesperada ao tentar atualizar Ponto de Coleta" << endl;
+        }
+
+        if (!this->aksYesOrNoQuestionThroughStdIO("Realizar nova tentativa?")) return false;
+
+    } while (true);
 };
 
-bool MeetingPointController::showList(const shared_ptr<UserModel> currentUser) {
+bool MeetingPointController::showList(void) {
 
-    // cout << "> TIPOS de RESIDUO" << endl
-    //      << "Pressione '0' para sair..." << endl << endl;
-    //
-    // // Exibe listagem
-    // this->service->showRegistersListData(this->dao->findAll());
-    //
-    // // Captura acao selecionada pelo usuario
-    // string action = "";
-    //
-    // do {
-    //
-    //     if (action != "") cout << "Acao '" << action << "' invalida!" << endl << endl;
-    //     cout << "Pressione 'e' (para editar) ou 'r' (para remover): ";
-    //
-    //     char readInput[100];
-    //     scanf("%s", &readInput);
-    //     action = string(readInput);
-    //
-    //     if (action == "0") return false;
-    //
-    // } while (action != "e" && action != "r");
-    //
-    // const bool remove = (action == "r");
-    // const bool update = (action == "e");
-    //
-    // const string actionStr = (remove) ? "REMOVER" : "EDITAR";
-    // cout << "Opcao selecionada: " << actionStr << endl << endl;
-    //
-    // // Seleciona item sobre o qual a acao sera executada
-    // FindResult<MeetingPointModel> rejTypeSearch;
-    // string selectionDescMsg = "Informe o codigo do Tipo de Residuo a ser ";
-    // selectionDescMsg += (remove) ? "removido" : "editado";
-    //
-    // do {
-    //
-    //     const int selectedRejCode = this->getNumberFromStdIO(selectionDescMsg, "Codigo invalido: ");
-    //     if (selectedRejCode == 0) return false;
-    //
-    //     rejTypeSearch = this->dao->findOne(selectedRejCode);
-    //
-    //     if (rejTypeSearch.foundRegister == nullptr) {
-    //         cout << "Tipo de residuo nao encontrado (codigo invalido)" << endl << endl;
-    //         const auto tryAgain = this->aksYesOrNoQuestionThroughStdIO("Deseja tentar novamente?");
-    //         if (!tryAgain) return false;
-    //     }
-    //
-    // } while (rejTypeSearch.foundRegister == nullptr);
-    //
-    // // Executa edicao (se necessario)
-    // if (update) return this->update(rejTypeSearch.foundRegister);
-    //
-    // // Executa remocao (se necessario)
-    // this->dao->deleteOne(rejTypeSearch.line);
-    // cout << "Tipo de residuo removido com sucesso!" << endl;
-    // return true;
+    cout << "> PONTOS de COLETA" << endl
+         << "Pressione '0' para sair..." << endl << endl;
+
+    // Exibe listagem
+    this->service->showRegistersListData(this->dao->findAll());
+
+    // Captura acao selecionada pelo usuario
+    string action = "";
+
+    do {
+
+        if (action != "") cout << "Acao '" << action << "' invalida!" << endl << endl;
+        cout << "Pressione 'e' (para editar) ou 'r' (para remover): ";
+
+        char readInput[100];
+        scanf("%s", &readInput);
+        action = string(readInput);
+
+        if (action == "0") return false;
+
+    } while (action != "e" && action != "r");
+
+    const bool remove = (action == "r");
+    const bool update = (action == "e");
+
+    const string actionStr = (remove) ? "REMOVER" : "EDITAR";
+    cout << "Opcao selecionada: " << actionStr << endl << endl;
+
+    // Seleciona item sobre o qual a acao sera executada
+    FindResult<MeetingPointModel> mPointSearch;
+    string selectionDescMsg = "Informe o codigo do Ponto de Coleta a ser ";
+    selectionDescMsg += (remove) ? "removido" : "editado";
+
+    do {
+
+        const int selectedMPointCode = this->getNumberFromStdIO(selectionDescMsg, "Codigo invalido: ");
+        if (selectedMPointCode == 0) return false;
+
+        mPointSearch = this->dao->findOne(selectedMPointCode);
+
+        if (mPointSearch.foundRegister == nullptr) {
+            cout << "Ponto de Coleta nao encontrado (codigo invalido)" << endl << endl;
+            const auto tryAgain = this->aksYesOrNoQuestionThroughStdIO("Deseja tentar novamente?");
+            if (!tryAgain) return false;
+        }
+
+    } while (mPointSearch.foundRegister == nullptr);
+
+    // Executa edicao (se necessario)
+    if (update) return this->update(mPointSearch.foundRegister);
+
+    // Executa remocao (se necessario)
+    this->dao->deleteOne(mPointSearch.line);
+    cout << "Ponto de Coleta removido com sucesso!" << endl;
+    return true;
 };
 
 bool MeetingPointController::runAction(int action) {
-    if (action != ControllerActionEnum::CREATE) throw invalid_argument("Acao invalida para controlador de pontos de coleta (1)");
-    if (!this->create()) cout << "Usuario selecionou: 'sair'..." << endl;
-    return false;
-};
 
-bool MeetingPointController::runAction(int action, shared_ptr<UserModel> currentUser) {
-    // if (action != ControllerActionEnum::RETRIVE) throw invalid_argument("Acao invalida para controlador de Tipos de Residuo (2)");
-    // if (!this->showList(currentUser)) cout << "Usuario selecionou: 'sair'..." << endl;
-    // return false;
+    if (action != ControllerActionEnum::CREATE && action != ControllerActionEnum::RETRIVE)
+        throw invalid_argument("Acao invalida para controlador de pontos de coleta");
+
+    bool exit = false;
+
+    switch (action) {
+        case ControllerActionEnum::CREATE:
+            exit = !this->create();
+            break;
+
+        case ControllerActionEnum::RETRIVE:
+            exit = !this->showList();
+            break;
+    }
+
+    if (exit) cout << "Usuario selecionou: 'sair'..." << endl;
+    return false;
 };
 
 void MeetingPointController::setCurrentMeetingPointName(void) {

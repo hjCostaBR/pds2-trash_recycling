@@ -7,49 +7,51 @@
 
 bool MeetingPointService::validateStoredRegister(const vector<string> lineProps) const {
 
-    // if (lineProps.size() < 4)
-    //     return false;
-    //
-    // // Valida codigo
-    // try { stoi(lineProps[0]); }
-    // catch (exception err) { return false; }
-    //
-    // // Valida tipo
-    // try { !this->validateUserType(stoi(lineProps[0])); }
-    // catch (exception err) { return false; }
-    //
-    // // Valida cpf/cnpj
-    // try { this->getUserPersonType(string(lineProps[1])); }
-    // catch (exception err) { return false; }
+    if (lineProps.size() != 2) return false;
+
+    try { stoi(lineProps[0]); }
+    catch (exception err) { return false; }
 
     return true;
 };
 
-void MeetingPointService::showRegisterData(const shared_ptr<MeetingPointModel> rejectType) const { };
+void MeetingPointService::showRegisterData(const shared_ptr<MeetingPointModel> mPoint) const {
+    cout << "|\t" << mPoint->getCode() << "\t| "
+        << mPoint->getName() << "\t|"
+        << endl;
+};
 
-void MeetingPointService::showDataTableHeader(void) const { };
+void MeetingPointService::showDataTableHeader(void) const {
+    cout << "|\tCodigo\t|"
+        << "\tNome\t\t|"
+        << endl;
+};
 
-void MeetingPointService::showRegistersListData(const vector<FindResult<MeetingPointModel>> rejTypesList) const {
+void MeetingPointService::showRegistersListData(const vector<FindResult<MeetingPointModel>> mPointList) const {
 
-    // this->showDataTableHeader();
-    //
-    // for (uint i = 0; i < rejTypesList.size(); i++) {
-    //     this->showRegisterData(rejTypesList[i].foundRegister);
-    // }
-    //
-    // cout << endl;
+    if (!mPointList.size()) {
+        cout << "Nenhum registro encontrado..." << endl;
+        return;
+    }
+
+    this->showDataTableHeader();
+
+    for (uint i = 0; i < mPointList.size(); i++) {
+        this->showRegisterData(mPointList[i].foundRegister);
+    }
+
+    cout << endl;
 };
 
 shared_ptr<MeetingPointModel> MeetingPointService::getModelFromStorageLine(const vector<string> lineProps) {
 
-    // if (!this->validateStoredRegister(lineProps))
-    //     throw invalid_argument("Tentativa de gerar Tipo de Residuo a partir de dados invalidos");
-    //
-    // auto rejType = make_shared<MeetingPointModel>();
-    // rejType->setCode(stoi(lineProps[0]));
-    // rejType->setName(lineProps[1]);
-    // rejType->setStorageSpecification(lineProps[2]);
-    // return rejType;
+    if (!this->validateStoredRegister(lineProps))
+        throw invalid_argument("Tentativa de gerar Ponto de Coleta a partir de dados invalidos");
+
+    auto mPoint = make_shared<MeetingPointModel>();
+    mPoint->setCode(stoi(lineProps[0]));
+    mPoint->setName(lineProps[1]);
+    return mPoint;
 };
 
 #endif

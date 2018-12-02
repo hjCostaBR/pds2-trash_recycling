@@ -29,9 +29,9 @@ public:
 
     /**
      * Monta & Exibe 01 tabela listando dados de varios registros.
-     * @param rejTypesList Itens a serem exibidos.
+     * @param mPointList Itens a serem exibidos.
      */
-    void showRegistersListData(const vector<FindResult<MeetingPointModel>> rejTypesList) const;
+    void showRegistersListData(const vector<FindResult<MeetingPointModel>> mPointList) const;
 
     /**
      * @inherit

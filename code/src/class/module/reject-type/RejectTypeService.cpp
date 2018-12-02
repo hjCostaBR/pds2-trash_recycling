@@ -7,20 +7,11 @@
 
 bool RejectTypeService::validateStoredRegister(const vector<string> lineProps) const {
 
-    // if (lineProps.size() < 4)
-    //     return false;
-    //
-    // // Valida codigo
-    // try { stoi(lineProps[0]); }
-    // catch (exception err) { return false; }
-    //
-    // // Valida tipo
-    // try { !this->validateUserType(stoi(lineProps[0])); }
-    // catch (exception err) { return false; }
-    //
-    // // Valida cpf/cnpj
-    // try { this->getUserPersonType(string(lineProps[1])); }
-    // catch (exception err) { return false; }
+    if (lineProps.size() != 3) return false;
+
+    // Valida codigo
+    try { stoi(lineProps[0]); }
+    catch (exception err) { return false; }
 
     return true;
 };
@@ -43,6 +34,11 @@ void RejectTypeService::showDataTableHeader(void) const {
 };
 
 void RejectTypeService::showRegistersListData(const vector<FindResult<RejectTypeModel>> rejTypesList) const {
+
+    if (!rejTypesList.size()) {
+        cout << "Nenhum registro encontrado..." << endl;
+        return;
+    }
 
     this->showDataTableHeader();
 

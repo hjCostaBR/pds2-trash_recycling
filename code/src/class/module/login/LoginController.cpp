@@ -106,7 +106,7 @@ void LoginController::showLoggedOptions(const shared_ptr<UserModel> loggedUser) 
         const auto meetingPointDao = make_shared<MeetingPointDAO>(meetingPointService);
         const auto meetingPointController = make_shared<MeetingPointController>(meetingPointDao, meetingPointService);
 
-        menuItems.push_back(MenuItemSet("Adicionar Ponto de Coleta", meetingPointController, ControllerActionEnum::CREATE));
+        menuItems.push_back(MenuItemSet("Novo Ponto de Coleta", meetingPointController, ControllerActionEnum::CREATE));
 
         // Incluir opcao: Listar pontos de coleta
         menuItems.push_back(MenuItemSet("Listar Pontos de Coleta", meetingPointController, ControllerActionEnum::RETRIVE));

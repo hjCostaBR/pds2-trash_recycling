@@ -49,7 +49,7 @@ public:
     /**
      * @inherit
      */
-    shared_ptr<MeetingPointModel> update(const shared_ptr<MeetingPointModel> meetingPoint);
+    shared_ptr<MeetingPointModel> update(const shared_ptr<MeetingPointModel> mPoint);
 
     /**
      * Pesquisa & retorna 01 registro identificado pelo codigo.

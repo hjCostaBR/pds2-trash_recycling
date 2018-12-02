@@ -48,7 +48,7 @@ private:
      * Monta & exibe listagem de registros + opcoes de acao.
      * @return Flag: SE o usuario selecionou 'sair'.
      */
-    bool showList(const shared_ptr<UserModel> currentUser);
+    bool showList(void);
 
     /** Captura & define nome para o registro em edicao no momento. */
     void setCurrentMeetingPointName(void);
@@ -63,11 +63,6 @@ public:
      * @inherit
      */
     virtual bool runAction(int action) override;
-
-    /**
-     * @inherit
-     */
-    virtual bool runAction(int action, shared_ptr<UserModel> currentUser);
 };
 
 #endif

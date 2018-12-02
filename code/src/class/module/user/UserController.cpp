@@ -384,7 +384,6 @@ bool UserController::runAction(int action) {
             break;
     }
 
-
     if (exit) cout << "Usuario selecionou: 'sair'..." << endl;
     return false;
 };

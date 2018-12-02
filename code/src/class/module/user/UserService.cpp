@@ -144,6 +144,11 @@ void UserService::showDataTableHeader(void) const {
 
 void UserService::showRegistersListData(const vector<FindResult<UserModel>> usersList) const {
 
+    if (!usersList.size()) {
+        cout << "Nenhum registro encontrado..." << endl;
+        return;
+    }
+
     this->showDataTableHeader();
 
     for (uint i = 0; i < usersList.size(); i++) {
