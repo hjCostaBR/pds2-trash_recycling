@@ -42,7 +42,7 @@ private:
     bool getDataFromStdIo(const bool insert);
 
     /** Atualiza cadastro de 01 registro ja armazenado. */
-    bool update(shared_ptr<RejectTypeModel> currentRejectType);
+    bool update(shared_ptr<RejectTypeModel> rejType);
 
     /** Exibe cabecalho para exibicao tabular de dados. */
     void showDataTableHeader(void) const;

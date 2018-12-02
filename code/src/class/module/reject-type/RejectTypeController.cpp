@@ -12,6 +12,7 @@ bool RejectTypeController::create(void) {
     do {
 
         cout << "> CADASTRO" << endl;
+        cout << "pressione '0' para sair" << endl << endl;
 
         this->currentRejectType = make_shared<RejectTypeModel>();
 
@@ -23,14 +24,13 @@ bool RejectTypeController::create(void) {
             return true;
 
         } catch (invalid_argument error) {
-            cout << "Ops! Dados de Tipo de Residuo invalidos" << endl;
+            cout << endl << "Ops! Dados de Tipo de Residuo invalidos" << endl;
 
         } catch (domain_error error) {
-            // @todo: Definir msg de notificacao
-            cout << "Ops! Codigo ja cadastrado(s) para outro Tipo de Residuo." << endl;
+            cout << endl << "Ops! Codigo ja cadastrado(s) para outro Tipo de Residuo." << endl;
 
         } catch (exception error) {
-            cout << "Falha inesperada ao tentar adicionar Tipo de Residuo" << endl;
+            cout << endl << "Falha inesperada ao tentar adicionar Tipo de Residuo" << endl;
         }
 
         if (!this->aksYesOrNoQuestionThroughStdIO("Realizar nova tentativa?")) return false;
@@ -39,8 +39,6 @@ bool RejectTypeController::create(void) {
 };
 
 bool RejectTypeController::getDataFromStdIo(const bool insert) {
-
-    cout << "pressione '0' para sair" << endl << endl;
 
     // Captura codigo (se necessario)
     if (insert) {
@@ -58,48 +56,42 @@ bool RejectTypeController::getDataFromStdIo(const bool insert) {
     if (this->currentRejectType->getStorageSpecification() == "") return false;
 
     return true;
-
 };
 
-bool RejectTypeController::update(shared_ptr<RejectTypeModel> currentUser) {
+bool RejectTypeController::update(shared_ptr<RejectTypeModel> rejType) {
 
-    /*// Exibir dados atuais
+    cout << endl << "> EDITAR TIPO de RESIDUO" << endl << endl;
+
+    // Exibir dados atuais
     cout << "Dados atuais cadastrados:" << endl;
-    this->showUserDataTableHeader();
-    this->service->showRegisterData(currentUser);
+    this->showDataTableHeader();
+    this->service->showRegisterData(rejType);
     cout << endl;
 
     // Confirmar desejo pela alteracao
     if (!this->aksYesOrNoQuestionThroughStdIO("Alterar cadastro?")) return false;
+    cin.ignore();
 
     do {
         try {
 
-            this->currentUser = currentUser;
-            this->currentUserType = nullptr;
+            this->currentRejectType = rejType;
+            if (!this->getDataFromStdIo(false)) return false;
 
-            if (!this->getDataForUserFromStdIo(false, (UserTypeEnum)currentUser->getType() == UserTypeEnum::ADMIN))
-                return false;
-
-            this->dao->update(this->currentUser);
+            this->dao->update(this->currentRejectType);
             cout << "Dados atualizados com sucesso!" << endl;
             return true;
 
         } catch (invalid_argument error) {
-            cout << "Ops! Dados de usuario invalidos" << endl;
-
-        } catch (domain_error error) {
-            string docType = (*this->currentUserType == PersonTypeEnum::PF) ? "CPF" : "CNPJ";
-            cout << "Ops! " << docType << " ja cadastrado para outro usuario." << endl;
+            cout << "Ops! Dados de Tipo de Residuo invalidos" << endl;
 
         } catch (exception error) {
-            cout << "Falha inesperada ao tentar atualizar usuario" << endl;
+            cout << "Falha inesperada ao tentar atualizar Tipo de Residuo" << endl;
         }
 
         if (!this->aksYesOrNoQuestionThroughStdIO("Realizar nova tentativa?")) return false;
 
-    } while (true);*/
-    return false;
+    } while (true);
 };
 
 void RejectTypeController::showDataTableHeader(void) const {
@@ -130,7 +122,7 @@ bool RejectTypeController::showList(const shared_ptr<UserModel> currentUser) {
         scanf("%s", &readInput);
         action = string(readInput);
 
-        if (action == "0") return true;
+        if (action == "0") return false;
 
     } while (action != "e" && action != "r");
 
@@ -148,29 +140,24 @@ bool RejectTypeController::showList(const shared_ptr<UserModel> currentUser) {
     do {
 
         const int selectedRejCode = this->getNumberFromStdIO(selectionDescMsg, "Codigo invalido: ");
-        if (selectedRejCode == 0) return true;
+        if (selectedRejCode == 0) return false;
 
         rejTypeSearch = this->dao->findOne(selectedRejCode);
 
         if (rejTypeSearch.foundRegister == nullptr) {
             cout << "Tipo de residuo nao encontrado (codigo invalido)" << endl << endl;
             const auto tryAgain = this->aksYesOrNoQuestionThroughStdIO("Deseja tentar novamente?");
-            if (!tryAgain) return true;
+            if (!tryAgain) return false;
         }
 
     } while (rejTypeSearch.foundRegister == nullptr);
 
-    // Executa remocao (se necessario)
-    if (remove) {
-        this->dao->deleteOne(rejTypeSearch.line);
-        cout << "Tipo de residuo removido com sucesso!" << endl;
-
     // Executa edicao (se necessario)
-    } else {
-        // @todo: Editar
-        cout << "editando..." << endl;
-    }
+    if (update) return this->update(rejTypeSearch.foundRegister);
 
+    // Executa remocao (se necessario)
+    this->dao->deleteOne(rejTypeSearch.line);
+    cout << "Tipo de residuo removido com sucesso!" << endl;
     return true;
 };
 

@@ -47,30 +47,17 @@ shared_ptr<RejectTypeModel> RejectTypeDAO::insert(const shared_ptr<RejectTypeMod
     return rejectType;
 };
 
-shared_ptr<RejectTypeModel> RejectTypeDAO::update(const shared_ptr<RejectTypeModel> user) {
+shared_ptr<RejectTypeModel> RejectTypeDAO::update(const shared_ptr<RejectTypeModel> rejectType) {
 
-    // if (user == nullptr) throw invalid_argument("Dados insuficientes");
-    //
-    // // Verifica SE usuario existe
-    // auto existingUserSearch = this->findOne(user->getCode());
-    // if (existingUserSearch.foundRegister == nullptr) throw invalid_argument("Usuario nao existe");
-    //
-    // // Verifica SE cpf/cnpj esta disponivel
-    // auto docValidationSearch = this->findOne(user->getCpfCnpj());
-    // auto docValidationFoundUser = existingUserSearch.foundRegister;
-    //
-    // if (docValidationFoundUser != nullptr && docValidationFoundUser->getCode() != user->getCode())
-    //     throw domain_error("Dados repetidos");
-    //
-    // // Remove linha atual do usuario
-    // this->deleteOne(existingUserSearch.line);
-    //
-    // // Add nova linha para usuario
-    // this->writeRegisterIntoStorage(user);
-    //
-    // // Tudo OK
-    // return user;
-    return nullptr;
+    // Validacao
+    if (rejectType == nullptr) throw invalid_argument("Dados insuficientes");
+    auto existingRejTypeSearch = this->findOne(rejectType->getCode());
+    if (existingRejTypeSearch.foundRegister == nullptr) throw invalid_argument("Tipo de Residuo nao existe");
+
+    // Remove linha defasada, insere nova & retorna objeto valido
+    this->deleteOne(existingRejTypeSearch.line);
+    this->writeRegisterIntoStorage(rejectType);
+    return rejectType;
 };
 
 FindResult<RejectTypeModel> RejectTypeDAO::findOne(const int code) {

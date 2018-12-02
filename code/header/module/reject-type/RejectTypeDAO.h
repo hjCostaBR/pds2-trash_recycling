@@ -49,7 +49,7 @@ public:
     /**
      * @inherit
      */
-    shared_ptr<RejectTypeModel> update(const shared_ptr<RejectTypeModel> user);
+    shared_ptr<RejectTypeModel> update(const shared_ptr<RejectTypeModel> rejectType);
 
     /**
      * Pesquisa & retorna 01 registro identificado pelo codigo.
