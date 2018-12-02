@@ -289,20 +289,12 @@ bool UserController::create(void) {
     } while (true);
 };
 
-void UserController::showDataTableHeader(void) const {
-    cout << "|\tCodigo\t|"
-         << "\tCPF/CNPJ\t|"
-         << "\tTipo\t\t|"
-         << "\tNome\t\t|"
-         << endl;
-};
-
 bool UserController::update(shared_ptr<UserModel> currentUser) {
 
     // Exibir dados atuais
     cout << "Dados atuais cadastrados:" << endl;
-    this->showDataTableHeader();
-    this->service->showRegisterData(currentUser);
+    this->service->showDataTableHeader();
+    this->service->showRegisterData(currentUser, true);
     cout << endl;
 
     // Confirmar desejo pela alteracao
@@ -337,8 +329,42 @@ bool UserController::update(shared_ptr<UserModel> currentUser) {
     } while (true);
 };
 
-void UserController::showList(void) const {
+bool UserController::showList(void) const {
 
+    cout << "> USUARIOS" << endl
+         << "Pressione '0' para sair..." << endl << endl;
+
+    // Exibe listagem
+    this->service->showRegistersListData(this->dao->findAll());
+
+    // Captura acao selecionada pelo usuario
+    string action = "";
+
+    const bool remove = this->aksYesOrNoQuestionThroughStdIO("Deseja remover algum Usuario?");
+    if (!remove) return false;
+
+    // Seleciona item sobre o qual a acao sera executada
+    FindResult<UserModel> userSearch;
+
+    do {
+
+        const int selectedUserCode = this->getNumberFromStdIO("Informe o codigo do Tipo de Residuo a ser removido", "Codigo invalido: ");
+        if (selectedUserCode == 0) return false;
+
+        userSearch = this->dao->findOne(selectedUserCode);
+
+        if (userSearch.foundRegister == nullptr) {
+            cout << "Usuario nao encontrado (codigo invalido)" << endl << endl;
+            const auto tryAgain = this->aksYesOrNoQuestionThroughStdIO("Deseja tentar novamente?");
+            if (!tryAgain) return false;
+        }
+
+    } while (userSearch.foundRegister == nullptr);
+
+    // Executa remocao
+    this->dao->deleteOne(userSearch.line);
+    cout << "Usuario removido com sucesso!" << endl;
+    return true;
 };
 
 bool UserController::runAction(int action) {
@@ -350,12 +376,11 @@ bool UserController::runAction(int action) {
 
     switch (action) {
         case ControllerActionEnum::CREATE:
-            exit = (!this->create());
+            exit = !this->create();
             break;
 
         case ControllerActionEnum::RETRIVE:
-            this->showList();
-            exit = false;
+            exit = !this->showList();
             break;
     }
 

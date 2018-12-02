@@ -4,6 +4,7 @@
 #include <exception>
 #include <stdexcept>
 #include <vector>
+#include <sstream>
 #include "../../../../header/module/user/UserService.h"
 #include "../../../../header/common/enums.h"
 
@@ -27,7 +28,7 @@ bool UserService::validateStoredRegister(const vector<string> lineProps) const {
     return true;
 };
 
-void UserService::showRegisterData(const shared_ptr<UserModel> user) const {
+void UserService::showRegisterData(const shared_ptr<UserModel> user, const bool showRejTypes) const {
 
     // Exibe dados gerais
     cout << "|\t" << user->getCode()
@@ -39,7 +40,9 @@ void UserService::showRegisterData(const shared_ptr<UserModel> user) const {
     cout << "\t|\t" << user->getName()
          << "\t|" << endl;
 
-    // Exibe lista de residuos de interesse
+    // Exibe lista de residuos de interesse (se necesario)
+    if (!showRejTypes) return;
+
     if (!user->getRejectTypesOfInterestCodes().size()) {
         cout << "Nenhum Tipo de Residuo de interesse selecionado..." << endl;
         return;
@@ -97,12 +100,57 @@ shared_ptr<UserModel> UserService::getModelFromStorageLine(const vector<string> 
     if (!this->validateStoredRegister(lineProps))
         throw invalid_argument("Tentativa de gerar usuario a partir de dados invalidos");
 
+    // Add dados gerais
     auto user = make_shared<UserModel>();
     user->setCode(stoi(lineProps[0]));
     user->setCpfCnpj(lineProps[1]);
     user->setType((UserTypeEnum)stoi(lineProps[2]));
     user->setName(lineProps[3]);
+
+    if (lineProps.size() == 4) return user;
+
+    // Add lista de residuos de interesse (se houver)
+    vector<int> rejTypeCodes;
+
+    stringstream ss(lineProps[4]);
+    string item;
+
+    while (getline(ss, item, ',')) {
+
+        try {
+            rejTypeCodes.push_back(stoi(item));
+
+        } catch (exception err) {
+            cout << endl << "** WARNING: Cadastro de usuário invalido (tipo de residuo invalido: " << item << ") **" << endl << endl;
+            continue;
+        }
+    }
+
+    for (uint i = 0; i < rejTypeCodes.size(); i++) {
+        user->addRejectTypeOfInterest(rejTypeCodes[i]);
+    }
+
+    // Tudo OK
     return user;
+};
+
+void UserService::showDataTableHeader(void) const {
+    cout << "|\tCodigo\t|"
+         << "\tCPF/CNPJ\t|"
+         << "\tTipo\t\t|"
+         << "\tNome\t\t|"
+         << endl;
+};
+
+void UserService::showRegistersListData(const vector<FindResult<UserModel>> usersList) const {
+
+    this->showDataTableHeader();
+
+    for (uint i = 0; i < usersList.size(); i++) {
+        this->showRegisterData(usersList[i].foundRegister, false);
+    }
+
+    cout << endl;
 };
 
 #endif

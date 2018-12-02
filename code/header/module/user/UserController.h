@@ -67,11 +67,8 @@ private:
     /** Atualiza cadastro de 01 registro ja armazenado. */
     bool update(shared_ptr<UserModel> currentUser);
 
-    /** Exibe cabecalho para exibicao tabular de dados. */
-    void showDataTableHeader(void) const;
-
     /** Exibe listagem de usuarios cadastrados. */
-    void showList(void) const;
+    bool showList(void) const;
 
 public:
 

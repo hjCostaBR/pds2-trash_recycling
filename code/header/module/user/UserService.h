@@ -30,7 +30,7 @@ public:
     /**
      * @inherit
      */
-    virtual void showRegisterData(const shared_ptr<UserModel> register) const;
+    virtual void showRegisterData(const shared_ptr<UserModel> register, const bool showRejTypes) const;
 
     /**
      * Informa se 01 usuario eh PJ ou PJ.
@@ -58,6 +58,15 @@ public:
      * @inherit
      */
     shared_ptr<UserModel> getModelFromStorageLine(const vector<string> lineProps);
+
+    /** Exibe cabecalho para exibicao tabular de dados. */
+    void showDataTableHeader(void) const;
+
+    /**
+     * Monta & Exibe 01 tabela listando dados de varios registros.
+     * @param usersList Itens a serem exibidos.
+     */
+    void showRegistersListData(const vector<FindResult<UserModel>> usersList) const;
 };
 
 #endif

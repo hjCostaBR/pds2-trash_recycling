@@ -130,4 +130,41 @@ void UserDAO::writeRegisterIntoStorage(shared_ptr<UserModel> user) {
     this->writingStream << ";" << endl;
 };
 
+vector<FindResult<UserModel>> UserDAO::findAll(void) {
+
+    this->openStorageForReading();
+
+    vector<FindResult<UserModel>> returnList;
+    int lineCount = 0;
+    string fileLine;
+
+    while (getline(this->readingStream, fileLine)) {
+
+        lineCount++;
+
+        // Extrai propriedades da linha
+        stringstream ss(fileLine);
+        string item;
+        vector<string> lineProps;
+
+        while (getline(ss, item, ';')) {
+            lineProps.push_back(item);
+        }
+
+        // Valida valores extraidos
+        if (!this->service->validateStoredRegister(lineProps)) {
+            cout << endl << "** WARNING: Cadastro de Usuario invalido (linha: " << lineCount << ") **" << endl << endl;
+            continue;
+        }
+
+        // Add item na lista de retorno
+        FindResult<UserModel> result;
+        result.foundRegister = this->service->getModelFromStorageLine(lineProps);
+        result.line = lineCount;
+        returnList.push_back(result);
+    }
+
+    return returnList;
+};
+
 #endif

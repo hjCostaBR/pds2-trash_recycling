@@ -76,6 +76,12 @@ public:
      * @return Estrutura contendo o registro encontrado + a linha do arquivo em que ele esta.
      */
     FindResult<UserModel> findOne(const int code, const string cpfCnpj);
+
+    /**
+     * Captura & retorna lista com todos os registros armazenados.
+     * @return
+     */
+    vector<FindResult<UserModel>> findAll(void);
 };
 
 #endif
