@@ -29,6 +29,7 @@ int Controller::getNumberFromStdIO(string presentationMsg, string invalidInputMs
         // Captura entrada
         cout << presentationMsg << ": ";
         cin >> readInput;
+        cin.ignore();
 
         try {
             number = stoi(readInput);
@@ -54,7 +55,6 @@ bool Controller::aksYesOrNoQuestionThroughStdIO(string presentationMsg) const {
 string Controller::getStringFromStdIO(const string presentationMsg) {
     cout << presentationMsg;
     char readInput[100];
-    cin.ignore();
     cin.getline(readInput, sizeof(readInput));
     return string(readInput);
 }
