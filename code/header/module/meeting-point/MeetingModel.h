@@ -5,8 +5,8 @@
 
 using namespace std;
 
-class MeetingModel
-{
+class MeetingModel {
+
 private:
     int code;
     string name;
@@ -20,44 +20,45 @@ private:
     
 
 public:
-    MeetingModel(void){};
-    // ~MeetingModel() {};
+
+    MeetingModel(void) {};
+
 
     // Codigo
-    void setCode(int code);
-    int getCode(void);
+    int getCode() const { return code; }
+    void setCode(int code) { code = code; }
 
     // Nome
-    void setName(string name);
-    string getName(void);
+    const string &getName() const { return name; }
+    void setName(const string &name) { name = name; }
 
     // Cep
-    void setCep(string cep);
-    string getCep(void);
+    const string &getCep() const { return cep; }
+    void setCep(const string &cep) { cep = cep; }
 
     // Estado
-    void setState(string state);
-    string getState(void);
+    const string &getState() const { return state; }
+    void setState(const string &state) { state = state; }
 
     // Cidade
-    void setCity(string city);
-    string getCity(void);
+    const string &getCity() const { return city; }
+    void setCity(const string &city) { city = city; }
 
     // Bairro
-    void setNeighborhood(string neighborhood);
-    string getNeighborhood(void);
+    const string &getNeighborhood() const { return neighborhood; }
+    void setNeighborhood(const string &neighborhood) { neighborhood = neighborhood; }
 
     // Rua
-    void setStreet(string street);
-    string getStreet(void);
+    const string &getStreet() const { return street; }
+    void setStreet(const string &street) { street = street; }
 
     // Numero
-    int setNumber(int number);
-    string getNumber(void);
+    int getNumber() const { return number; }
+    void setNumber(int number) { number = number; }
 
     // Complemento
-    void setComplement(string complement);
-    string getComplement(void);
+    const string &getComplement() const { return complement; }
+    void setComplement(const string &complement) { complement = complement; }
 };
 
 #endif
