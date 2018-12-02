@@ -8,9 +8,9 @@ using namespace std;
 class RejectTypeModel {
 
 private:
-    int code;
-    string name;
-    string storageSpecification;
+    int code = 0;
+    string name = "";
+    string storageSpecification = "";
 
 public:
     RejectTypeModel(void) {};

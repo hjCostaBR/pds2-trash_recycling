@@ -85,13 +85,14 @@ void LoginController::showLoggedOptions(const shared_ptr<UserModel> loggedUser) 
     // Incluir opcao: Listar residuos
     menuItems.push_back(MenuItemSet("Listar Tipos de Residuo", rejectTypeController, ControllerActionEnum::RETRIVE, loggedUser));
 
-    // Incluir opcao: Agendar coleta
-    if (loggedUser->getType() != UserTypeEnum::ADMIN)
+    if (loggedUser->getType() != UserTypeEnum::ADMIN) {
+
+        // Incluir opcao: Agendar coleta
         menuItems.push_back(MenuItemSet("Agendar Coleta de Residuos", nullptr));
 
-    // Incluir opcao: Visualizar agendamentos
-    if (loggedUser->getType() != UserTypeEnum::ADMIN)
+        // Incluir opcao: Visualizar agendamentos
         menuItems.push_back(MenuItemSet("Minhas coletas agendadas", nullptr));
+    }
 
     // Incluir opcao: Listar usuario cadastrados
     auto userService = make_shared<UserService>();

@@ -38,11 +38,6 @@ protected:
      */
     string getStorageFileName(void) override;
 
-    /**
-     * @inherit
-     */
-    shared_ptr<UserModel> getModelFromStorageLine(const vector<string> lineProps);
-
 public:
 
     UserDAO(shared_ptr<UserService> service): service(service) {};

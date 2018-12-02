@@ -31,6 +31,11 @@ public:
      * @param rejTypesList Itens a serem exibidos.
      */
     void showRegistersListData(const vector<FindResult<RejectTypeModel>> rejTypesList) const;
+
+    /**
+     * @inherit
+     */
+    shared_ptr<RejectTypeModel> getModelFromStorageLine(const vector<string> lineProps);
 };
 
 #endif

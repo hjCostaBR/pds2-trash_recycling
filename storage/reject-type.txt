@@ -1,0 +1,2 @@
+10;Papel;Armazenar sem amassar;
+11;Plastico;Armazenar seco;

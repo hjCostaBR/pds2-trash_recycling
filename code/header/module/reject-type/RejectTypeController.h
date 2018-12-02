@@ -57,7 +57,7 @@ private:
      * Monta & exibe listagem de registros + opcoes de acao.
      * @return Flag: SE o usuario selecionou 'sair'.
      */
-    bool showList(const shared_ptr<UserModel> currentUser) const;
+    bool showList(const shared_ptr<UserModel> currentUser);
 
 public:
 

@@ -53,7 +53,7 @@ FindResult<UserModel> UserDAO::findOne(const int code, const string cpfCnpj) {
 
         // Verifica se usuario pesquisado foi encontrado
         if (code == stoi(lineProps[0]) || cpfCnpj == lineProps[1]) {
-            result.foundRegister = this->getModelFromStorageLine(lineProps);
+            result.foundRegister = this->service->getModelFromStorageLine(lineProps);
             result.line = lineCount;
             return result;
         }
@@ -68,19 +68,6 @@ FindResult<UserModel> UserDAO::findOne(const string cpfCnpj) {
 
 FindResult<UserModel> UserDAO::findOne(const int code) {
     return this->findOne(code, "");
-};
-
-shared_ptr<UserModel> UserDAO::getModelFromStorageLine(const vector<string> lineProps) {
-
-    if (!this->service->validateStoredRegister(lineProps))
-        throw invalid_argument("Tentativa de gerar usuario a partir de dados invalidos");
-
-    auto user = make_shared<UserModel>();
-    user->setCode(stoi(lineProps[0]));
-    user->setCpfCnpj(lineProps[1]);
-    user->setType((UserTypeEnum)stoi(lineProps[2]));
-    user->setName(lineProps[3]);
-    return user;
 };
 
 shared_ptr<UserModel> UserDAO::insert(const shared_ptr<UserModel> user) {
@@ -136,6 +123,6 @@ void UserDAO::writeRegisterIntoStorage(shared_ptr<UserModel> user) {
         << user->getName() << ";"
         // << user->getRejectTypesOfInterest() << ";"
         << endl;
-}
+};
 
 #endif

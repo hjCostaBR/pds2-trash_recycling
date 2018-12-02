@@ -3,6 +3,7 @@
 
 #include <exception>
 #include <stdexcept>
+#include <vector>
 #include "../../../../header/module/user/UserService.h"
 #include "../../../../header/common/enums.h"
 
@@ -64,6 +65,19 @@ string UserService::getUserTypeLabel(const UserTypeEnum typeCode) const {
     }
 
     throw invalid_argument("Tipo de usuario invalido");
+};
+
+shared_ptr<UserModel> UserService::getModelFromStorageLine(const vector<string> lineProps) {
+
+    if (!this->validateStoredRegister(lineProps))
+        throw invalid_argument("Tentativa de gerar usuario a partir de dados invalidos");
+
+    auto user = make_shared<UserModel>();
+    user->setCode(stoi(lineProps[0]));
+    user->setCpfCnpj(lineProps[1]);
+    user->setType((UserTypeEnum)stoi(lineProps[2]));
+    user->setName(lineProps[3]);
+    return user;
 };
 
 #endif

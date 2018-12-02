@@ -4,6 +4,7 @@
 #include <iostream>
 #include <memory>
 #include "../interface/IModel.h"
+#include "../../module/user/UserModel.h"
 
 using namespace std;
 
@@ -76,7 +77,7 @@ public:
      * @param currentUser Usuario atual que executa a acao.
      * @return Flag: Se execucao do programa do programa deve ser encerrada.
      */
-    virtual bool runAction(int action, shared_ptr<IModel> currentUser);
+    virtual bool runAction(int action, shared_ptr<UserModel> currentUser);
 };
 
 #endif

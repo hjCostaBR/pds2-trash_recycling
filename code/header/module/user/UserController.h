@@ -78,7 +78,7 @@ public:
     /**
      * @inherit
      */
-    virtual bool runAction(int action, shared_ptr<UserModel> currentUser);
+    bool runAction(int action, shared_ptr<UserModel> currentUser) override;
 };
 
 #endif

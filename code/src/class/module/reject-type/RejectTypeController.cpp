@@ -104,17 +104,70 @@ bool RejectTypeController::update(shared_ptr<RejectTypeModel> currentUser) {
 
 void RejectTypeController::showDataTableHeader(void) const {
     cout << "| Codigo\t|"
-         << " Nome\t|"
-         << " Instrucao de armazenamento\t\t|"
+         << "\tNome\t|"
+         << "\tInstrucao de armazenamento\t\t\t\t|"
          << endl;
 };
 
-bool RejectTypeController::showList(const shared_ptr<UserModel> currentUser) const {
+bool RejectTypeController::showList(const shared_ptr<UserModel> currentUser) {
 
+    cout << "> TIPOS de RESIDUO" << endl
+        << "Pressione '0' para sair..." << endl << endl;
+
+    // Exibe listagem
     this->showDataTableHeader();
     this->service->showRegistersListData(this->dao->findAll());
 
-    // @todo: Arrumar isso
+    // Captura acao selecionada pelo usuario
+    string action = "";
+
+    do {
+        if (action != "") cout << "Acao '" << action << "' invalida!" << endl << endl;
+        action = this->getStringFromStdIO("Pressione 'e' (para editar) ou 'r' (para remover): ");
+        if (action == "0") return true;
+        cin.ignore();
+        cout << "\n!!DEBUG!! action: " << action << "\n'";
+
+    } while (action != "e" && action != "r");
+
+    const bool remove = (action == "r");
+    const bool update = (action == "e");
+
+    const string actionStr = (remove) ? "REMOVER" : "EDITAR";
+    cout << "Opcao selecionada: " << actionStr << endl << endl;
+
+    // Seleciona item sobre o qual a acao sera executada
+    auto rejType = make_shared<RejectTypeModel>() = nullptr;
+    string selectionDescMsg = "Informe o codigo do Tipo de Residuo a ser ";
+    selectionDescMsg += (remove) ? "removido" : "editado";
+
+    do {
+
+        const int selectedRejCode = this->getNumberFromStdIO(selectionDescMsg, "Codigo invalido: ");
+        if (selectedRejCode == 0) return true;
+
+        const auto rejTypeSearch = this->dao->findOne(selectedRejCode);
+        rejType = rejTypeSearch.foundRegister;
+
+        if (rejType == nullptr) {
+            cout << "Tipo de residuo nao encontrado (codigo invalido)" << endl << endl;
+            const auto tryAgain = this->aksYesOrNoQuestionThroughStdIO("Deseja tentar novamente?");
+            if (!tryAgain) return true;
+        }
+
+    } while (rejType == nullptr);
+
+
+    // Executa remocao (se necessario)
+    if (remove) {
+        // @todo: Remover
+        cout << "removendo..." << endl;
+    }
+
+    // Executa edicao (se necessario)
+    // @todo: Editar
+    cout << "editando..." << endl;
+
     return false;
 };
 

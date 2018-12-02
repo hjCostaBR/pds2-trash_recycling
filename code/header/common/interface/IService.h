@@ -33,6 +33,14 @@ public:
      * @param register
      */
     virtual void showRegisterData(const shared_ptr<IModel> register) const {};
+
+    /**
+     * Transforma dados de 01 registro armazenado numa instancia do modelo gerido pela DAO.
+     *
+     * @param lineProps Propriedades do registro armazenado.
+     * @return
+     */
+    virtual shared_ptr<IModel> getModelFromStorageLine(const vector<string> lineProps) const {};
 };
 
 #endif

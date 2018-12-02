@@ -37,11 +37,6 @@ protected:
      */
     string getStorageFileName(void) override;
 
-    /**
-     * @inherit
-     */
-    shared_ptr<RejectTypeModel> getModelFromStorageLine(const vector<string> lineProps);
-
 public:
 
     RejectTypeDAO(shared_ptr<RejectTypeService> service): service(service) {};

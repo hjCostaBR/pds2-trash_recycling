@@ -30,21 +30,6 @@ string RejectTypeDAO::getStorageFileName(void) {
     return RejectTypeDAO::STORAGE_FILE;
 };
 
-shared_ptr<RejectTypeModel> RejectTypeDAO::getModelFromStorageLine(const vector<string> lineProps) {
-
-    // if (!this->service->validateStoredRegister(lineProps))
-    //     throw invalid_argument("Tentativa de gerar usuario a partir de dados invalidos");
-    //
-    // auto user = make_shared<RejectTypeModel>();
-    // user->setCode(stoi(lineProps[0]));
-    // user->setCpfCnpj(lineProps[1]);
-    // user->setType((UserTypeEnum)stoi(lineProps[2]));
-    // user->setName(lineProps[3]);
-    // return user;
-
-    return nullptr;
-};
-
 shared_ptr<RejectTypeModel> RejectTypeDAO::insert(const shared_ptr<RejectTypeModel> rejectType) {
 
     // Validacao
@@ -123,7 +108,7 @@ FindResult<RejectTypeModel> RejectTypeDAO::findOne(const int code) {
 
         // Verifica se usuario pesquisado foi encontrado
         if (code == stoi(lineProps[0])) {
-            result.foundRegister = this->getModelFromStorageLine(lineProps);
+            result.foundRegister = this->service->getModelFromStorageLine(lineProps);
             result.line = lineCount;
             return result;
         }
@@ -161,7 +146,7 @@ vector<FindResult<RejectTypeModel>> RejectTypeDAO::findAll(void) {
 
         // Add item na lista de retorno
         FindResult<RejectTypeModel> result;
-        result.foundRegister = this->getModelFromStorageLine(lineProps);
+        result.foundRegister = this->service->getModelFromStorageLine(lineProps);
         result.line = lineCount;
         returnList.push_back(result);
     }

@@ -45,6 +45,11 @@ public:
      * @return Label
      */
     string getUserTypeLabel(const UserTypeEnum typeCode) const;
+
+    /**
+     * @inherit
+     */
+    shared_ptr<UserModel> getModelFromStorageLine(const vector<string> lineProps);
 };
 
 #endif

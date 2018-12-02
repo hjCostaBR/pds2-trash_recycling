@@ -60,14 +60,6 @@ protected:
     /** Define & retorna nome do arquivo de armazenamento utilizado pela DAO. */
     virtual string getStorageFileName(void) = 0;
 
-    /**
-     * Transforma dados de 01 registro armazenado numa instancia do modelo gerido pela DAO.
-     *
-     * @param lineProps Propriedades do registro armazenado.
-     * @return
-     */
-    virtual shared_ptr<IModel> getModelFromStorageLine(const vector<string> lineProps) const {};
-
 public:
 
     DAO(void) {};
