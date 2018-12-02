@@ -35,7 +35,16 @@ void RejectTypeService::showRegisterData(const shared_ptr<RejectTypeModel> rejec
          << endl;
 };
 
+void RejectTypeService::showDataTableHeader(void) const {
+    cout << "| Codigo\t|"
+         << "\tNome\t|"
+         << "\tInstrucao de armazenamento\t\t\t\t|"
+         << endl;
+};
+
 void RejectTypeService::showRegistersListData(const vector<FindResult<RejectTypeModel>> rejTypesList) const {
+
+    this->showDataTableHeader();
 
     for (uint i = 0; i < rejTypesList.size(); i++) {
         this->showRegisterData(rejTypesList[i].foundRegister);

@@ -64,7 +64,7 @@ bool RejectTypeController::update(shared_ptr<RejectTypeModel> rejType) {
 
     // Exibir dados atuais
     cout << "Dados atuais cadastrados:" << endl;
-    this->showDataTableHeader();
+    this->service->showDataTableHeader();
     this->service->showRegisterData(rejType);
     cout << endl;
 
@@ -94,20 +94,12 @@ bool RejectTypeController::update(shared_ptr<RejectTypeModel> rejType) {
     } while (true);
 };
 
-void RejectTypeController::showDataTableHeader(void) const {
-    cout << "| Codigo\t|"
-         << "\tNome\t|"
-         << "\tInstrucao de armazenamento\t\t\t\t|"
-         << endl;
-};
-
 bool RejectTypeController::showList(const shared_ptr<UserModel> currentUser) {
 
     cout << "> TIPOS de RESIDUO" << endl
         << "Pressione '0' para sair..." << endl << endl;
 
     // Exibe listagem
-    this->showDataTableHeader();
     this->service->showRegistersListData(this->dao->findAll());
 
     // Captura acao selecionada pelo usuario

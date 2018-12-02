@@ -157,6 +157,17 @@ void UserController::setCurrentUserName(void) {
     if (readInput != "0") this->currentUser->setName(readInput);
 };
 
+void UserController::setCurrentUserRejTypeList(void) {
+
+    const string update = this->aksYesOrNoQuestionThroughStdIO("Deseja alterar lista de Tipos de Residuo de interesse?");
+    if (!update) return;
+
+    cout << "Tipos de residuo disponiveis: " << endl;
+    this->rejTypeService->showRegistersListData();
+
+    // if (update != "0") this->currentUser->setName(update);
+};
+
 bool UserController::getDataForUserFromStdIo(const bool insert, const bool admin) {
 
     cout << "pressione '0' para sair" << endl

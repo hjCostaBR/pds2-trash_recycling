@@ -36,6 +36,9 @@ public:
      * @inherit
      */
     shared_ptr<RejectTypeModel> getModelFromStorageLine(const vector<string> lineProps);
+
+    /** Exibe cabecalho para exibicao tabular de dados. */
+    void showDataTableHeader(void) const;
 };
 
 #endif

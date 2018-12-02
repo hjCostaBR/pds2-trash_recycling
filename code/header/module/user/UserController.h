@@ -5,6 +5,7 @@
 #include "../../common/class/Controller.h"
 #include "../../common/class/MenuController.h"
 #include "../../common/enums.h"
+#include "../../module/reject-type/RejectTypeService.h"
 #include "./UserModel.h"
 #include "./UserDAO.h"
 
@@ -23,6 +24,8 @@ private:
     shared_ptr<UserDAO> dao = nullptr;
     /** Servico. */
     shared_ptr<UserService> service = nullptr;
+    /** Classe de Servico para entidade: Tipo de Residuo. */
+    shared_ptr<RejectTypeService> rejTypeService = nullptr;
 
     /** Dados do registro sendo manipulado no momento. */
     shared_ptr<UserModel> currentUser = nullptr;
@@ -41,6 +44,9 @@ private:
 
     /** Captura & define nome do usuario atual. */
     void setCurrentUserName(void);
+
+    /** Captura & define lista de residuos de interesse de 01 usuario. */
+    void setCurrentUserRejTypeList(void)
 
     /** Efetua cadastro de novo usuario. */
     bool create(void);
@@ -66,9 +72,12 @@ private:
 public:
 
     /** Contrutor. */
-    UserController(const shared_ptr<UserDAO> dao, const shared_ptr<UserService> service)
-        : dao(dao), service(service)
-        {};
+    UserController(
+        const shared_ptr<UserDAO> dao,
+        const shared_ptr<UserService> service,
+        const shared_ptr<RejectTypeService> rejTypeService,
+
+    ) : dao(dao), service(service), rejTypeService(rejTypeService) {};
 
     /**
      * @inherit

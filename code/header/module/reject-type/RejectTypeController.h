@@ -44,9 +44,6 @@ private:
     /** Atualiza cadastro de 01 registro ja armazenado. */
     bool update(shared_ptr<RejectTypeModel> rejType);
 
-    /** Exibe cabecalho para exibicao tabular de dados. */
-    void showDataTableHeader(void) const;
-
     /** Captura & define nome para o registro em edicao no momento. */
     void setCurrentRejectTypeName(void);
 
