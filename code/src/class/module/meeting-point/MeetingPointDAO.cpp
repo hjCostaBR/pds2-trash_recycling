@@ -17,13 +17,12 @@ const string MeetingPointDAO::STORAGE_FILE = "meeting-point.txt";
 
 void MeetingPointDAO::writeRegisterIntoStorage(shared_ptr<MeetingPointModel> rejectType) {
 
-    // this->openStorageForWriting();
-    //
-    // this->writingStream
-    //         << rejectType->getCode() << ";"
-    //         << rejectType->getName() << ";"
-    //         << rejectType->getStorageSpecification() << ";"
-    //         << endl;
+    this->openStorageForWriting();
+
+    this->writingStream
+            << rejectType->getCode() << ";"
+            << rejectType->getName() << ";"
+            << endl;
 }
 
 string MeetingPointDAO::getStorageFileName(void) {
@@ -31,20 +30,9 @@ string MeetingPointDAO::getStorageFileName(void) {
 };
 
 shared_ptr<MeetingPointModel> MeetingPointDAO::insert(const shared_ptr<MeetingPointModel> rejectType) {
-
-    // // Validacao
-    // if (rejectType == nullptr) throw invalid_argument("Dados nao informados");
-    //
-    // auto existingRejTypeSearch = this->findOne(rejectType->getCode());
-    // auto existingRejType = existingRejTypeSearch.foundRegister;
-    //
-    // if (existingRejType != nullptr) throw domain_error("Tipo de Residuo ja existe");
-    //
-    // // Add
-    // this->writeRegisterIntoStorage(rejectType);
-    //
-    // // Tudo OK
-    // return rejectType;
+    if (rejectType == nullptr) throw invalid_argument("Dados nao informados");
+    this->writeRegisterIntoStorage(rejectType);
+    return rejectType;
 };
 
 shared_ptr<MeetingPointModel> MeetingPointDAO::update(const shared_ptr<MeetingPointModel> rejectType) {

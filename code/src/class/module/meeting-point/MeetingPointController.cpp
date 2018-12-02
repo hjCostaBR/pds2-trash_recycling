@@ -9,53 +9,46 @@ using namespace std;
 
 bool MeetingPointController::create(void) {
 
-    // do {
-    //
-    //     cout << "> CADASTRO" << endl;
-    //     cout << "pressione '0' para sair" << endl << endl;
-    //
-    //     this->currentMeetingPoint = make_shared<MeetingPointModel>();
-    //
-    //     if (!this->getDataFromStdIo(true)) return false;
-    //
-    //     try {
-    //         this->dao->insert(this->currentMeetingPoint);
-    //         cout << "Tipo de Residuo criado com sucesso!" << endl;
-    //         return true;
-    //
-    //     } catch (invalid_argument error) {
-    //         cout << endl << "Ops! Dados de Tipo de Residuo invalidos" << endl;
-    //
-    //     } catch (domain_error error) {
-    //         cout << endl << "Ops! Codigo ja cadastrado(s) para outro Tipo de Residuo." << endl;
-    //
-    //     } catch (exception error) {
-    //         cout << endl << "Falha inesperada ao tentar adicionar Tipo de Residuo" << endl;
-    //     }
-    //
-    //     if (!this->aksYesOrNoQuestionThroughStdIO("Realizar nova tentativa?")) return false;
-    //
-    // } while (true);
+    do {
+
+        cout << "> CADASTRO" << endl;
+        cout << "pressione '0' para sair" << endl << endl;
+
+        this->currentMeetingPoint = make_shared<MeetingPointModel>();
+
+        if (!this->getDataFromStdIo(true)) return false;
+
+        try {
+            this->dao->insert(this->currentMeetingPoint);
+            cout << "Ponto de Coleta criado com sucesso!" << endl;
+            return true;
+
+        } catch (invalid_argument error) {
+            cout << endl << "Ops! Dados de Tipo de Residuo invalidos" << endl;
+
+        } catch (exception error) {
+            cout << endl << "Falha inesperada ao tentar adicionar Ponto de Coleta" << endl;
+        }
+
+        if (!this->aksYesOrNoQuestionThroughStdIO("Realizar nova tentativa?")) return false;
+
+    } while (true);
 };
 
 bool MeetingPointController::getDataFromStdIo(const bool insert) {
 
     // Captura codigo (se necessario)
-    // if (insert) {
-    //     int code = this->getNumberFromStdIO("Informe um Codigo para o Tipo de Residuo", "Codigo invalido");
-    //     if (!code) return false;
-    //     this->currentMeetingPoint->setCode(code);
-    // }
-    //
-    // // Define nome
-    // this->setCurrentMeetingPointName();
-    // if (this->currentMeetingPoint->getName() == "") return false;
-    //
-    // // Define instrucoes de armazenamento
-    // this->setCurrentMeetingPointStorageSpecification();
-    // if (this->currentMeetingPoint->getStorageSpecification() == "") return false;
-    //
-    // return true;
+    if (insert) {
+        int code = this->getNumberFromStdIO("Informe um Codigo para o Ponto de Coleta", "Codigo invalido");
+        if (!code) return false;
+        this->currentMeetingPoint->setCode(code);
+    }
+
+    // Define nome
+    this->setCurrentMeetingPointName();
+    if (this->currentMeetingPoint->getName() == "") return false;
+
+    return true;
 };
 
 bool MeetingPointController::update(shared_ptr<MeetingPointModel> rejType) {
@@ -154,15 +147,22 @@ bool MeetingPointController::showList(const shared_ptr<UserModel> currentUser) {
 };
 
 bool MeetingPointController::runAction(int action) {
-    // if (action != ControllerActionEnum::CREATE) throw invalid_argument("Acao invalida para controlador de tipos de residuo (1)");
-    // if (!this->create()) cout << "Usuario selecionou: 'sair'..." << endl;
-    // return false;
+    if (action != ControllerActionEnum::CREATE) throw invalid_argument("Acao invalida para controlador de pontos de coleta (1)");
+    if (!this->create()) cout << "Usuario selecionou: 'sair'..." << endl;
+    return false;
 };
 
 bool MeetingPointController::runAction(int action, shared_ptr<UserModel> currentUser) {
     // if (action != ControllerActionEnum::RETRIVE) throw invalid_argument("Acao invalida para controlador de Tipos de Residuo (2)");
     // if (!this->showList(currentUser)) cout << "Usuario selecionou: 'sair'..." << endl;
     // return false;
+};
+
+void MeetingPointController::setCurrentMeetingPointName(void) {
+    cout << "Informe nome para o Ponto de Coleta: ";
+    char readInput[100];
+    cin.getline(readInput, sizeof(readInput));
+    if (readInput != "0") this->currentMeetingPoint->setName(string(readInput));
 };
 
 #endif

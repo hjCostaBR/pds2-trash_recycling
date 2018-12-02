@@ -50,6 +50,9 @@ private:
      */
     bool showList(const shared_ptr<UserModel> currentUser);
 
+    /** Captura & define nome para o registro em edicao no momento. */
+    void setCurrentMeetingPointName(void);
+
 public:
 
     /** Contrutor. */

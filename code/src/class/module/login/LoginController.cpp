@@ -9,6 +9,7 @@
 #include "../../../../header/module/login/LoginController.h"
 #include "../../../../header/module/user/UserController.h"
 #include "../../../../header/module/reject-type/RejectTypeController.h"
+#include "../../../../header/module/meeting-point/MeetingPointController.h"
 
 using namespace std;
 
@@ -72,13 +73,18 @@ shared_ptr<UserModel> LoginController::login() {
 
 void LoginController::showLoggedOptions(const shared_ptr<UserModel> loggedUser) {
 
+    // Ininicializar dependencias
     vector<MenuItemSet> menuItems;
 
-    // Incluir opcao: Add residuo
     auto rejectTypeService = make_shared<RejectTypeService>();
     auto rejectTypeDao = make_shared<RejectTypeDAO>(rejectTypeService);
     auto rejectTypeController = make_shared<RejectTypeController>(rejectTypeDao, rejectTypeService);
 
+    auto userService = make_shared<UserService>(rejectTypeDao);
+    auto userDao = make_shared<UserDAO>(userService);
+    auto userController = make_shared<UserController>(userDao, userService, rejectTypeService, rejectTypeDao);
+
+    // Incluir opcao: Add residuo
     if (loggedUser->getType() == UserTypeEnum::ADMIN)
         menuItems.push_back(MenuItemSet("Novo Tipo de Residuo", rejectTypeController, ControllerActionEnum::CREATE));
 
@@ -92,15 +98,22 @@ void LoginController::showLoggedOptions(const shared_ptr<UserModel> loggedUser) 
 
         // Incluir opcao: Visualizar agendamentos
         menuItems.push_back(MenuItemSet("Minhas coletas agendadas", nullptr));
-    }
+        
+    } else {
 
-    // Incluir opcao: Listar usuario cadastrados
-    auto userService = make_shared<UserService>(rejectTypeDao);
-    auto userDao = make_shared<UserDAO>(userService);
-    auto userController = make_shared<UserController>(userDao, userService, rejectTypeService, rejectTypeDao);
+        // Incluir opcao: Novo Ponto de Coleta
+        const auto meetingPointService = make_shared<MeetingPointService>();
+        const auto meetingPointDao = make_shared<MeetingPointDAO>(meetingPointService);
+        const auto meetingPointController = make_shared<MeetingPointController>(meetingPointDao, meetingPointService);
 
-    if (loggedUser->getType() == UserTypeEnum::ADMIN)
+        menuItems.push_back(MenuItemSet("Adicionar Ponto de Coleta", meetingPointController, ControllerActionEnum::CREATE));
+
+        // Incluir opcao: Listar pontos de coleta
+        menuItems.push_back(MenuItemSet("Listar Pontos de Coleta", meetingPointController, ControllerActionEnum::RETRIVE));
+
+        // Incluir opcao: Listar usuario cadastrados
         menuItems.push_back(MenuItemSet("Listar usuarios", userController, ControllerActionEnum::RETRIVE));
+    }
 
     // Incluir opcao: Atualizar dados pessoais
     menuItems.push_back(MenuItemSet("Atualizar dados pessoais", userController, ControllerActionEnum::UPDATE, loggedUser));
