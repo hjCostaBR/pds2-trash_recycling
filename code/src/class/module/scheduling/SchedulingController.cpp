@@ -7,47 +7,49 @@
 
 using namespace std;
 
-bool SchedulingController::create(void) {
+bool SchedulingController::create(const shared_ptr<UserModel> loggedUser) {
 
-    // do {
-    //
-    //     cout << "> CADASTRO" << endl;
-    //     cout << "pressione '0' para sair" << endl << endl;
-    //
-    //     this->currentScheduling = make_shared<SchedulingModel>();
-    //
-    //     if (!this->getDataFromStdIo(true)) return false;
-    //
-    //     try {
-    //         this->dao->insert(this->currentScheduling);
-    //         cout << "Ponto de Coleta criado com sucesso!" << endl;
-    //         return true;
-    //
-    //     } catch (invalid_argument error) {
-    //         cout << endl << "Ops! Dados de Tipo de Residuo invalidos" << endl;
-    //
-    //     } catch (exception error) {
-    //         cout << endl << "Falha inesperada ao tentar adicionar Ponto de Coleta" << endl;
-    //     }
-    //
-    //     if (!this->aksYesOrNoQuestionThroughStdIO("Realizar nova tentativa?")) return false;
-    //
-    // } while (true);
-    return false;
+    do {
+
+        cout << "> NOVO AGENDAMENTO" << endl;
+        cout << "pressione '0' para sair" << endl << endl;
+
+        this->currentScheduling = make_shared<SchedulingModel>();
+
+        if (!this->getDataFromStdIo(true)) return false;
+
+        try {
+            this->dao->insert(this->currentScheduling);
+            cout << "Ponto de Coleta criado com sucesso!" << endl;
+            return true;
+
+        } catch (invalid_argument error) {
+            cout << endl << "Ops! Dados de Tipo de Residuo invalidos" << endl;
+
+        } catch (exception error) {
+            cout << endl << "Falha inesperada ao tentar adicionar Ponto de Coleta" << endl;
+        }
+
+        if (!this->aksYesOrNoQuestionThroughStdIO("Realizar nova tentativa?")) return false;
+
+    } while (true);
 };
 
 bool SchedulingController::getDataFromStdIo(const bool insert) {
 
-    // Captura codigo (se necessario)
-    // if (insert) {
-    //     int code = this->getNumberFromStdIO("Informe um Codigo para o Ponto de Coleta", "Codigo invalido");
-    //     if (!code) return false;
-    //     this->currentScheduling->setCode(code);
-    // }
-    //
-    // // Define nome
-    // this->setCurrentSchedulingName();
-    // if (this->currentScheduling->getName() == "") return false;
+    // Define nome
+    this->setCurrentSchedulingDate();
+    if (this->currentScheduling->getDate() == "") return false;
+
+    this->setCurrentSchedulingMeetingPoint();
+    if (!this->currentScheduling->getMeetingPointCode()) return false;
+
+    // string date = "";
+    // int meetingPointCode = 0;
+    // int donatorCode = 0;
+    // int receiverCode = 0;
+    // vector<int> rejectsToBeExchangedCodes;
+    // bool done = false;
 
     return true;
 };
@@ -147,32 +149,59 @@ bool SchedulingController::showList(void) {
     return true;
 };
 
-bool SchedulingController::runAction(int action) {
-
-    // if (action != ControllerActionEnum::CREATE && action != ControllerActionEnum::RETRIVE)
-    //     throw invalid_argument("Acao invalida para controlador de pontos de coleta");
-    //
-    // bool exit = false;
-    //
-    // switch (action) {
-    //     case ControllerActionEnum::CREATE:
-    //         exit = !this->create();
-    //         break;
-    //
-    //     case ControllerActionEnum::RETRIVE:
-    //         exit = !this->showList();
-    //         break;
-    // }
-    //
-    // if (exit) cout << "Usuario selecionou: 'sair'..." << endl;
+bool SchedulingController::runAction(int action, shared_ptr<UserModel> currentUser) {
+    if (action != ControllerActionEnum::CREATE) throw invalid_argument("Acao invalida para controlador de agendamentos");
+    if (!this->create(currentUser)) cout << "Usuario selecionou: 'sair'..." << endl;
     return false;
 };
 
-void SchedulingController::setCurrentSchedulingName(void) {
-    // cout << "Informe nome para o Ponto de Coleta: ";
-    // char readInput[100];
-    // cin.getline(readInput, sizeof(readInput));
-    // if (readInput != "0") this->currentScheduling->setName(string(readInput));
+void SchedulingController::setCurrentSchedulingDate(void) {
+    cout << "Informe a data deste agendamento (nao eh validado): ";
+    char readInput[100];
+    cin.getline(readInput, sizeof(readInput));
+    if (readInput != "0") this->currentScheduling->setDate(string(readInput));
 };
+
+void SchedulingController::setCurrentSchedulingMeetingPoint(void) {
+
+    // Confirma intencao
+    cout << endl;
+    const bool goOn = this->aksYesOrNoQuestionThroughStdIO("Avancar para selecionar Ponto de Coleta?");
+    if (!goOn) return;
+
+    // Exibe opcoes disponiveis
+    cout << ">> Pontos de Coleta disponiveis: " << endl;
+    const auto mPoints = this->mPointDao->findAll();
+    this->mPointService->showRegistersListData(mPoints);
+
+    // Captura selecao do usuario
+    int selectedMPointCode;
+    bool repeat = true;
+
+    do {
+
+        selectedMPointCode = this->getNumberFromStdIO("Informe o codigo do Ponto de Coleta a ser selecionado", "Codigo invalido");
+        const auto existanceTestSearch = this->mPointDao->findOne(selectedMPointCode);
+
+        if (existanceTestSearch.foundRegister == nullptr) {
+            const bool tryAgain = this->aksYesOrNoQuestionThroughStdIO("Nao existe um Ponto de Coleta com este codigo. Deseja tentar novamente?");
+            if (!tryAgain) return;
+            cout << endl;
+            continue;
+        }
+
+        repeat = false;
+
+    } while (repeat);
+
+    // Add Ponto de Coleta
+    this->currentScheduling->setMeetingPointCode(selectedMPointCode);
+}
+
+void SchedulingController::setCurrentSchedulingDonator(void) {};
+
+void SchedulingController::setCurrentSchedulingReceiver(void) {};
+
+void SchedulingController::setCurrentSchedulingRejectsList(void) {};
 
 #endif

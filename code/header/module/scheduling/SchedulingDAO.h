@@ -1,6 +1,9 @@
 #ifndef _SCHEDULING_DAO_H_
 #define _SCHEDULING_DAO_H_
 
+#include "../../common/class/DAO.h"
+#include "SchedulingService.h"
+
 /**
  * DAO
  * Gerencia acesso a 'camada de dados' relacionados a entidade AGENDAMENTO no sistema

@@ -8,8 +8,17 @@
 #include "../../../../header/common/class/MenuController.h"
 #include "../../../../header/module/login/LoginController.h"
 #include "../../../../header/module/user/UserController.h"
+#include "../../../../header/module/user/UserService.h"
+#include "../../../../header/module/user/UserDAO.h"
 #include "../../../../header/module/reject-type/RejectTypeController.h"
+#include "../../../../header/module/reject-type/RejectTypeService.h"
+#include "../../../../header/module/reject-type/RejectTypeDAO.h"
 #include "../../../../header/module/meeting-point/MeetingPointController.h"
+#include "../../../../header/module/meeting-point/MeetingPointService.h"
+#include "../../../../header/module/meeting-point/MeetingPointDAO.h"
+#include "../../../../header/module/scheduling/SchedulingController.h"
+#include "../../../../header/module/scheduling/SchedulingService.h"
+#include "../../../../header/module/scheduling/SchedulingDAO.h"
 
 using namespace std;
 
@@ -84,6 +93,10 @@ void LoginController::showLoggedOptions(const shared_ptr<UserModel> loggedUser) 
     auto userDao = make_shared<UserDAO>(userService);
     auto userController = make_shared<UserController>(userDao, userService, rejectTypeService, rejectTypeDao);
 
+    const auto mPointService = make_shared<MeetingPointService>();
+    const auto mPointDao = make_shared<MeetingPointDAO>(mPointService);
+    const auto mPointController = make_shared<MeetingPointController>(mPointDao, mPointService);
+
     // Incluir opcao: Add residuo
     if (loggedUser->getType() == UserTypeEnum::ADMIN)
         menuItems.push_back(MenuItemSet("Novo Tipo de Residuo", rejectTypeController, ControllerActionEnum::CREATE));
@@ -94,7 +107,11 @@ void LoginController::showLoggedOptions(const shared_ptr<UserModel> loggedUser) 
     if (loggedUser->getType() != UserTypeEnum::ADMIN) {
 
         // Incluir opcao: Agendar coleta
-        menuItems.push_back(MenuItemSet("Agendar Coleta de Residuos", nullptr));
+        const auto schedulingService = make_shared<SchedulingService>();
+        const auto schedulingDao = make_shared<SchedulingDAO>(schedulingService);
+        const auto schedulingController = make_shared<SchedulingController>(schedulingDao, schedulingService, mPointDao, mPointService);
+
+        menuItems.push_back(MenuItemSet("Agendar Coleta de Residuos", schedulingController, ControllerActionEnum::CREATE, loggedUser));
 
         // Incluir opcao: Visualizar agendamentos
         menuItems.push_back(MenuItemSet("Minhas coletas agendadas", nullptr));
@@ -102,14 +119,10 @@ void LoginController::showLoggedOptions(const shared_ptr<UserModel> loggedUser) 
     } else {
 
         // Incluir opcao: Novo Ponto de Coleta
-        const auto meetingPointService = make_shared<MeetingPointService>();
-        const auto meetingPointDao = make_shared<MeetingPointDAO>(meetingPointService);
-        const auto meetingPointController = make_shared<MeetingPointController>(meetingPointDao, meetingPointService);
-
-        menuItems.push_back(MenuItemSet("Novo Ponto de Coleta", meetingPointController, ControllerActionEnum::CREATE));
+        menuItems.push_back(MenuItemSet("Novo Ponto de Coleta", mPointController, ControllerActionEnum::CREATE));
 
         // Incluir opcao: Listar pontos de coleta
-        menuItems.push_back(MenuItemSet("Listar Pontos de Coleta", meetingPointController, ControllerActionEnum::RETRIVE));
+        menuItems.push_back(MenuItemSet("Listar Pontos de Coleta", mPointController, ControllerActionEnum::RETRIVE));
 
         // Incluir opcao: Listar usuario cadastrados
         menuItems.push_back(MenuItemSet("Listar usuarios", userController, ControllerActionEnum::RETRIVE));

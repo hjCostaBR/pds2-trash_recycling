@@ -13,7 +13,6 @@ using namespace std;
 class SchedulingModel {
 
 private:
-    int code = 0;
     string date = "";
     int meetingPointCode = 0;
     int donatorCode = 0;
@@ -25,10 +24,6 @@ public:
 
     /** Construtor. */
     SchedulingModel(void){};
-
-    // Codigo
-    int getCode() const { return code; }
-    void setCode(int code) { this->code = code; }
 
     // Data
     const string getDate() const { return date; }

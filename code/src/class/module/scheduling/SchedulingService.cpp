@@ -2,10 +2,11 @@
 #define _SCHEDULLING_SERVICE_CPP_
 
 #include <vector>
+#include "../../../../header/module/scheduling/SchedulingModel.h"
 #include "../../../../header/module/scheduling/SchedulingService.h"
 #include "../../../../header/common/FindResult.h"
 
-bool SchedullingService::validateStoredRegister(const vector<string> lineProps) const {
+bool SchedulingService::validateStoredRegister(const vector<string> lineProps) const {
 
     // if (lineProps.size() != 2) return false;
     //
@@ -15,43 +16,43 @@ bool SchedullingService::validateStoredRegister(const vector<string> lineProps) 
     return true;
 };
 
-void SchedullingService::showRegisterData(const shared_ptr<SchedullingModel> schedulling) const {
-    // cout << "|\t" << schedulling->getCode() << "\t| "
-    //      << schedulling->getName() << "\t|"
+void SchedulingService::showRegisterData(const shared_ptr<SchedulingModel> scheduling) const {
+    // cout << "|\t" << scheduling->getCode() << "\t| "
+    //      << scheduling->getName() << "\t|"
     //      << endl;
 };
 
-void SchedullingService::showDataTableHeader(void) const {
+void SchedulingService::showDataTableHeader(void) const {
     cout << "|\tCodigo\t|"
          << "\tNome\t\t|"
          << endl;
 };
 
-void SchedullingService::showRegistersListData(const vector<FindResult<SchedullingModel>> schedullingList) const {
+void SchedulingService::showRegistersListData(const vector<FindResult<SchedulingModel>> schedulingList) const {
 
-    if (!schedullingList.size()) {
+    if (!schedulingList.size()) {
         cout << "Nenhum registro encontrado..." << endl;
         return;
     }
 
     this->showDataTableHeader();
 
-    for (uint i = 0; i < schedullingList.size(); i++) {
-        this->showRegisterData(schedullingList[i].foundRegister);
+    for (uint i = 0; i < schedulingList.size(); i++) {
+        this->showRegisterData(schedulingList[i].foundRegister);
     }
 
     cout << endl;
 };
 
-shared_ptr<SchedullingModel> SchedullingService::getModelFromStorageLine(const vector<string> lineProps) {
+shared_ptr<SchedulingModel> SchedulingService::getModelFromStorageLine(const vector<string> lineProps) {
 
     if (!this->validateStoredRegister(lineProps))
         throw invalid_argument("Tentativa de gerar Agendamento a partir de dados invalidos");
 
-    // auto schedulling = make_shared<SchedullingModel>();
-    // schedulling->setCode(stoi(lineProps[0]));
-    // schedulling->setName(lineProps[1]);
-    // return schedulling;
+    // auto scheduling = make_shared<SchedulingModel>();
+    // scheduling->setCode(stoi(lineProps[0]));
+    // scheduling->setName(lineProps[1]);
+    // return scheduling;
     return nullptr;
 };
 
