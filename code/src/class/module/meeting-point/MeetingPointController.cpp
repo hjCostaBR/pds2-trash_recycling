@@ -165,18 +165,4 @@ bool MeetingPointController::runAction(int action, shared_ptr<UserModel> current
     // return false;
 };
 
-void MeetingPointController::setCurrentMeetingPointName(void) {
-    // cout << "Informe nome do tipo de residuo: ";
-    // char readInput[100];
-    // cin.getline(readInput, sizeof(readInput));
-    // if (readInput != "0") this->currentMeetingPoint->setName(string(readInput));
-};
-
-void MeetingPointController::setCurrentMeetingPointStorageSpecification(void) {
-    // cout << "Informe descricao de armazenamento para este tipo de residuo (max 100 caracteres): ";
-    // char readInput[100];
-    // cin.getline(readInput, sizeof(readInput));
-    // if (readInput != "0") this->currentMeetingPoint->setStorageSpecification(string(readInput));
-};
-
 #endif

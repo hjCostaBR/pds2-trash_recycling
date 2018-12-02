@@ -7,6 +7,7 @@
 #include "../../common/interface/IService.h"
 #include "../../common/FindResult.h"
 #include "../../common/enums.h"
+#include "MeetingPointModel.h"
 
 using namespace std;
 
