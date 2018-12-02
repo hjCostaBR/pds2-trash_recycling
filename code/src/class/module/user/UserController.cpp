@@ -177,7 +177,7 @@ void UserController::setCurrentUserRejTypeList(void) {
     do {
 
         // Captura
-        const string selectedCodesStr = this->getStringFromStdIO("Insira lista de codigos (separados por virgula)");
+        const string selectedCodesStr = this->getStringFromStdIO("Insira lista de codigos (separados por virgula): ");
 
         stringstream ss(selectedCodesStr);
         string item;
@@ -205,7 +205,7 @@ void UserController::setCurrentUserRejTypeList(void) {
         }
 
         // Valida
-        if (!error) {
+        if (!error && selectedCodes.size() > 0) {
             repeat = false;
             continue;
         }

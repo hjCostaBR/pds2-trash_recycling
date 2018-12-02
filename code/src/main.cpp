@@ -30,7 +30,7 @@ int main(int argc, char const *argv[]) {
     // Prepara controller de usuarios
     auto rejTypeService = make_shared<RejectTypeService>();
     auto regTypeDao = make_shared<RejectTypeDAO>(rejTypeService);
-    auto userService = make_shared<UserService>();
+    auto userService = make_shared<UserService>(regTypeDao);
     auto userDao = make_shared<UserDAO>(userService);
     auto userController = make_shared<UserController>(userDao, userService, rejTypeService, regTypeDao);
 

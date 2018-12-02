@@ -120,9 +120,14 @@ void UserDAO::writeRegisterIntoStorage(shared_ptr<UserModel> user) {
         << user->getCode() << ";"
         << user->getCpfCnpj() << ";"
         << user->getType() << ";"
-        << user->getName() << ";"
-        // << user->getRejectTypesOfInterestCodes() << ";"
-        << endl;
+        << user->getName() << ";";
+
+    for (uint i = 0; i < user->getRejectTypesOfInterestCodes().size(); i++) {
+        if (i > 0) this->writingStream << ",";
+        this->writingStream << user->getRejectTypesOfInterestCodes()[i];
+    }
+
+    this->writingStream << ";" << endl;
 };
 
 #endif

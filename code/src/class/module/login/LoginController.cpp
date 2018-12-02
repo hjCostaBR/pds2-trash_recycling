@@ -95,7 +95,7 @@ void LoginController::showLoggedOptions(const shared_ptr<UserModel> loggedUser) 
     }
 
     // Incluir opcao: Listar usuario cadastrados
-    auto userService = make_shared<UserService>();
+    auto userService = make_shared<UserService>(rejectTypeDao);
     auto userDao = make_shared<UserDAO>(userService);
     auto userController = make_shared<UserController>(userDao, userService, rejectTypeService, rejectTypeDao);
 

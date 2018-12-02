@@ -3,6 +3,7 @@
 
 #include <string>
 #include <memory>
+#include "../../module/reject-type/RejectTypeDAO.h"
 #include "../../module/user/UserModel.h"
 #include "../../common/interface/IService.h"
 #include "../../common/enums.h"
@@ -11,8 +12,15 @@ using namespace std;
 
 class UserService: IService {
 
+private:
+
+    /** DAO de Tipos de Residuo. */
+    shared_ptr<RejectTypeDAO> rejTypeDAO = nullptr;
+
 public:
-    UserService(void) {};
+
+    /** Contrutor. */
+    UserService(const shared_ptr<RejectTypeDAO> rejTypeDAO): rejTypeDAO(rejTypeDAO) {};
 
     /**
      * @inherit

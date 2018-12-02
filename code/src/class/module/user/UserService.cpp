@@ -29,6 +29,7 @@ bool UserService::validateStoredRegister(const vector<string> lineProps) const {
 
 void UserService::showRegisterData(const shared_ptr<UserModel> user) const {
 
+    // Exibe dados gerais
     cout << "|\t" << user->getCode()
          << "\t|\t" << user->getCpfCnpj()
          << "\t|\t" << this->getUserTypeLabel((UserTypeEnum)user->getType());
@@ -37,6 +38,30 @@ void UserService::showRegisterData(const shared_ptr<UserModel> user) const {
 
     cout << "\t|\t" << user->getName()
          << "\t|" << endl;
+
+    // Exibe lista de residuos de interesse
+    if (!user->getRejectTypesOfInterestCodes().size()) {
+        cout << "Nenhum Tipo de Residuo de interesse selecionado..." << endl;
+        return;
+    }
+
+    cout << "Residuos de interesse: ";
+
+    for (uint i = 0; i < user->getRejectTypesOfInterestCodes().size(); i++) {
+
+        const int rejTypeCode = user->getRejectTypesOfInterestCodes()[i];
+        const auto rejTypeSearch = this->rejTypeDAO->findOne(rejTypeCode);
+
+        if (rejTypeSearch.foundRegister == nullptr) {
+            cout << endl << "** WARNING: Cadastro de usuário invalido (tipo de residuo nao existe: " << rejTypeCode << ") **" << endl << endl;
+            continue;
+        }
+
+        if (i > 0) cout << ", ";
+        cout << rejTypeSearch.foundRegister->getName();
+    }
+
+    cout << endl;
 };
 
 PersonTypeEnum UserService::getUserPersonType(const string cpfCnpj) const {
