@@ -28,9 +28,11 @@ int main(int argc, char const *argv[]) {
          << endl << endl;
 
     // Prepara controller de usuarios
+    auto rejTypeService = make_shared<RejectTypeService>();
+    auto regTypeDao = make_shared<RejectTypeDAO>(rejTypeService);
     auto userService = make_shared<UserService>();
     auto userDao = make_shared<UserDAO>(userService);
-    auto userController = make_shared<UserController>(userDao, userService);
+    auto userController = make_shared<UserController>(userDao, userService, rejTypeService, regTypeDao);
 
     // Exibir menu principal
     vector<MenuItemSet> menuItems;

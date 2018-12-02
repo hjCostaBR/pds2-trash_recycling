@@ -5,6 +5,7 @@
 #include <functional>
 #include <map>
 #include <algorithm>
+#include <sstream>
 #include "../../../../header/module/user/UserController.h"
 #include "../../../../header/module/user/UserModel.h"
 #include "../../../../header/common/enums.h"
@@ -159,13 +160,66 @@ void UserController::setCurrentUserName(void) {
 
 void UserController::setCurrentUserRejTypeList(void) {
 
-    const string update = this->aksYesOrNoQuestionThroughStdIO("Deseja alterar lista de Tipos de Residuo de interesse?");
+    // Confirma intencao alterar essa lista
+    cout << endl;
+    const bool update = this->aksYesOrNoQuestionThroughStdIO("Deseja alterar lista de Tipos de Residuo de interesse?");
     if (!update) return;
 
-    cout << "Tipos de residuo disponiveis: " << endl;
-    this->rejTypeService->showRegistersListData();
+    // Exibe opcoes disponiveis
+    cout << ">> Tipos de Residuo disponiveis: " << endl;
+    const auto rejTypesSearch = this->rejTypeDao->findAll();
+    this->rejTypeService->showRegistersListData(rejTypesSearch);
 
-    // if (update != "0") this->currentUser->setName(update);
+    // Captura selecao do usuario
+    vector<int> selectedCodes;
+    bool repeat = true;
+
+    do {
+
+        // Captura
+        const string selectedCodesStr = this->getStringFromStdIO("Insira lista de codigos (separados por virgula)");
+
+        stringstream ss(selectedCodesStr);
+        string item;
+        bool error = false;
+
+        while (getline(ss, item, ',')) {
+
+            try {
+
+                const int code = stoi(item);
+                const auto existanceTestSearch = this->rejTypeDao->findOne(code);
+
+                if (existanceTestSearch.foundRegister == nullptr) {
+                    cout << "Tipo de Residuo de codigo '" << code << "' nao existe" << endl;
+                    error = true;
+                    continue;
+                }
+
+                selectedCodes.push_back(code);
+
+            } catch (exception err) {
+                cout << "Valor invalido: '" << item << "'" << endl;
+                error = true;
+            }
+        }
+
+        // Valida
+        if (!error) {
+            repeat = false;
+            continue;
+        }
+
+        cout << endl;
+        const bool tryAgain = this->aksYesOrNoQuestionThroughStdIO("Lista invalida. Deseja tentar novamente?");
+        if (!tryAgain) return;
+
+    } while (repeat);
+
+    // Add tipos de residuo para o usuario
+    for (uint i = 0; i < selectedCodes.size(); i++) {
+        this->currentUser->addRejectTypeOfInterest(selectedCodes[i]);
+    }
 };
 
 bool UserController::getDataForUserFromStdIo(const bool insert, const bool admin) {
@@ -198,7 +252,8 @@ bool UserController::getDataForUserFromStdIo(const bool insert, const bool admin
     this->setCurrentUserName();
     if (this->currentUser->getName() == "") return false;
 
-    // @todo: Captura lista de residuos de interesse
+    // Captura lista de tipos de residuo de interesse do usuario
+    this->setCurrentUserRejTypeList();
     return true;
 };
 

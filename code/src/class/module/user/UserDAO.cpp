@@ -121,7 +121,7 @@ void UserDAO::writeRegisterIntoStorage(shared_ptr<UserModel> user) {
         << user->getCpfCnpj() << ";"
         << user->getType() << ";"
         << user->getName() << ";"
-        // << user->getRejectTypesOfInterest() << ";"
+        // << user->getRejectTypesOfInterestCodes() << ";"
         << endl;
 };
 

@@ -97,7 +97,7 @@ void LoginController::showLoggedOptions(const shared_ptr<UserModel> loggedUser) 
     // Incluir opcao: Listar usuario cadastrados
     auto userService = make_shared<UserService>();
     auto userDao = make_shared<UserDAO>(userService);
-    auto userController = make_shared<UserController>(userDao, userService);
+    auto userController = make_shared<UserController>(userDao, userService, rejectTypeService, rejectTypeDao);
 
     if (loggedUser->getType() == UserTypeEnum::ADMIN)
         menuItems.push_back(MenuItemSet("Listar usuarios", userController, ControllerActionEnum::RETRIVE));

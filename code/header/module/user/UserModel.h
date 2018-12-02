@@ -17,7 +17,7 @@ private:
     string cpfCnpj = "";
     int type = 0;
     string name = "";
-    vector<RejectTypeModel> rejectTypesOfInterest;
+    vector<int> rejTypesOfInterestCodes;
 
 public:
 
@@ -41,9 +41,9 @@ public:
     void setName(const string &name) { this->name = name; }
 
     // Lista de Residuos
-    void resetRejectTypesOfInterest(void);
-    void addRejectTypeOfInterest(RejectTypeModel rejectType);
-    const vector<RejectTypeModel> &getRejectTypesOfInterest() const { return rejectTypesOfInterest; }
+    void resetRejectTypesOfInterest(void) { this->rejTypesOfInterestCodes = vector<int>(); };
+    void addRejectTypeOfInterest(int rejTypeCode) { this->rejTypesOfInterestCodes.push_back(rejTypeCode); };
+    const vector<int> getRejectTypesOfInterestCodes() const { return rejTypesOfInterestCodes; }
 };
 
 #endif
