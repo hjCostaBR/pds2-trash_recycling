@@ -122,11 +122,15 @@ bool RejectTypeController::showList(const shared_ptr<UserModel> currentUser) {
     string action = "";
 
     do {
+
         if (action != "") cout << "Acao '" << action << "' invalida!" << endl << endl;
-        action = this->getStringFromStdIO("Pressione 'e' (para editar) ou 'r' (para remover): ");
+        cout << "Pressione 'e' (para editar) ou 'r' (para remover): ";
+
+        char readInput[100];
+        scanf("%s", &readInput);
+        action = string(readInput);
+
         if (action == "0") return true;
-        cin.ignore();
-        cout << "\n!!DEBUG!! action: " << action << "\n'";
 
     } while (action != "e" && action != "r");
 
@@ -137,7 +141,7 @@ bool RejectTypeController::showList(const shared_ptr<UserModel> currentUser) {
     cout << "Opcao selecionada: " << actionStr << endl << endl;
 
     // Seleciona item sobre o qual a acao sera executada
-    auto rejType = make_shared<RejectTypeModel>() = nullptr;
+    FindResult<RejectTypeModel> rejTypeSearch;
     string selectionDescMsg = "Informe o codigo do Tipo de Residuo a ser ";
     selectionDescMsg += (remove) ? "removido" : "editado";
 
@@ -146,29 +150,28 @@ bool RejectTypeController::showList(const shared_ptr<UserModel> currentUser) {
         const int selectedRejCode = this->getNumberFromStdIO(selectionDescMsg, "Codigo invalido: ");
         if (selectedRejCode == 0) return true;
 
-        const auto rejTypeSearch = this->dao->findOne(selectedRejCode);
-        rejType = rejTypeSearch.foundRegister;
+        rejTypeSearch = this->dao->findOne(selectedRejCode);
 
-        if (rejType == nullptr) {
+        if (rejTypeSearch.foundRegister == nullptr) {
             cout << "Tipo de residuo nao encontrado (codigo invalido)" << endl << endl;
             const auto tryAgain = this->aksYesOrNoQuestionThroughStdIO("Deseja tentar novamente?");
             if (!tryAgain) return true;
         }
 
-    } while (rejType == nullptr);
-
+    } while (rejTypeSearch.foundRegister == nullptr);
 
     // Executa remocao (se necessario)
     if (remove) {
-        // @todo: Remover
-        cout << "removendo..." << endl;
-    }
+        this->dao->deleteOne(rejTypeSearch.line);
+        cout << "Tipo de residuo removido com sucesso!" << endl;
 
     // Executa edicao (se necessario)
-    // @todo: Editar
-    cout << "editando..." << endl;
+    } else {
+        // @todo: Editar
+        cout << "editando..." << endl;
+    }
 
-    return false;
+    return true;
 };
 
 bool RejectTypeController::runAction(int action) {
@@ -184,13 +187,17 @@ bool RejectTypeController::runAction(int action, shared_ptr<UserModel> currentUs
 };
 
 void RejectTypeController::setCurrentRejectTypeName(void) {
-    const string readInput = this->getStringFromStdIO("Informe nome do tipo de residuo: ");
-    if (readInput != "0") this->currentRejectType->setName(readInput);
+    cout << "Informe nome do tipo de residuo: ";
+    char readInput[100];
+    cin.getline(readInput, sizeof(readInput));
+    if (readInput != "0") this->currentRejectType->setName(string(readInput));
 };
 
 void RejectTypeController::setCurrentRejectTypeStorageSpecification(void) {
-    const string readInput = this->getStringFromStdIO("Informe descricao de armazenamento para este tipo de residuo (max 100 caracteres): ");
-    if (readInput != "0") this->currentRejectType->setStorageSpecification(readInput);
+    cout << "Informe descricao de armazenamento para este tipo de residuo (max 100 caracteres): ";
+    char readInput[100];
+    cin.getline(readInput, sizeof(readInput));
+    if (readInput != "0") this->currentRejectType->setStorageSpecification(string(readInput));
 };
 
 #endif

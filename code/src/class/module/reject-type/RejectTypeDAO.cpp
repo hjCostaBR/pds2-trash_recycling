@@ -21,7 +21,7 @@ void RejectTypeDAO::writeRegisterIntoStorage(shared_ptr<RejectTypeModel> rejectT
 
     this->writingStream
             << rejectType->getCode() << ";"
-            << rejectType->getName() << ":"
+            << rejectType->getName() << ";"
             << rejectType->getStorageSpecification() << ";"
             << endl;
 }

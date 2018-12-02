@@ -51,12 +51,6 @@ protected:
      */
     void openStorageForReading(void);
 
-    /**
-     * Remove do armazenamento 01 registro identificado pelo numero de sua linha.
-     * @param line
-     */
-    void deleteOne(const int line);
-
     /** Define & retorna nome do arquivo de armazenamento utilizado pela DAO. */
     virtual string getStorageFileName(void) = 0;
 
@@ -80,6 +74,12 @@ public:
      * @return Registro recem atualizado.
      */
     virtual shared_ptr<IModel> update(const shared_ptr<IModel> model) {};
+
+    /**
+     * Remove do armazenamento 01 registro identificado pelo numero de sua linha.
+     * @param line
+     */
+    void deleteOne(const int line);
 };
 
 #endif

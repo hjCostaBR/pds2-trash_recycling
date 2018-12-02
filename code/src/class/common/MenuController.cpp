@@ -39,6 +39,7 @@ MenuItemSet MenuController::showOptionsAndGetSelectedController(void) {
 
         // Captura selecao de 01 item do menu
         cin >> readInput;
+        cin.ignore();
 
         try {
             selectedOptionCode = (stoi(readInput) - 1);

@@ -27,6 +27,7 @@ void UserController::setCurrentUserPersonType(void) {
         // Captura entrada
         cout << "Informe o tipo de pessoa do cadastro (pf/pj): ";
         cin >> readInput;
+        cin.ignore();
         reapeat = (readInput != "pf" && readInput != "pj" && readInput != "0");
 
     } while (reapeat);

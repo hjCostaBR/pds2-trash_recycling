@@ -1,2 +1,1 @@
-10;Papel;Armazenar sem amassar;
-11;Plastico;Armazenar seco;
+11;Papel;Pode rasgar mas nao pode amassar;
