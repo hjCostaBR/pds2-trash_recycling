@@ -189,21 +189,24 @@ bool SchedulingController::runAction(int action, shared_ptr<UserModel> currentUs
 
         string missingResource = "";
 
-        if (err.what() == "no-meeting-points") {
+        if ((string)err.what() == "no-meeting-points") {
             missingResource = "Pontos de Coleta";
 
-        } else if (err.what() == "no-donators") {
+        } else if ((string)err.what() == "no-donators") {
             missingResource = "Doadores";
 
-        } else if (err.what() == "no-receivers") {
+        } else if ((string)err.what() == "no-receivers") {
             missingResource = "Receptores";
 
-        } else if (err.what() == "no-reject-types") {
+        } else if ((string)err.what() == "no-reject-types") {
             missingResource = "Tipos de Residuo";
         }
 
         if (missingResource == "") throw err;
-        cout << "Nao eh possivel cadastrar um agendamento, no momento. Nao ha " << missingResource << " disponiveis.." << endl << endl;
+
+        cout << "Nao eh possivel cadastrar um agendamento, no momento :(" << endl
+            << "Nao ha " << missingResource << " disponiveis..." << endl;
+
         return false;
 
     } catch (exception err) {
