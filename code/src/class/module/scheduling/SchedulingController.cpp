@@ -1,6 +1,7 @@
 #ifndef _SCHEDULING_CONTROLLER_CPP_
 #define _SCHEDULING_CONTROLLER_CPP_
 
+#include <sstream>
 #include "../../../../header/module/user/UserModel.h"
 #include "../../../../header/module/scheduling/SchedulingController.h"
 #include "../../../../header/module/scheduling/SchedulingModel.h"
@@ -35,31 +36,46 @@ bool SchedulingController::create(const shared_ptr<UserModel> loggedUser) {
     } while (true);
 };
 
+bool SchedulingController::getOptionsForScheduling(const bool loggedUserIsDonator) {
+
+    this->availableMPoints = this->mPointDao->findAll();
+    if (!this->availableMPoints.size()) throw domain_error("no-meeting-points");
+
+    this->availableRejTypes = this->rejTypeDao->findAll();
+    if (!this->availableRejTypes.size()) throw domain_error("no-reject-types");
+
+    if (loggedUserIsDonator) {
+        this->availableReceivers = this->userDao->findAllReceivers();
+        if (!this->availableReceivers.size()) throw domain_error("no-receivers");
+    }
+
+    if (!loggedUserIsDonator) {
+        this->availableDonators = this->userDao->findAllDonators();
+        if (!this->availableDonators.size()) throw domain_error("no-donators");
+    }
+}
+
 bool SchedulingController::getDataFromStdIo(const bool insert, const shared_ptr<UserModel> loggedUser) {
 
     // Define data
     this->setCurrentSchedulingDate();
     if (this->currentScheduling->getDate() == "") return false;
-    // string date = "";
 
     // Define ponto de coleta
     this->setCurrentSchedulingMeetingPoint();
     if (!this->currentScheduling->getMeetingPointCode()) return false;
-    // int meetingPointCode = 0;
 
     // Define doador
-    this->setCurrentSchedulingDonator(loggedUser);
+    this->setCurrentSchedulingUser(loggedUser, true);
     if (!this->currentScheduling->getDonatorCode()) return false;
 
     // Define recpetor
-    // this->setCurrentSchedulingReceiver(loggedUser);
-    // if (!this->currentScheduling->getReceiverCode()) return false;
+    this->setCurrentSchedulingUser(loggedUser, false);
+    if (!this->currentScheduling->getReceiverCode()) return false;
 
-
-    // int donatorCode = 0;
-    // int receiverCode = 0;
-    // vector<int> rejectsToBeExchangedCodes;
-    // bool done = false;
+    // Define Residuos a serem trocados
+    this->setCurrentSchedulingRejectsList();
+    if (!this->currentScheduling->getRejectsToBeExchangedCodes().size()) return false;
 
     return true;
 };
@@ -160,9 +176,40 @@ bool SchedulingController::showList(void) {
 };
 
 bool SchedulingController::runAction(int action, shared_ptr<UserModel> currentUser) {
+
     if (action != ControllerActionEnum::CREATE) throw invalid_argument("Acao invalida para controlador de agendamentos");
-    if (!this->create(currentUser)) cout << "Usuario selecionou: 'sair'..." << endl;
-    return false;
+
+    try {
+
+        this->getOptionsForScheduling(currentUser->getType() == UserTypeEnum::DONATOR);
+        if (!this->create(currentUser)) cout << "Usuario selecionou: 'sair'..." << endl;
+        return false;
+
+    } catch (domain_error err) {
+
+        string missingResource = "";
+
+        if (err.what() == "no-meeting-points") {
+            missingResource = "Pontos de Coleta";
+
+        } else if (err.what() == "no-donators") {
+            missingResource = "Doadores";
+
+        } else if (err.what() == "no-receivers") {
+            missingResource = "Receptores";
+
+        } else if (err.what() == "no-reject-types") {
+            missingResource = "Tipos de Residuo";
+        }
+
+        if (missingResource == "") throw err;
+        cout << "Nao eh possivel cadastrar um agendamento, no momento. Nao ha " << missingResource << " disponiveis.." << endl << endl;
+        return false;
+
+    } catch (exception err) {
+        cout << "Falha inesperada ao tentar Criar Agendamento" << endl;
+        exit(1);
+    }
 };
 
 void SchedulingController::setCurrentSchedulingDate(void) {
@@ -182,88 +229,178 @@ void SchedulingController::setCurrentSchedulingMeetingPoint(void) {
 
     // Exibe opcoes disponiveis
     cout << ">> Pontos de Coleta disponiveis: " << endl;
-    const auto mPoints = this->mPointDao->findAll();
-    this->mPointService->showRegistersListData(mPoints);
+    this->mPointService->showRegistersListData(this->availableMPoints);
 
     // Captura selecao do usuario
     shared_ptr<MeetingPointModel> selectedMPoint = nullptr;
     int selectedMPointCode;
-    bool repeat = true;
-
-    do {
-
-        selectedMPointCode = this->getNumberFromStdIO("Informe o codigo do Ponto de Coleta a ser selecionado", "Codigo invalido");
-        const auto existanceTestSearch = this->mPointDao->findOne(selectedMPointCode);
-        selectedMPoint = existanceTestSearch.foundRegister;
-
-        if (selectedMPoint == nullptr) {
-            const bool tryAgain = this->aksYesOrNoQuestionThroughStdIO("Nao existe um Ponto de Coleta com este codigo. Deseja tentar novamente?");
-            if (!tryAgain) return;
-            cout << endl;
-            continue;
-        }
-
-        repeat = false;
-
-    } while (repeat);
-
-    // Add Ponto de Coleta
-    cout << "Ponto de Coleta selecionado: " << selectedMPoint->getName() << endl;
-    this->currentScheduling->setMeetingPointCode(selectedMPointCode);
-};
-
-void SchedulingController::setCurrentSchedulingDonator(const shared_ptr<UserModel> loggedUser) {
-
-    // Define usuario logado como doador (se necessario)
-    if (loggedUser->getType() == UserTypeEnum::DONATOR) {
-        this->currentScheduling->setDonatorCode(loggedUser->getCode());
-        return;
-    }
-
-    // Confirma intencao
-    cout << endl;
-    const bool goOn = this->aksYesOrNoQuestionThroughStdIO("Avancar para selecionar Doador?");
-    if (!goOn) return;
-
-    // Exibe opcoes disponiveis
-    cout << ">> Doadores disponiveis: " << endl;
-    const auto donators = this->userDao->findAllDonators();
-    this->userService->showRegistersListData(donators);
-
-    // Captura selecao do usuario
-    shared_ptr<UserModel> selectedDonator = nullptr;
-    int selectedDonatorCode;
 
     do {
 
         // Captura codigo
-        selectedDonatorCode = this->getNumberFromStdIO("Informe o codigo do Usuario a ser selecionado", "Codigo invalido");
+        selectedMPointCode = this->getNumberFromStdIO("Informe o codigo do Ponto de Coleta a ser selecionado", "Codigo invalido");
         bool found = false;
 
-        for (uint i = 0; i < donators.size(); i++) {
-            const auto currentDonator = donators[i].foundRegister;
-            if (currentDonator->getCode() != selectedDonatorCode) continue;
+        for (uint i = 0; i < this->availableMPoints.size(); i++) {
+            const auto currentMpoint = this->availableMPoints[i].foundRegister;
+            if (currentMpoint->getCode() != selectedMPointCode) continue;
             found = true;
-            selectedDonator = currentDonator;
+            selectedMPoint = currentMpoint;
             break;
         }
 
         if (found) break;
 
         // Notifica falha
-        const bool tryAgain = this->aksYesOrNoQuestionThroughStdIO("Nao existe um Doador com este codigo. Deseja tentar novamente?");
+        const bool tryAgain = this->aksYesOrNoQuestionThroughStdIO("Nao existe um Ponto de Coleta com este codigo. Deseja tentar novamente?");
         if (!tryAgain) return;
         cout << endl;
 
     } while (true);
 
-    // Add Doador
-    cout << "Doador selecionado: " << selectedDonator->getName() << endl;
-    this->currentScheduling->setMeetingPointCode(selectedDonatorCode);
+    // Add Ponto de Coleta
+    cout << "Ponto de Coleta selecionado: " << selectedMPoint->getName() << endl;
+    this->currentScheduling->setMeetingPointCode(selectedMPointCode);
 };
 
-void SchedulingController::setCurrentSchedulingReceiver(const shared_ptr<UserModel> loggedUser) {};
+void SchedulingController::setCurrentSchedulingUser(const shared_ptr<UserModel> loggedUser, const bool setDonator) {
 
-void SchedulingController::setCurrentSchedulingRejectsList(void) {};
+    // Define usuario logado como doador (se necessario)
+    if (setDonator && loggedUser->getType() == UserTypeEnum::DONATOR) {
+        this->currentScheduling->setDonatorCode(loggedUser->getCode());
+        return;
+    }
+
+    // Define usuario logado como receptor (se necessario)
+    if (!setDonator && loggedUser->getType() == UserTypeEnum::RECEIVER) {
+        this->currentScheduling->setReceiverCode(loggedUser->getCode());
+        return;
+    }
+
+    // Confirma intencao
+    cout << endl;
+    const string schedullingUserType = setDonator ? "Doador" : "Receptor";
+    const bool goOn = this->aksYesOrNoQuestionThroughStdIO("Avancar para selecionar " + schedullingUserType + "?");
+    if (!goOn) return;
+
+    // Exibe opcoes disponiveis
+    cout << ">> " + schedullingUserType + "s disponiveis: " << endl;
+    const auto availableUsers = setDonator ? this->availableDonators : this->availableReceivers;
+    this->userService->showRegistersListData(availableUsers);
+
+    // Captura selecao do usuario
+    shared_ptr<UserModel> selectedUser = nullptr;
+    int selectedUserCode;
+
+    do {
+
+        // Captura codigo
+        selectedUserCode = this->getNumberFromStdIO("Informe o codigo do " + schedullingUserType + " a ser selecionado", "Codigo invalido");
+        bool found = false;
+
+        for (uint i = 0; i < availableUsers.size(); i++) {
+            const auto currentUser = availableUsers[i].foundRegister;
+            if (currentUser->getCode() != selectedUserCode) continue;
+            found = true;
+            selectedUser = currentUser;
+            break;
+        }
+
+        if (found) break;
+
+        // Notifica falha
+        const bool tryAgain = this->aksYesOrNoQuestionThroughStdIO("Nao existe um(a) " + schedullingUserType + " com este codigo. Deseja tentar novamente?");
+        if (!tryAgain) return;
+        cout << endl;
+
+    } while (true);
+
+    // Tudo OK
+    cout << schedullingUserType << " selecionado(a): " << selectedUser->getName() << endl;
+
+    if (setDonator) {
+        this->currentScheduling->setDonatorCode(selectedUserCode);
+
+    } else {
+        this->currentScheduling->setReceiverCode(selectedUserCode);
+    }
+};
+
+void SchedulingController::setCurrentSchedulingRejectsList(void) {
+
+    // Confirma intencao
+    cout << endl;
+    const bool goOn = this->aksYesOrNoQuestionThroughStdIO("Avancar para selecionar Lista de Residuos a serem trocados?");
+    if (!goOn) return;
+
+    // Exibe opcoes disponiveis
+    cout << ">> Tipos de Residuo disponiveis: " << endl;
+    this->rejTypeService->showRegistersListData(this->availableRejTypes);
+
+    // Captura selecao do usuario
+    vector<shared_ptr<RejectTypeModel>> selectedRejTypes;
+    bool repeat = true;
+
+    do {
+
+        // Captura
+        const string selectedCodesStr = this->getStringFromStdIO("Insira lista de codigos (separados por virgula): ");
+
+        stringstream ss(selectedCodesStr);
+        string item;
+        bool error = false;
+
+        while (getline(ss, item, ',')) {
+
+            try {
+
+                // Captura codigo
+                const int rejTypeCode = stoi(item);
+                bool exists = false;
+
+                for (uint i = 0; i < this->availableRejTypes.size(); i++) {
+                    const auto currentRejType = this->availableRejTypes[i].foundRegister;
+                    if (currentRejType->getCode() != rejTypeCode) continue;
+                    selectedRejTypes.push_back(currentRejType);
+                    exists = true;
+                    break;
+                }
+
+                // Valida
+                if (exists) continue;
+
+                cout << "Tipo de Residuo de codigo '" << rejTypeCode << "' nao existe" << endl;
+                error = true;
+
+            } catch (exception err) {
+                cout << "Valor invalido: '" << item << "'" << endl;
+                error = true;
+            }
+        }
+
+        // Valida
+        if (!error && selectedRejTypes.size() > 0) {
+            repeat = false;
+            continue;
+        }
+
+        cout << endl;
+        const bool tryAgain = this->aksYesOrNoQuestionThroughStdIO("Lista invalida. Deseja tentar novamente?");
+        if (!tryAgain) return;
+
+    } while (repeat);
+
+    // Add tipos de residuo
+    cout << "Residuos selecionados: ";
+
+    for (uint i = 0; i < selectedRejTypes.size(); i++) {
+        const auto selectedRejType = selectedRejTypes[i];
+        this->currentScheduling->addRejectToBeExchangedCode(selectedRejType->getCode());
+        if (i > 0) cout << ", ";
+        cout << selectedRejType->getName();
+    }
+
+    cout << endl;
+};
 
 #endif

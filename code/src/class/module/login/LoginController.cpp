@@ -109,7 +109,17 @@ void LoginController::showLoggedOptions(const shared_ptr<UserModel> loggedUser) 
         // Incluir opcao: Agendar coleta
         const auto schedulingService = make_shared<SchedulingService>();
         const auto schedulingDao = make_shared<SchedulingDAO>(schedulingService);
-        const auto schedulingController = make_shared<SchedulingController>(schedulingDao, schedulingService, mPointDao, mPointService, userDao, userService);
+
+        const auto schedulingController = make_shared<SchedulingController>(
+                schedulingDao,
+                schedulingService,
+                mPointDao,
+                mPointService,
+                userDao,
+                userService,
+                rejectTypeDao,
+                rejectTypeService
+        );
 
         menuItems.push_back(MenuItemSet("Agendar Coleta de Residuos", schedulingController, ControllerActionEnum::CREATE, loggedUser));
 
