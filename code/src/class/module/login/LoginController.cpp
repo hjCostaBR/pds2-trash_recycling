@@ -107,7 +107,7 @@ void LoginController::showLoggedOptions(const shared_ptr<UserModel> loggedUser) 
     if (loggedUser->getType() != UserTypeEnum::ADMIN) {
 
         // Incluir opcao: Agendar coleta
-        const auto schedulingService = make_shared<SchedulingService>();
+        const auto schedulingService = make_shared<SchedulingService>(mPointDao, userDao, rejectTypeDao);
         const auto schedulingDao = make_shared<SchedulingDAO>(schedulingService);
 
         const auto schedulingController = make_shared<SchedulingController>(
@@ -124,7 +124,7 @@ void LoginController::showLoggedOptions(const shared_ptr<UserModel> loggedUser) 
         menuItems.push_back(MenuItemSet("Agendar Coleta de Residuos", schedulingController, ControllerActionEnum::CREATE, loggedUser));
 
         // Incluir opcao: Visualizar agendamentos
-        menuItems.push_back(MenuItemSet("Minhas coletas agendadas", nullptr));
+        menuItems.push_back(MenuItemSet("Minhas coletas agendadas", schedulingController, ControllerActionEnum::RETRIVE, loggedUser));
         
     } else {
 

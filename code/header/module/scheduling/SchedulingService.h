@@ -8,14 +8,41 @@
 #include "../../common/FindResult.h"
 #include "../../common/enums.h"
 #include "SchedulingModel.h"
+#include "../meeting-point/MeetingPointDAO.h"
+#include "../user/UserDAO.h"
 
 using namespace std;
 
 class SchedulingService: IService {
 
+private:
+    /** DAO de Pontos de Coleta. */
+    shared_ptr<MeetingPointDAO> mPointDao = nullptr;
+    /** DAO de Usuarios. */
+    shared_ptr<UserDAO> userDao = nullptr;
+    /** DAO de Tipos de Residuo. */
+    shared_ptr<RejectTypeDAO> rejTypeDao = nullptr;
+
 public:
 
-    SchedulingService(void) {};
+    /**
+     * Contrutor.
+     *
+     * @param mPointDao
+     * @param userDao
+     * @param rejTypeDao
+     */
+    SchedulingService(
+        const shared_ptr<MeetingPointDAO> mPointDao,
+        const shared_ptr<UserDAO> userDao,
+        const shared_ptr<RejectTypeDAO> rejTypeDao,
+
+    ) :
+        mPointDao(mPointDao),
+        userDao(userDao),
+        rejTypeDao(rejTypeDao),
+    {};
+
 
     /**
      * @inherit

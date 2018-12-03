@@ -104,41 +104,43 @@ FindResult<SchedulingModel> SchedulingDAO::findOne(const int code) {
     // return result;
 };
 
-vector<FindResult<SchedulingModel>> SchedulingDAO::findAll(void) {
+vector<FindResult<SchedulingModel>> SchedulingDAO::findByUser(const int userCode) {
 
-    // this->openStorageForReading();
-    //
-    // vector<FindResult<SchedulingModel>> returnList;
-    // int lineCount = 0;
-    // string fileLine;
-    //
-    // while (getline(this->readingStream, fileLine)) {
-    //
-    //     lineCount++;
-    //
-    //     // Extrai propriedades da linha
-    //     stringstream ss(fileLine);
-    //     string item;
-    //     vector<string> lineProps;
-    //
-    //     while (getline(ss, item, ';')) {
-    //         lineProps.push_back(item);
-    //     }
-    //
-    //     // Valida valores extraidos
-    //     if (!this->service->validateStoredRegister(lineProps)) {
-    //         cout << endl << "** WARNING: Cadastro de Ponto de Coleta invalido (linha: " << lineCount << ") **" << endl << endl;
-    //         continue;
-    //     }
-    //
-    //     // Add item na lista de retorno
-    //     FindResult<SchedulingModel> result;
-    //     result.foundRegister = this->service->getModelFromStorageLine(lineProps);
-    //     result.line = lineCount;
-    //     returnList.push_back(result);
-    // }
-    //
-    // return returnList;
+    this->openStorageForReading();
+
+    vector<FindResult<SchedulingModel>> returnList;
+    int lineCount = 0;
+    string fileLine;
+
+    while (getline(this->readingStream, fileLine)) {
+
+        lineCount++;
+
+        // Extrai propriedades da linha
+        stringstream ss(fileLine);
+        string item;
+        vector<string> lineProps;
+
+        while (getline(ss, item, ';'))
+            lineProps.push_back(item);
+
+        // Valida valores extraidos
+        if (!this->service->validateStoredRegister(lineProps)) {
+            cout << endl << "** WARNING: Cadastro de Agendamento invalido (linha: " << lineCount << ") **" << endl << endl;
+            continue;
+        }
+
+        // Add item na lista de retorno (SE necessario)
+        const auto scheduling = this->service->getModelFromStorageLine(lineProps);
+        if (scheduling->getDonatorCode() != userCode && scheduling->getReceiverCode() != userCode) continue;
+
+        FindResult<SchedulingModel> result;
+        result.foundRegister = scheduling;
+        result.line = lineCount;
+        returnList.push_back(result);
+    }
+
+    return returnList;
 };
 
 #endif

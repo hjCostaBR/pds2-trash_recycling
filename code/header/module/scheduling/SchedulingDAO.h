@@ -57,10 +57,10 @@ public:
     FindResult<SchedulingModel> findOne(const int code);
 
     /**
-     * Captura & retorna lista com todos os registros armazenados.
+     * Captura & retorna lista com todos os registros associado a 01 determinado usuario.
      * @return
      */
-    vector<FindResult<SchedulingModel>> findAll(void);
+    vector<FindResult<SchedulingModel>> findByUser(const int userCode);
 };
 
 #endif

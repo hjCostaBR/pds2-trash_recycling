@@ -67,13 +67,15 @@ private:
     bool getDataFromStdIo(const shared_ptr<UserModel> loggedUser);
 
     /** Atualiza cadastro de 01 registro ja armazenado. */
-    bool update(shared_ptr<SchedulingModel> scheduling);
+    bool update();
 
     /**
      * Monta & exibe listagem de registros + opcoes de acao.
+     *
+     * @param loggedUser Codigo do usuario logado no momento.
      * @return Flag: SE o usuario selecionou 'sair'.
      */
-    bool showList(void);
+    bool showList(const int loggedUserCode);
 
     /** Captura & define data para o registro em edicao no momento. */
     void setCurrentSchedulingDate(void);
@@ -100,9 +102,26 @@ private:
      */
     bool getOptionsForScheduling(const bool loggedUserIsDonator);
 
+    /**
+     * Encapsula procedimento de mudanca de status de realizacao de 01 agendamento.
+     * @return
+     */
+    bool changeStatus();
+
 public:
 
-    /** Contrutor. */
+    /**
+     * Contrutor.
+     *
+     * @param dao
+     * @param service
+     * @param mPointDao
+     * @param mPointService
+     * @param userDao
+     * @param userService
+     * @param rejTypeDao
+     * @param rejTypeService
+     */
     SchedulingController(
         const shared_ptr<SchedulingDAO> dao,
         const shared_ptr<SchedulingService> service,
@@ -126,7 +145,7 @@ public:
     /**
      * @inherit
      */
-    virtual bool runAction(int action, shared_ptr<UserModel> currentUser);
+    virtual bool runAction(int action, shared_ptr<UserModel> loggedUser);
 };
 
 

@@ -10,6 +10,41 @@ using namespace std;
 
 bool SchedulingController::create(const shared_ptr<UserModel> loggedUser) {
 
+    // Captura listas de opcoes para criar agendamento
+    try {
+        this->getOptionsForScheduling(loggedUser->getType() == UserTypeEnum::DONATOR);
+
+    } catch (domain_error err) {
+
+        string missingResource = "";
+
+        if ((string)err.what() == "no-meeting-points") {
+            missingResource = "Pontos de Coleta";
+
+        } else if ((string)err.what() == "no-donators") {
+            missingResource = "Doadores";
+
+        } else if ((string)err.what() == "no-receivers") {
+            missingResource = "Receptores";
+
+        } else if ((string)err.what() == "no-reject-types") {
+            missingResource = "Tipos de Residuo";
+        }
+
+        if (missingResource == "") throw err;
+
+        cout << "Nao eh possivel cadastrar um agendamento, no momento :(" << endl
+             << "Nao ha " << missingResource << " disponiveis..." << endl;
+
+        return false;
+
+    } catch (exception err) {
+        cout << "Falha inesperada ao tentar Criar Agendamento" << endl;
+        exit(1);
+    }
+
+    bool exit = false;
+
     do {
 
         cout << "> NOVO AGENDAMENTO" << endl;
@@ -17,12 +52,15 @@ bool SchedulingController::create(const shared_ptr<UserModel> loggedUser) {
 
         this->currentScheduling = make_shared<SchedulingModel>();
 
-        if (!this->getDataFromStdIo(loggedUser)) return false;
+        if (!this->getDataFromStdIo(loggedUser)) {
+            exit = true;
+            break;
+        }
 
         try {
             this->dao->insert(this->currentScheduling);
             cout << endl << "Agendamento criado com sucesso!" << endl;
-            return true;
+            break;
 
         } catch (invalid_argument error) {
             cout << endl << "Ops! Dados invalidos para adicionar agendamento" << endl;
@@ -31,9 +69,14 @@ bool SchedulingController::create(const shared_ptr<UserModel> loggedUser) {
             cout << endl << "Falha inesperada ao tentar adicionar Ponto de Coleta" << endl;
         }
 
-        if (!this->aksYesOrNoQuestionThroughStdIO("Realizar nova tentativa?")) return false;
+        if (this->aksYesOrNoQuestionThroughStdIO("Realizar nova tentativa?")) continue;
+        exit = true;
+        break;
 
     } while (true);
+
+    if (exit) cout << "Usuario selecionou: 'sair'..." << endl;
+    return false;
 };
 
 bool SchedulingController::getOptionsForScheduling(const bool loggedUserIsDonator) {
@@ -80,7 +123,7 @@ bool SchedulingController::getDataFromStdIo(const shared_ptr<UserModel> loggedUs
     return true;
 };
 
-bool SchedulingController::update(shared_ptr<SchedulingModel> rejType) {
+bool SchedulingController::update() {
 
     // cout << endl << "> EDITAR PONTO de COLETA" << endl << endl;
     //
@@ -116,102 +159,106 @@ bool SchedulingController::update(shared_ptr<SchedulingModel> rejType) {
     // } while (true);
 };
 
-bool SchedulingController::showList(void) {
+bool SchedulingController::changeStatus(void) {
 
-    // cout << "> PONTOS de COLETA" << endl
-    //      << "Pressione '0' para sair..." << endl << endl;
-    //
-    // // Exibe listagem
-    // this->service->showRegistersListData(this->dao->findAll());
-    //
-    // // Captura acao selecionada pelo usuario
-    // string action = "";
-    //
-    // do {
-    //
-    //     if (action != "") cout << "Acao '" << action << "' invalida!" << endl << endl;
-    //     cout << "Pressione 'e' (para editar) ou 'r' (para remover): ";
-    //
-    //     char readInput[100];
-    //     scanf("%s", &readInput);
-    //     action = string(readInput);
-    //
-    //     if (action == "0") return false;
-    //
-    // } while (action != "e" && action != "r");
-    //
-    // const bool remove = (action == "r");
-    // const bool update = (action == "e");
-    //
-    // const string actionStr = (remove) ? "REMOVER" : "EDITAR";
-    // cout << "Opcao selecionada: " << actionStr << endl << endl;
-    //
-    // // Seleciona item sobre o qual a acao sera executada
-    // FindResult<SchedulingModel> mPointSearch;
-    // string selectionDescMsg = "Informe o codigo do Ponto de Coleta a ser ";
-    // selectionDescMsg += (remove) ? "removido" : "editado";
-    //
-    // do {
-    //
-    //     const int selectedMPointCode = this->getNumberFromStdIO(selectionDescMsg, "Codigo invalido: ");
-    //     if (selectedMPointCode == 0) return false;
-    //
-    //     mPointSearch = this->dao->findOne(selectedMPointCode);
-    //
-    //     if (mPointSearch.foundRegister == nullptr) {
-    //         cout << "Ponto de Coleta nao encontrado (codigo invalido)" << endl << endl;
-    //         const auto tryAgain = this->aksYesOrNoQuestionThroughStdIO("Deseja tentar novamente?");
-    //         if (!tryAgain) return false;
-    //     }
-    //
-    // } while (mPointSearch.foundRegister == nullptr);
-    //
-    // // Executa edicao (se necessario)
-    // if (update) return this->update(mPointSearch.foundRegister);
-    //
-    // // Executa remocao (se necessario)
-    // this->dao->deleteOne(mPointSearch.line);
-    // cout << "Ponto de Coleta removido com sucesso!" << endl;
-    return true;
 };
 
-bool SchedulingController::runAction(int action, shared_ptr<UserModel> currentUser) {
+bool SchedulingController::showList(const int loggedUserCode) {
 
-    if (action != ControllerActionEnum::CREATE) throw invalid_argument("Acao invalida para controlador de agendamentos");
+    cout << "> MEUS AGENDAMENTOS" << endl
+         << "Pressione '0' para sair..." << endl << endl;
 
-    try {
+    // Exibe listagem
+    const auto schedulingList = this->dao->findByUser(loggedUserCode);
+    this->service->showRegistersListData(schedulingList);
+    if (!schedulingList.size()) return true;
 
-        this->getOptionsForScheduling(currentUser->getType() == UserTypeEnum::DONATOR);
-        if (!this->create(currentUser)) cout << "Usuario selecionou: 'sair'..." << endl;
-        return false;
+    // Captura acao selecionada pelo usuario
+    string action = "";
 
-    } catch (domain_error err) {
+    do {
 
-        string missingResource = "";
+        if (action != "") cout << "Acao '" << action << "' invalida!" << endl << endl;
+        cout << "Pressione 's' (altear status) 'e' (para editar) ou 'r' (para remover): ";
 
-        if ((string)err.what() == "no-meeting-points") {
-            missingResource = "Pontos de Coleta";
+        char readInput[100];
+        scanf("%s", &readInput);
+        action = string(readInput);
 
-        } else if ((string)err.what() == "no-donators") {
-            missingResource = "Doadores";
+        if (action == "0") return false;
 
-        } else if ((string)err.what() == "no-receivers") {
-            missingResource = "Receptores";
+    } while (action != "e" && action != "r" && action != "s");
 
-        } else if ((string)err.what() == "no-reject-types") {
-            missingResource = "Tipos de Residuo";
+    const bool changeStatus = (action == "s");
+    const bool remove = (action == "r");
+    const bool update = (action == "e");
+
+    string actionStr = "EDITAR";
+
+    if (changeStatus) {
+        actionStr = "ALTERAR STATUS";
+
+    } else if (remove) {
+        actionStr = "REMOVER";
+    }
+
+    cout << "Opcao selecionada: " << actionStr << endl << endl;
+
+    // Seleciona item sobre o qual a acao sera executada
+    FindResult<SchedulingModel> schedulingSearch;
+    string selectionDescMsg = "Informe o codigo do Agendamento a ser ";
+    string selectionDescMsgComplement = "editado";
+
+    if (changeStatus) {
+        selectionDescMsgComplement = "marcado como realizado/nao realizado";
+
+    } else if (remove) {
+        selectionDescMsgComplement = "removido";
+    }
+
+    selectionDescMsg += selectionDescMsgComplement;
+
+    do {
+
+        const int selectedSchedulingCode = this->getNumberFromStdIO(selectionDescMsg, "Codigo invalido: ");
+        if (selectedSchedulingCode == 0) return false;
+
+        schedulingSearch = this->dao->findOne(selectedSchedulingCode);
+
+        if (schedulingSearch.foundRegister == nullptr) {
+            cout << "Agendamento nao encontrado (codigo invalido)" << endl << endl;
+            const auto tryAgain = this->aksYesOrNoQuestionThroughStdIO("Deseja tentar novamente?");
+            if (!tryAgain) return false;
         }
 
-        if (missingResource == "") throw err;
+    } while (schedulingSearch.foundRegister == nullptr);
 
-        cout << "Nao eh possivel cadastrar um agendamento, no momento :(" << endl
-            << "Nao ha " << missingResource << " disponiveis..." << endl;
+    // Executa remocao (se necessario)
+    if (remove) {
+        this->dao->deleteOne(schedulingSearch.line);
+        cout << "Agendamento removido com sucesso!" << endl;
+        return true;
+    }
 
-        return false;
+    // Executa edicao (se necessario)
+    this->currentScheduling = schedulingSearch.foundRegister;
+    if (update) return this->update();
 
-    } catch (exception err) {
-        cout << "Falha inesperada ao tentar Criar Agendamento" << endl;
-        exit(1);
+    // Executa mudanca de status (se necessario)
+    return this->changeStatus();
+};
+
+bool SchedulingController::runAction(int action, shared_ptr<UserModel> loggedUser) {
+
+    if (action != ControllerActionEnum::CREATE && action != ControllerActionEnum::RETRIVE)
+        throw invalid_argument("Acao invalida para controlador de agendamentos");
+
+    switch (action) {
+        case ControllerActionEnum ::CREATE:
+            return this->create(loggedUser);
+
+        case ControllerActionEnum ::RETRIVE:
+            return this->showList(loggedUser->getCode());
     }
 };
 
