@@ -17,12 +17,23 @@ const string SchedulingDAO::STORAGE_FILE = "scheduling.txt";
 
 void SchedulingDAO::writeRegisterIntoStorage(shared_ptr<SchedulingModel> scheduling) {
 
-    // this->openStorageForWriting();
-    //
-    // this->writingStream
-    //         << scheduling->getCode() << ";"
-    //         << scheduling->getName() << ";"
-    //         << endl;
+    const int doneFlagValue = scheduling->isDone() ? 1 : 0;
+    this->openStorageForWriting();
+
+    this->writingStream
+        << scheduling->getDate() << ";"
+        << scheduling->getMeetingPointCode() << ";"
+        << scheduling->getDonatorCode() << ";"
+        << scheduling->getReceiverCode() << ";";
+
+    for (uint i = 0; i < scheduling->getRejectsToBeExchangedCodes().size(); i++) {
+        if (i > 0) this->writingStream << ",";
+        this->writingStream << scheduling->getRejectsToBeExchangedCodes()[i];
+    }
+
+    this->writingStream << ";"
+        << doneFlagValue << ";"
+        << endl;
 }
 
 string SchedulingDAO::getStorageFileName(void) {
@@ -30,9 +41,9 @@ string SchedulingDAO::getStorageFileName(void) {
 };
 
 shared_ptr<SchedulingModel> SchedulingDAO::insert(const shared_ptr<SchedulingModel> scheduling) {
-    // if (scheduling == nullptr) throw invalid_argument("Dados nao informados");
-    // this->writeRegisterIntoStorage(scheduling);
-    // return scheduling;
+    if (scheduling == nullptr) throw invalid_argument("Dados nao informados");
+    this->writeRegisterIntoStorage(scheduling);
+    return scheduling;
 };
 
 shared_ptr<SchedulingModel> SchedulingDAO::update(const shared_ptr<SchedulingModel> scheduling) {

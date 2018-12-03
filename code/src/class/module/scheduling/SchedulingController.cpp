@@ -17,15 +17,15 @@ bool SchedulingController::create(const shared_ptr<UserModel> loggedUser) {
 
         this->currentScheduling = make_shared<SchedulingModel>();
 
-        if (!this->getDataFromStdIo(true, loggedUser)) return false;
+        if (!this->getDataFromStdIo(loggedUser)) return false;
 
         try {
             this->dao->insert(this->currentScheduling);
-            cout << "Ponto de Coleta criado com sucesso!" << endl;
+            cout << endl << "Agendamento criado com sucesso!" << endl;
             return true;
 
         } catch (invalid_argument error) {
-            cout << endl << "Ops! Dados de Tipo de Residuo invalidos" << endl;
+            cout << endl << "Ops! Dados invalidos para adicionar agendamento" << endl;
 
         } catch (exception error) {
             cout << endl << "Falha inesperada ao tentar adicionar Ponto de Coleta" << endl;
@@ -55,7 +55,7 @@ bool SchedulingController::getOptionsForScheduling(const bool loggedUserIsDonato
     }
 }
 
-bool SchedulingController::getDataFromStdIo(const bool insert, const shared_ptr<UserModel> loggedUser) {
+bool SchedulingController::getDataFromStdIo(const shared_ptr<UserModel> loggedUser) {
 
     // Define data
     this->setCurrentSchedulingDate();
