@@ -167,4 +167,52 @@ vector<FindResult<UserModel>> UserDAO::findAll(void) {
     return returnList;
 };
 
+vector<FindResult<UserModel>> UserDAO::findAllByType(const UserTypeEnum type) {
+
+    this->openStorageForReading();
+
+    vector<FindResult<UserModel>> returnList;
+    int lineCount = 0;
+    string fileLine;
+
+    while (getline(this->readingStream, fileLine)) {
+
+        lineCount++;
+
+        // Extrai propriedades da linha
+        stringstream ss(fileLine);
+        string item;
+        vector<string> lineProps;
+
+        while (getline(ss, item, ';'))
+            lineProps.push_back(item);
+
+        // Valida valores extraidos
+        if (!this->service->validateStoredRegister(lineProps)) {
+            cout << endl << "** WARNING: Cadastro de Usuario invalido (linha: " << lineCount << ") **" << endl << endl;
+            continue;
+        }
+
+        // Valida se registro eh do tipo desejado
+        const auto user = this->service->getModelFromStorageLine(lineProps);
+        if (user->getType() != type) continue;
+
+        // Add item na lista de retorno
+        FindResult<UserModel> result;
+        result.foundRegister = user;
+        result.line = lineCount;
+        returnList.push_back(result);
+    }
+
+    return returnList;
+};
+
+vector<FindResult<UserModel>> UserDAO::findAllDonators(void) {
+    return this->findAllByType(UserTypeEnum::DONATOR);
+};
+
+vector<FindResult<UserModel>> UserDAO::findAllReceivers(void) {
+    return this->findAllByType(UserTypeEnum::RECEIVER);
+};
+
 #endif

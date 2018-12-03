@@ -16,7 +16,7 @@ bool SchedulingController::create(const shared_ptr<UserModel> loggedUser) {
 
         this->currentScheduling = make_shared<SchedulingModel>();
 
-        if (!this->getDataFromStdIo(true)) return false;
+        if (!this->getDataFromStdIo(true, loggedUser)) return false;
 
         try {
             this->dao->insert(this->currentScheduling);
@@ -35,17 +35,27 @@ bool SchedulingController::create(const shared_ptr<UserModel> loggedUser) {
     } while (true);
 };
 
-bool SchedulingController::getDataFromStdIo(const bool insert) {
+bool SchedulingController::getDataFromStdIo(const bool insert, const shared_ptr<UserModel> loggedUser) {
 
-    // Define nome
+    // Define data
     this->setCurrentSchedulingDate();
     if (this->currentScheduling->getDate() == "") return false;
+    // string date = "";
 
+    // Define ponto de coleta
     this->setCurrentSchedulingMeetingPoint();
     if (!this->currentScheduling->getMeetingPointCode()) return false;
-
-    // string date = "";
     // int meetingPointCode = 0;
+
+    // Define doador
+    this->setCurrentSchedulingDonator(loggedUser);
+    if (!this->currentScheduling->getDonatorCode()) return false;
+
+    // Define recpetor
+    // this->setCurrentSchedulingReceiver(loggedUser);
+    // if (!this->currentScheduling->getReceiverCode()) return false;
+
+
     // int donatorCode = 0;
     // int receiverCode = 0;
     // vector<int> rejectsToBeExchangedCodes;
@@ -159,7 +169,8 @@ void SchedulingController::setCurrentSchedulingDate(void) {
     cout << "Informe a data deste agendamento (nao eh validado): ";
     char readInput[100];
     cin.getline(readInput, sizeof(readInput));
-    if (readInput != "0") this->currentScheduling->setDate(string(readInput));
+    const string answer = string(readInput);
+    if (answer!= "0") this->currentScheduling->setDate(answer);
 };
 
 void SchedulingController::setCurrentSchedulingMeetingPoint(void) {
@@ -175,6 +186,7 @@ void SchedulingController::setCurrentSchedulingMeetingPoint(void) {
     this->mPointService->showRegistersListData(mPoints);
 
     // Captura selecao do usuario
+    shared_ptr<MeetingPointModel> selectedMPoint = nullptr;
     int selectedMPointCode;
     bool repeat = true;
 
@@ -182,8 +194,9 @@ void SchedulingController::setCurrentSchedulingMeetingPoint(void) {
 
         selectedMPointCode = this->getNumberFromStdIO("Informe o codigo do Ponto de Coleta a ser selecionado", "Codigo invalido");
         const auto existanceTestSearch = this->mPointDao->findOne(selectedMPointCode);
+        selectedMPoint = existanceTestSearch.foundRegister;
 
-        if (existanceTestSearch.foundRegister == nullptr) {
+        if (selectedMPoint == nullptr) {
             const bool tryAgain = this->aksYesOrNoQuestionThroughStdIO("Nao existe um Ponto de Coleta com este codigo. Deseja tentar novamente?");
             if (!tryAgain) return;
             cout << endl;
@@ -195,12 +208,61 @@ void SchedulingController::setCurrentSchedulingMeetingPoint(void) {
     } while (repeat);
 
     // Add Ponto de Coleta
+    cout << "Ponto de Coleta selecionado: " << selectedMPoint->getName() << endl;
     this->currentScheduling->setMeetingPointCode(selectedMPointCode);
-}
+};
 
-void SchedulingController::setCurrentSchedulingDonator(void) {};
+void SchedulingController::setCurrentSchedulingDonator(const shared_ptr<UserModel> loggedUser) {
 
-void SchedulingController::setCurrentSchedulingReceiver(void) {};
+    // Define usuario logado como doador (se necessario)
+    if (loggedUser->getType() == UserTypeEnum::DONATOR) {
+        this->currentScheduling->setDonatorCode(loggedUser->getCode());
+        return;
+    }
+
+    // Confirma intencao
+    cout << endl;
+    const bool goOn = this->aksYesOrNoQuestionThroughStdIO("Avancar para selecionar Doador?");
+    if (!goOn) return;
+
+    // Exibe opcoes disponiveis
+    cout << ">> Doadores disponiveis: " << endl;
+    const auto donators = this->userDao->findAllDonators();
+    this->userService->showRegistersListData(donators);
+
+    // Captura selecao do usuario
+    shared_ptr<UserModel> selectedDonator = nullptr;
+    int selectedDonatorCode;
+
+    do {
+
+        // Captura codigo
+        selectedDonatorCode = this->getNumberFromStdIO("Informe o codigo do Usuario a ser selecionado", "Codigo invalido");
+        bool found = false;
+
+        for (uint i = 0; i < donators.size(); i++) {
+            const auto currentDonator = donators[i].foundRegister;
+            if (currentDonator->getCode() != selectedDonatorCode) continue;
+            found = true;
+            selectedDonator = currentDonator;
+            break;
+        }
+
+        if (found) break;
+
+        // Notifica falha
+        const bool tryAgain = this->aksYesOrNoQuestionThroughStdIO("Nao existe um Doador com este codigo. Deseja tentar novamente?");
+        if (!tryAgain) return;
+        cout << endl;
+
+    } while (true);
+
+    // Add Doador
+    cout << "Doador selecionado: " << selectedDonator->getName() << endl;
+    this->currentScheduling->setMeetingPointCode(selectedDonatorCode);
+};
+
+void SchedulingController::setCurrentSchedulingReceiver(const shared_ptr<UserModel> loggedUser) {};
 
 void SchedulingController::setCurrentSchedulingRejectsList(void) {};
 

@@ -6,6 +6,8 @@
 #include "../../common/class/Controller.h"
 #include "../../module/meeting-point/MeetingPointDAO.h"
 #include "../../module/meeting-point/MeetingPointService.h"
+#include "../../module/user/UserDAO.h"
+#include "../../module/user/UserService.h"
 
 /**
  * CONTROLLER
@@ -30,6 +32,12 @@ private:
     /** Classe de servico de Pontos de Coleta. */
     shared_ptr<MeetingPointService> mPointService = nullptr;
 
+    /** DAO de Usuarios. */
+    shared_ptr<UserDAO> userDao = nullptr;
+
+    /** Classe de servico de Usuario. */
+    shared_ptr<UserService> userService = nullptr;
+
     /** Dados do registro sendo manipulado no momento. */
     shared_ptr<SchedulingModel> currentScheduling = nullptr;
 
@@ -41,9 +49,10 @@ private:
      * Captura & retorna dados para inserir/atualizar 01 registro.
      *
      * @param insert Flag: Determina se a coleta de dados eh para realizar insercao (SE nao for, sera atualizacao).
+     * @param loggedUser Usuario atual que executa o agendamento.
      * @return
      */
-    bool getDataFromStdIo(const bool insert);
+    bool getDataFromStdIo(const bool insert, const shared_ptr<UserModel> loggedUser);
 
     /** Atualiza cadastro de 01 registro ja armazenado. */
     bool update(shared_ptr<SchedulingModel> scheduling);
@@ -61,10 +70,10 @@ private:
     void setCurrentSchedulingMeetingPoint(void);
 
     /** Captura & define doador para o registro em edicao no momento. */
-    void setCurrentSchedulingDonator(void);
+    void setCurrentSchedulingDonator(const shared_ptr<UserModel> loggedUser);
 
     /** Captura & define receptor para o registro em edicao no momento. */
-    void setCurrentSchedulingReceiver(void);
+    void setCurrentSchedulingReceiver(const shared_ptr<UserModel> loggedUser);
 
     /** Captura & define lista de residuos para o registro em edicao no momento. */
     void setCurrentSchedulingRejectsList(void);
@@ -76,9 +85,17 @@ public:
         const shared_ptr<SchedulingDAO> dao,
         const shared_ptr<SchedulingService> service,
         const shared_ptr<MeetingPointDAO> mPointDao,
-        const shared_ptr<MeetingPointService> mPointService
+        const shared_ptr<MeetingPointService> mPointService,
+        const shared_ptr<UserDAO> userDao,
+        const shared_ptr<UserService> userService
 
-    ) : dao(dao), service(service), mPointDao(mPointDao), mPointService(mPointService) {};
+    ) : dao(dao),
+        service(service),
+        mPointDao(mPointDao),
+        mPointService(mPointService),
+        userDao(userDao),
+        userService(userService)
+        {};
 
     /**
      * @inherit

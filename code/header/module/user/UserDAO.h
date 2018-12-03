@@ -31,6 +31,14 @@ private:
      */
     void writeRegisterIntoStorage(shared_ptr<UserModel> user);
 
+    /**
+     * Captura & retorna lista com todos os registros armazenados de 01 determinado tipo.
+     *
+     * @param type Tipo do qual os registros pesquisados devem fazer parte.
+     * @return
+     */
+    vector<FindResult<UserModel>> findAllByType(const UserTypeEnum type);
+
 protected:
 
     /**
@@ -82,6 +90,18 @@ public:
      * @return
      */
     vector<FindResult<UserModel>> findAll(void);
+
+    /**
+     * Captura & retorna lista com todos os registros armazenados do tipo DOADOR.
+     * @return
+     */
+    vector<FindResult<UserModel>> findAllDonators(void);
+
+    /**
+     * Captura & retorna lista com todos os registros armazenados do tipo RECEPTOR.
+     * @return
+     */
+    vector<FindResult<UserModel>> findAllReceivers(void);
 };
 
 #endif
