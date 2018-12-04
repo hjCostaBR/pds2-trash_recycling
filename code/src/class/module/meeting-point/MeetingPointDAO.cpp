@@ -109,9 +109,8 @@ vector<FindResult<MeetingPointModel>> MeetingPointDAO::findAll(void) {
         string item;
         vector<string> lineProps;
 
-        while (getline(ss, item, ';')) {
+        while (getline(ss, item, ';'))
             lineProps.push_back(item);
-        }
 
         // Valida valores extraidos
         if (!this->service->validateStoredRegister(lineProps)) {

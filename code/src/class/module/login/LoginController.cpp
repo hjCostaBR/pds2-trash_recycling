@@ -61,7 +61,12 @@ shared_ptr<UserModel> LoginController::login() {
             auto loggedUser = searchResult.foundRegister;
 
             if (loggedUser != nullptr) {
-                cout << "Login realizado com sucesso: Seja bem vindo(a) " << loggedUser->getName() << "!" << endl << endl;
+
+                cout << "Login realizado com sucesso: Seja bem vindo(a) "
+                    << loggedUser->getName()
+                    << " (" << this->userService->getUserTypeLabel((UserTypeEnum)loggedUser->getType()) << ")!"
+                    << endl << endl;
+
                 return loggedUser;
             }
 
@@ -97,16 +102,18 @@ void LoginController::showLoggedOptions(const shared_ptr<UserModel> loggedUser) 
     const auto mPointDao = make_shared<MeetingPointDAO>(mPointService);
     const auto mPointController = make_shared<MeetingPointController>(mPointDao, mPointService);
 
-    // Incluir opcao: Add residuo
-    if (loggedUser->getType() == UserTypeEnum::ADMIN)
+    // Opcoes exclusivas para usuario admin
+    if (loggedUser->getType() == UserTypeEnum::ADMIN) {
+
         menuItems.push_back(MenuItemSet("Novo Tipo de Residuo", rejectTypeController, ControllerActionEnum::CREATE));
+        menuItems.push_back(MenuItemSet("Listar Tipos de Residuo", rejectTypeController, ControllerActionEnum::RETRIVE, loggedUser));
+        menuItems.push_back(MenuItemSet("Novo Ponto de Coleta", mPointController, ControllerActionEnum::CREATE));
+        menuItems.push_back(MenuItemSet("Listar Pontos de Coleta", mPointController, ControllerActionEnum::RETRIVE));
+        menuItems.push_back(MenuItemSet("Listar usuarios", userController, ControllerActionEnum::RETRIVE));
 
-    // Incluir opcao: Listar residuos
-    menuItems.push_back(MenuItemSet("Listar Tipos de Residuo", rejectTypeController, ControllerActionEnum::RETRIVE, loggedUser));
+    // Opcoes exclusivas para usuarios que NAO sao admin
+    } else {
 
-    if (loggedUser->getType() != UserTypeEnum::ADMIN) {
-
-        // Incluir opcao: Agendar coleta
         const auto schedulingService = make_shared<SchedulingService>(mPointDao, userDao, rejectTypeDao);
         const auto schedulingDao = make_shared<SchedulingDAO>(schedulingService);
 
@@ -122,26 +129,11 @@ void LoginController::showLoggedOptions(const shared_ptr<UserModel> loggedUser) 
         );
 
         menuItems.push_back(MenuItemSet("Agendar Coleta de Residuos", schedulingController, ControllerActionEnum::CREATE, loggedUser));
-
-        // Incluir opcao: Visualizar agendamentos
         menuItems.push_back(MenuItemSet("Minhas coletas agendadas", schedulingController, ControllerActionEnum::RETRIVE, loggedUser));
-        
-    } else {
-
-        // Incluir opcao: Novo Ponto de Coleta
-        menuItems.push_back(MenuItemSet("Novo Ponto de Coleta", mPointController, ControllerActionEnum::CREATE));
-
-        // Incluir opcao: Listar pontos de coleta
-        menuItems.push_back(MenuItemSet("Listar Pontos de Coleta", mPointController, ControllerActionEnum::RETRIVE));
-
-        // Incluir opcao: Listar usuario cadastrados
-        menuItems.push_back(MenuItemSet("Listar usuarios", userController, ControllerActionEnum::RETRIVE));
     }
 
-    // Incluir opcao: Atualizar dados pessoais
+    // Opcoes validas para qualquer usuario
     menuItems.push_back(MenuItemSet("Atualizar dados pessoais", userController, ControllerActionEnum::UPDATE, loggedUser));
-
-    // Incluir opcao: Sair
     menuItems.push_back(MenuItemSet("Sair", nullptr));
 
     // Exibir menu

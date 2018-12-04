@@ -11,37 +11,8 @@ using namespace std;
 bool SchedulingController::create(const shared_ptr<UserModel> loggedUser) {
 
     // Captura listas de opcoes para criar agendamento
-    try {
-        this->getOptionsForScheduling(loggedUser->getType() == UserTypeEnum::DONATOR);
-
-    } catch (domain_error err) {
-
-        string missingResource = "";
-
-        if ((string)err.what() == "no-meeting-points") {
-            missingResource = "Pontos de Coleta";
-
-        } else if ((string)err.what() == "no-donators") {
-            missingResource = "Doadores";
-
-        } else if ((string)err.what() == "no-receivers") {
-            missingResource = "Receptores";
-
-        } else if ((string)err.what() == "no-reject-types") {
-            missingResource = "Tipos de Residuo";
-        }
-
-        if (missingResource == "") throw err;
-
-        cout << "Nao eh possivel cadastrar um agendamento, no momento :(" << endl
-             << "Nao ha " << missingResource << " disponiveis..." << endl;
-
-        return false;
-
-    } catch (exception err) {
-        cout << "Falha inesperada ao tentar Criar Agendamento" << endl;
-        exit(1);
-    }
+    const bool resourcesOk = this->getOptionsForScheduling(loggedUser->getType() == UserTypeEnum::DONATOR);
+    if (!resourcesOk) return false;
 
     bool exit = false;
 
@@ -84,21 +55,48 @@ bool SchedulingController::create(const shared_ptr<UserModel> loggedUser) {
 
 bool SchedulingController::getOptionsForScheduling(const bool loggedUserIsDonator) {
 
+    const string defaultErrMsg = "Nao eh possivel cadastrar um agendamento, no momento :(\nNao ha ";
+    const string errMsgAux = " disponiveis...\n";
+
+    // Pontos de coleta
     this->availableMPoints = this->mPointDao->findAll();
-    if (!this->availableMPoints.size()) throw domain_error("no-meeting-points");
 
+    if (!this->availableMPoints.size()) {
+        cout << defaultErrMsg << "Pontos de Coleta" << errMsgAux;
+        return false;
+    }
+
+    // Tipos de residuo
     this->availableRejTypes = this->rejTypeDao->findAll();
-    if (!this->availableRejTypes.size()) throw domain_error("no-reject-types");
 
+    if (!this->availableRejTypes.size()) {
+        cout << defaultErrMsg << "Tipos de Residuo" << errMsgAux;
+        return false;
+    }
+
+    // Receptores
     if (loggedUserIsDonator) {
+
         this->availableReceivers = this->userDao->findAllReceivers();
-        if (!this->availableReceivers.size()) throw domain_error("no-receivers");
+
+        if (!this->availableReceivers.size()) {
+            cout << defaultErrMsg << "Receptores" << errMsgAux;
+            return false;
+        }
     }
 
+    // Doadores
     if (!loggedUserIsDonator) {
+
         this->availableDonators = this->userDao->findAllDonators();
-        if (!this->availableDonators.size()) throw domain_error("no-donators");
+
+        if (!this->availableDonators.size()) {
+            cout << defaultErrMsg << "Doadores" << errMsgAux;
+            return false;
+        }
     }
+
+    return true;
 }
 
 bool SchedulingController::getDataFromStdIo(const bool isInsert, const shared_ptr<UserModel> loggedUser) {
@@ -134,6 +132,10 @@ bool SchedulingController::getDataFromStdIo(const bool isInsert, const shared_pt
 };
 
 bool SchedulingController::update(const shared_ptr<UserModel> loggedUser) {
+
+    // Captura listas de opcoes para criar agendamento
+    const bool resourcesOk = this->getOptionsForScheduling(loggedUser->getType() == UserTypeEnum::DONATOR);
+    if (!resourcesOk) return false;
 
     cout << endl << "> EDITAR AGENDAMENTO" << endl << endl;
 
@@ -177,8 +179,8 @@ bool SchedulingController::changeStatus(void) {
             this->currentScheduling->setDone(setDone);
             this->dao->update(this->currentScheduling);
 
-            const string foo = setDone ? "Realizado" : "Nao realizado";
-            cout << "Status do Agendamento alterado para: " << foo << endl;
+            const string aux = setDone ? "Realizado" : "Nao realizado";
+            cout << "Status do Agendamento alterado para: " << aux << endl;
             return true;
 
         } catch (invalid_argument error) {
@@ -270,12 +272,9 @@ bool SchedulingController::showList(shared_ptr<UserModel> loggedUser) {
         return true;
     }
 
-    // Executa edicao (se necessario)
+    // Executa edicao ou alteracao de status
     this->currentScheduling = schedulingSearch.foundRegister;
-    if (update) return this->update(loggedUser);
-
-    // Executa mudanca de status (se necessario)
-    return this->changeStatus();
+    return (update) ? this->update(loggedUser) : this->changeStatus();
 };
 
 bool SchedulingController::runAction(int action, shared_ptr<UserModel> loggedUser) {
@@ -285,10 +284,12 @@ bool SchedulingController::runAction(int action, shared_ptr<UserModel> loggedUse
 
     switch (action) {
         case ControllerActionEnum ::CREATE:
-            return this->create(loggedUser);
+            return !this->create(loggedUser);
 
         case ControllerActionEnum ::RETRIVE:
-            return this->showList(loggedUser);
+            const bool actionDone = this->showList(loggedUser);
+            if (!actionDone) cout << "Usuario selecionou sair..." << endl;
+            return false;
     }
 };
 
@@ -334,7 +335,6 @@ void SchedulingController::setCurrentSchedulingMeetingPoint(void) {
         // Notifica falha
         const bool tryAgain = this->aksYesOrNoQuestionThroughStdIO("Nao existe um Ponto de Coleta com este codigo. Deseja tentar novamente?");
         if (!tryAgain) return;
-        cout << endl;
 
     } while (true);
 

@@ -83,7 +83,7 @@ void SchedulingService::showDataTableHeader(void) const {
         << "\tPonto de Coleta\t|"
         << "\tDoador\t|"
         << "\tReceptor\t|"
-        << "\tRealizado?\t|"
+        << "\tStatus\t\t|"
         << endl;
 };
 

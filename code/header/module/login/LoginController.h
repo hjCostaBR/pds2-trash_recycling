@@ -4,6 +4,7 @@
 #include "../../common/class/Controller.h"
 #include "../../common/class/MenuController.h"
 #include "../../module/user/UserDAO.h"
+#include "../../module/user/UserService.h"
 
 /**
  * CONTROLLER
@@ -18,6 +19,9 @@ private:
 
     /** DAO de usuario. */
     shared_ptr<UserDAO> userDao = nullptr;
+
+    /** Classe de servico de usuario. */
+    shared_ptr<UserService> userService = nullptr;
 
     /** Codigo do usuario para o qual eh feita 01 tentativa de login. */
     int userLoginCode = 0;
@@ -47,7 +51,9 @@ private:
 public:
 
     /** Contrutor. */
-    LoginController(const shared_ptr<UserDAO> userDao): userDao(userDao) {};
+    LoginController(const shared_ptr<UserDAO> userDao, const shared_ptr<UserService> userService)
+        : userDao(userDao), userService(userService)
+        {};
 
     /**
      * @inherit
