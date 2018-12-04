@@ -35,12 +35,11 @@ public:
     SchedulingService(
         const shared_ptr<MeetingPointDAO> mPointDao,
         const shared_ptr<UserDAO> userDao,
-        const shared_ptr<RejectTypeDAO> rejTypeDao,
+        const shared_ptr<RejectTypeDAO> rejTypeDao
 
-    ) :
-        mPointDao(mPointDao),
+    ) : mPointDao(mPointDao),
         userDao(userDao),
-        rejTypeDao(rejTypeDao),
+        rejTypeDao(rejTypeDao)
     {};
 
 
@@ -52,7 +51,7 @@ public:
     /**
      * @inherit
      */
-    virtual void showRegisterData(const shared_ptr<SchedulingModel> register) const;
+    virtual void showRegisterData(const shared_ptr<SchedulingModel> register, const bool showRejTypes) const;
 
     /**
      * Monta & Exibe 01 tabela listando dados de varios registros.

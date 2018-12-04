@@ -2,6 +2,7 @@
 #define _SCHEDULLING_SERVICE_CPP_
 
 #include <vector>
+#include <sstream>
 #include "../../../../header/module/scheduling/SchedulingModel.h"
 #include "../../../../header/module/scheduling/SchedulingService.h"
 #include "../../../../header/common/FindResult.h"
@@ -42,57 +43,44 @@ void SchedulingService::showRegisterData(const shared_ptr<SchedulingModel> sched
     const string doneFlagValue = scheduling->isDone() ? "Realizado" : "Nao Realizado";
 
     // Exibe dados
-    cout << "|\t" << scheduling->getDate() << "\t|"
-         << " " << mPoint->getName() << "\t|"
-         << " " << donator->getName() << "\t|"
-         << " " << receiver->getName() << "\t|";
-         << " " << doneFlagValue << "\t|" << endl;
+    cout << "|\t" << scheduling->getCode() << "\t|"
+        << " " << scheduling->getDate() << "\t|"
+        << " " << mPoint->getName() << "\t|"
+        << " " << donator->getName() << "\t|"
+        << "\t" << receiver->getName() << "\t|"
+        << "\t" << doneFlagValue << "\t|" << endl;
 
     if (!showRejTypes) return;
 
     // @todo: Continuar daqui...
-    // if (!scheduling->getRejectsToBeExchangedCodes().size()) {
-    //     cout << "Nenhum Residuo de interesse selecionado..." << endl;
-    //     return;
-    // }
-    //
-    // cout << "Residuos de interesse: ";
-    //
-    // for (uint i = 0; i < user->getRejectTypesOfInterestCodes().size(); i++) {
-    //
-    //     const int rejTypeCode = user->getRejectTypesOfInterestCodes()[i];
-    //     const auto rejTypeSearch = this->rejTypeDAO->findOne(rejTypeCode);
-    //
-    //     if (rejTypeSearch.foundRegister == nullptr) {
-    //         cout << endl << "** WARNING: Cadastro de usuário invalido (tipo de residuo nao existe: " << rejTypeCode << ") **" << endl << endl;
-    //         continue;
-    //     }
-    //
-    //     if (i > 0) cout << ", ";
-    //     cout << rejTypeSearch.foundRegister->getName();
-    // }
-    //
-    // cout << endl;
-    //
-    //
-    //
-    //
-    // const vector<RejectTypeModel> rejTypes;
-    //
-    // for (uint i = 0; i < scheduling->getRejectsToBeExchangedCodes().size(); i++) {
-    //     const auto rejTypeSearch = this->rejTypeDao->findOne(scheduling->getRejectsToBeExchangedCodes());
-    //     const auto currentRejType = rejTypeSearch.foundRegister;
-    //     if (currentRejType == nullptr) throw domain_error("reject-type");
-    //     rejTypes.push_back(currentRejType);
-    // }
-    //
-    // cout << endl;
+    if (!scheduling->getRejectsToBeExchangedCodes().size()) {
+        cout << "Nenhum Residuo a ser trocado..." << endl;
+        return;
+    }
+
+    cout << "Residuos a serem trocados: ";
+
+    for (uint i = 0; i < scheduling->getRejectsToBeExchangedCodes().size(); i++) {
+
+        const int rejTypeCode = scheduling->getRejectsToBeExchangedCodes()[i];
+        const auto rejTypeSearch = this->rejTypeDao->findOne(rejTypeCode);
+
+        if (rejTypeSearch.foundRegister == nullptr) {
+            cout << endl << "** WARNING: Cadastro de Agendamento invalido (tipo de residuo nao existe: " << rejTypeCode << ") **" << endl << endl;
+            continue;
+        }
+
+        if (i > 0) cout << ", ";
+        cout << rejTypeSearch.foundRegister->getName();
+    }
+
+    cout << endl;
 };
 
 void SchedulingService::showDataTableHeader(void) const {
     cout << "|\tCodigo\t|"
-        << "|\tData\t|"
-        << "|\tPonto de Coleta\t|"
+        << "\tData\t|"
+        << "\tPonto de Coleta\t|"
         << "\tDoador\t|"
         << "\tReceptor\t|"
         << "\tRealizado?\t|"
@@ -109,7 +97,7 @@ void SchedulingService::showRegistersListData(const vector<FindResult<Scheduling
     this->showDataTableHeader();
 
     for (uint i = 0; i < schedulingList.size(); i++) {
-        this->showRegisterData(schedulingList[i].foundRegister);
+        this->showRegisterData(schedulingList[i].foundRegister, false);
     }
 
     cout << endl;
@@ -128,26 +116,27 @@ shared_ptr<SchedulingModel> SchedulingService::getModelFromStorageLine(const vec
     scheduling->setReceiverCode(stoi(lineProps[4]));
     scheduling->setDone(stoi(lineProps[6]) == 1);
 
+    // Add lista de tipos de residuos a serem trocados (se houver)
+    vector<int> rejTypeCodes;
 
-    // const vector<RejectTypeModel> rejTypes;
+    stringstream ss(lineProps[5]);
+    string item;
 
-    // for (uint i = 0; i < scheduling->getRejectsToBeExchangedCodes().size(); i++) {
-    //     const auto rejTypeSearch = this->rejTypeDao->findOne(scheduling->getRejectsToBeExchangedCodes());
-    //     const auto currentRejType = rejTypeSearch.foundRegister;
-    //     if (currentRejType == nullptr) throw domain_error("reject-type");
-    //     rejTypes.push_back(currentRejType);
-    // }
+    while (getline(ss, item, ',')) {
 
+        try {
+            rejTypeCodes.push_back(stoi(item));
+
+        } catch (exception err) {
+            cout << endl << "** WARNING: Cadastro de Agendamento invalido (tipo de residuo invalido: " << item << ") **" << endl << endl;
+            continue;
+        }
+    }
+
+    for (uint i = 0; i < rejTypeCodes.size(); i++)
+        scheduling->addRejectToBeExchangedCode(rejTypeCodes[i]);
 
     return scheduling;
-
-    // int code = 0;
-    // string date = "";
-    // int meetingPointCode = 0;
-    // int donatorCode = 0;
-    // int receiverCode = 0;
-    // vector<int> rejectsToBeExchangedCodes;
-    // bool done = false;
 };
 
 #endif

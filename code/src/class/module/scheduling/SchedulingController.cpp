@@ -62,6 +62,9 @@ bool SchedulingController::create(const shared_ptr<UserModel> loggedUser) {
             cout << endl << "Agendamento criado com sucesso!" << endl;
             break;
 
+        } catch (domain_error error) {
+            cout << endl << "Ja existe um agendamento cadastrado com este mesmo codigo" << endl;
+
         } catch (invalid_argument error) {
             cout << endl << "Ops! Dados invalidos para adicionar agendamento" << endl;
 
@@ -101,7 +104,7 @@ bool SchedulingController::getOptionsForScheduling(const bool loggedUserIsDonato
 bool SchedulingController::getDataFromStdIo(const bool isInsert, const shared_ptr<UserModel> loggedUser) {
 
     // Captura codigo (se necessario)
-    if (insert) {
+    if (isInsert) {
         int code = this->getNumberFromStdIO("Informe um Codigo para o agendamento", "Codigo invalido");
         if (!code) return false;
         this->currentScheduling->setCode(code);
@@ -154,10 +157,10 @@ bool SchedulingController::update(const shared_ptr<UserModel> loggedUser) {
             return true;
 
         } catch (invalid_argument error) {
-            cout << "Ops! Dados de Ponto de Coleta invalidos" << endl;
+            cout << "Ops! Dados de Agendamento invalidos" << endl;
 
         } catch (exception error) {
-            cout << "Falha inesperada ao tentar atualizar Ponto de Coleta" << endl;
+            cout << "Falha inesperada ao tentar atualizar Agendamento" << endl;
         }
 
         if (!this->aksYesOrNoQuestionThroughStdIO("Realizar nova tentativa?")) return false;
@@ -167,15 +170,36 @@ bool SchedulingController::update(const shared_ptr<UserModel> loggedUser) {
 
 bool SchedulingController::changeStatus(void) {
 
+    do {
+        try {
+
+            const bool setDone = !this->currentScheduling->isDone();
+            this->currentScheduling->setDone(setDone);
+            this->dao->update(this->currentScheduling);
+
+            const string foo = setDone ? "Realizado" : "Nao realizado";
+            cout << "Status do Agendamento alterado para: " << foo << endl;
+            return true;
+
+        } catch (invalid_argument error) {
+            cout << "Ops! Dados de Agendamento invalidos" << endl;
+
+        } catch (exception error) {
+            cout << "Falha inesperada ao tentar alterar status de um Agendamento" << endl;
+        }
+
+        if (!this->aksYesOrNoQuestionThroughStdIO("Realizar nova tentativa?")) return false;
+
+    } while (true);
 };
 
-bool SchedulingController::showList(const int loggedUserCode) {
+bool SchedulingController::showList(shared_ptr<UserModel> loggedUser) {
 
     cout << "> MEUS AGENDAMENTOS" << endl
          << "Pressione '0' para sair..." << endl << endl;
 
     // Exibe listagem
-    const auto schedulingList = this->dao->findByUser(loggedUserCode);
+    const auto schedulingList = this->dao->findByUser(loggedUser->getCode());
     this->service->showRegistersListData(schedulingList);
     if (!schedulingList.size()) return true;
 
@@ -248,7 +272,7 @@ bool SchedulingController::showList(const int loggedUserCode) {
 
     // Executa edicao (se necessario)
     this->currentScheduling = schedulingSearch.foundRegister;
-    if (update) return this->update();
+    if (update) return this->update(loggedUser);
 
     // Executa mudanca de status (se necessario)
     return this->changeStatus();
@@ -264,7 +288,7 @@ bool SchedulingController::runAction(int action, shared_ptr<UserModel> loggedUse
             return this->create(loggedUser);
 
         case ControllerActionEnum ::RETRIVE:
-            return this->showList(loggedUser->getCode());
+            return this->showList(loggedUser);
     }
 };
 
@@ -441,6 +465,7 @@ void SchedulingController::setCurrentSchedulingRejectsList(void) {
         }
 
         cout << endl;
+        cin.ignore();
         const bool tryAgain = this->aksYesOrNoQuestionThroughStdIO("Lista invalida. Deseja tentar novamente?");
         if (!tryAgain) return;
 

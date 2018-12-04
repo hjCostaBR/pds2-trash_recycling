@@ -42,12 +42,19 @@ string SchedulingDAO::getStorageFileName(void) {
 };
 
 shared_ptr<SchedulingModel> SchedulingDAO::insert(const shared_ptr<SchedulingModel> scheduling) {
+
     if (scheduling == nullptr) throw invalid_argument("Dados nao informados");
+
+    auto existingRegisterSearch = this->findOne(scheduling->getCode());
+    auto existingSchediling = existingRegisterSearch.foundRegister;
+
+    if (existingSchediling != nullptr) throw domain_error("Tentativa de inserir agendamento que ja existe");
+
     this->writeRegisterIntoStorage(scheduling);
     return scheduling;
 };
 
-shared_ptr<SchedulingModel> SchedulingDAO::update(const shared_ptr<SchedulingModel> scheduling, int line) {
+shared_ptr<SchedulingModel> SchedulingDAO::update(const shared_ptr<SchedulingModel> scheduling) {
 
     // Validacao
     if (scheduling == nullptr) throw invalid_argument("Dados insuficientes");

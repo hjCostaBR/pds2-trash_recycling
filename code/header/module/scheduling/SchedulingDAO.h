@@ -46,7 +46,7 @@ public:
     /**
      * @inherit
      */
-    shared_ptr<SchedulingModel> update(const shared_ptr<SchedulingModel> mPoint);
+    shared_ptr<SchedulingModel> update(const shared_ptr<SchedulingModel> scheduling);
 
     /**
      * Pesquisa & retorna 01 registro identificado pelo codigo.

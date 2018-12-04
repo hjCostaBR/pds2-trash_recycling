@@ -67,16 +67,21 @@ private:
      */
     bool getDataFromStdIo(const bool isInsert, const shared_ptr<UserModel> loggedUser);
 
-    /** Atualiza cadastro de 01 registro ja armazenado. */
-    bool update();
+    /**
+     * Atualiza cadastro de 01 registro ja armazenado.
+     *
+     * @param loggedUser Usuario logado no momento.
+     * @return
+     */
+    bool update(const shared_ptr<UserModel> loggedUser);
 
     /**
      * Monta & exibe listagem de registros + opcoes de acao.
      *
-     * @param loggedUser Codigo do usuario logado no momento.
+     * @param loggedUser Usuario logado no momento.
      * @return Flag: SE o usuario selecionou 'sair'.
      */
-    bool showList(const int loggedUserCode);
+    bool showList(const shared_ptr<UserModel> loggedUser);
 
     /** Captura & define data para o registro em edicao no momento. */
     void setCurrentSchedulingDate(void);
