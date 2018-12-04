@@ -61,10 +61,11 @@ private:
     /**
      * Captura & retorna dados para inserir/atualizar 01 registro.
      *
+     * @param isInsert Flag: Determina se a operacao atual para a qual os dados serao coletados eh de inercao (SE nao for, sera de Atualizacao).
      * @param loggedUser Usuario atual que executa o agendamento.
      * @return
      */
-    bool getDataFromStdIo(const shared_ptr<UserModel> loggedUser);
+    bool getDataFromStdIo(const bool isInsert, const shared_ptr<UserModel> loggedUser);
 
     /** Atualiza cadastro de 01 registro ja armazenado. */
     bool update();

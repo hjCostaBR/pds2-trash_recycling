@@ -37,8 +37,7 @@ void UserService::showRegisterData(const shared_ptr<UserModel> user, const bool 
 
     if ((UserTypeEnum)user->getType() == UserTypeEnum::DONATOR) cout << "\t";
 
-    cout << "\t|\t" << user->getName()
-         << "\t|" << endl;
+    cout << "\t|\t" << user->getName() << "\t|" << endl;
 
     // Exibe lista de residuos de interesse (se necesario)
     if (!showRejTypes) return;

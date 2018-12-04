@@ -21,6 +21,7 @@ void SchedulingDAO::writeRegisterIntoStorage(shared_ptr<SchedulingModel> schedul
     this->openStorageForWriting();
 
     this->writingStream
+        << scheduling->getCode() << ";"
         << scheduling->getDate() << ";"
         << scheduling->getMeetingPointCode() << ";"
         << scheduling->getDonatorCode() << ";"
@@ -46,62 +47,60 @@ shared_ptr<SchedulingModel> SchedulingDAO::insert(const shared_ptr<SchedulingMod
     return scheduling;
 };
 
-shared_ptr<SchedulingModel> SchedulingDAO::update(const shared_ptr<SchedulingModel> scheduling) {
+shared_ptr<SchedulingModel> SchedulingDAO::update(const shared_ptr<SchedulingModel> scheduling, int line) {
 
-    // // Validacao
-    // if (scheduling == nullptr) throw invalid_argument("Dados insuficientes");
-    // auto existingSchedulingSearch = this->findOne(scheduling->getCode());
-    // if (existingSchedulingSearch.foundRegister == nullptr) throw invalid_argument("Agendamento nao existe");
-    //
-    // // Remove linha defasada, insere nova & retorna objeto valido
-    // this->deleteOne(existingSchedulingSearch.line);
-    // this->writeRegisterIntoStorage(scheduling);
-    // return scheduling;
-    return nullptr;
+    // Validacao
+    if (scheduling == nullptr) throw invalid_argument("Dados insuficientes");
+    auto existingSchedulingSearch = this->findOne(scheduling->getCode());
+    if (existingSchedulingSearch.foundRegister == nullptr) throw invalid_argument("Agendamento nao existe");
+
+    // Remove linha defasada, insere nova & retorna objeto valido
+    this->deleteOne(existingSchedulingSearch.line);
+    this->writeRegisterIntoStorage(scheduling);
+    return scheduling;
 };
 
 FindResult<SchedulingModel> SchedulingDAO::findOne(const int code) {
 
-    // // Abre arquivo
-    // this->openStorageForReading();
-    //
-    // // Inicializa dados de retorno
-    // FindResult<SchedulingModel> result;
-    // result.foundRegister = nullptr;
-    // result.line = 0;
-    //
-    // // Efetua busca
-    // int lineCount = 0;
-    // string fileLine;
-    //
-    // while (getline(this->readingStream, fileLine)) {
-    //
-    //     lineCount++;
-    //
-    //     // Extrai propriedades da linha
-    //     stringstream ss(fileLine);
-    //     string item;
-    //     vector<string> lineProps;
-    //
-    //     while (getline(ss, item, ';')) {
-    //         lineProps.push_back(item);
-    //     }
-    //
-    //     // Valida valores extraidos
-    //     if (!this->service->validateStoredRegister(lineProps)) {
-    //         cout << endl << "** WARNING: Cadastro de Ponto de Coleta invalido (linha: " << lineCount << ") **" << endl << endl;
-    //         continue;
-    //     }
-    //
-    //     // Verifica se registro pesquisado foi encontrado
-    //     if (code == stoi(lineProps[0])) {
-    //         result.foundRegister = this->service->getModelFromStorageLine(lineProps);
-    //         result.line = lineCount;
-    //         return result;
-    //     }
-    // }
-    //
-    // return result;
+    // Abre arquivo
+    this->openStorageForReading();
+
+    // Inicializa dados de retorno
+    FindResult<SchedulingModel> result;
+    result.foundRegister = nullptr;
+    result.line = 0;
+
+    // Efetua busca
+    int lineCount = 0;
+    string fileLine;
+
+    while (getline(this->readingStream, fileLine)) {
+
+        lineCount++;
+
+        // Extrai propriedades da linha
+        stringstream ss(fileLine);
+        string item;
+        vector<string> lineProps;
+
+        while (getline(ss, item, ';'))
+            lineProps.push_back(item);
+
+        // Valida valores extraidos
+        if (!this->service->validateStoredRegister(lineProps)) {
+            cout << endl << "** WARNING: Cadastro de Agendamento invalido (linha: " << lineCount << ") **" << endl << endl;
+            continue;
+        }
+
+        if (code != stoi(lineProps[0])) continue;
+
+        // Registro encontrado
+        result.foundRegister = this->service->getModelFromStorageLine(lineProps);
+        result.line = lineCount;
+        return result;
+    }
+
+    return result;
 };
 
 vector<FindResult<SchedulingModel>> SchedulingDAO::findByUser(const int userCode) {

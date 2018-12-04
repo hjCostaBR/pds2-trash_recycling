@@ -52,7 +52,7 @@ bool SchedulingController::create(const shared_ptr<UserModel> loggedUser) {
 
         this->currentScheduling = make_shared<SchedulingModel>();
 
-        if (!this->getDataFromStdIo(loggedUser)) {
+        if (!this->getDataFromStdIo(true, loggedUser)) {
             exit = true;
             break;
         }
@@ -98,7 +98,14 @@ bool SchedulingController::getOptionsForScheduling(const bool loggedUserIsDonato
     }
 }
 
-bool SchedulingController::getDataFromStdIo(const shared_ptr<UserModel> loggedUser) {
+bool SchedulingController::getDataFromStdIo(const bool isInsert, const shared_ptr<UserModel> loggedUser) {
+
+    // Captura codigo (se necessario)
+    if (insert) {
+        int code = this->getNumberFromStdIO("Informe um Codigo para o agendamento", "Codigo invalido");
+        if (!code) return false;
+        this->currentScheduling->setCode(code);
+    }
 
     // Define data
     this->setCurrentSchedulingDate();
@@ -123,40 +130,39 @@ bool SchedulingController::getDataFromStdIo(const shared_ptr<UserModel> loggedUs
     return true;
 };
 
-bool SchedulingController::update() {
+bool SchedulingController::update(const shared_ptr<UserModel> loggedUser) {
 
-    // cout << endl << "> EDITAR PONTO de COLETA" << endl << endl;
-    //
-    // // Exibir dados atuais
-    // cout << "Dados atuais cadastrados:" << endl;
-    // this->service->showDataTableHeader();
-    // this->service->showRegisterData(rejType);
-    // cout << endl;
-    //
-    // // Confirmar desejo pela alteracao
-    // if (!this->aksYesOrNoQuestionThroughStdIO("Alterar cadastro?")) return false;
-    // cin.ignore();
-    //
-    // do {
-    //     try {
-    //
-    //         this->currentScheduling = rejType;
-    //         if (!this->getDataFromStdIo(false)) return false;
-    //
-    //         this->dao->update(this->currentScheduling);
-    //         cout << "Dados atualizados com sucesso!" << endl;
-    //         return true;
-    //
-    //     } catch (invalid_argument error) {
-    //         cout << "Ops! Dados de Ponto de Coleta invalidos" << endl;
-    //
-    //     } catch (exception error) {
-    //         cout << "Falha inesperada ao tentar atualizar Ponto de Coleta" << endl;
-    //     }
-    //
-    //     if (!this->aksYesOrNoQuestionThroughStdIO("Realizar nova tentativa?")) return false;
-    //
-    // } while (true);
+    cout << endl << "> EDITAR AGENDAMENTO" << endl << endl;
+
+    // Exibir dados atuais
+    cout << "Dados atuais cadastrados:" << endl;
+    this->service->showDataTableHeader();
+    this->service->showRegisterData(this->currentScheduling, true);
+    cout << endl;
+
+    // Confirmar desejo pela alteracao
+    if (!this->aksYesOrNoQuestionThroughStdIO("Alterar cadastro?")) return false;
+    cin.ignore();
+
+    do {
+        try {
+
+            if (!this->getDataFromStdIo(false, loggedUser)) return false;
+
+            this->dao->update(this->currentScheduling);
+            cout << "Dados atualizados com sucesso!" << endl;
+            return true;
+
+        } catch (invalid_argument error) {
+            cout << "Ops! Dados de Ponto de Coleta invalidos" << endl;
+
+        } catch (exception error) {
+            cout << "Falha inesperada ao tentar atualizar Ponto de Coleta" << endl;
+        }
+
+        if (!this->aksYesOrNoQuestionThroughStdIO("Realizar nova tentativa?")) return false;
+
+    } while (true);
 };
 
 bool SchedulingController::changeStatus(void) {
