@@ -27,16 +27,16 @@ void RejectTypeService::showRegisterData(const shared_ptr<RejectTypeModel> rejec
     cout << "|\t" << rejectType->getCode() << "\t"
          << "| " << rejectType->getName() << "\t";
 
-    if (rejectType->getName().size() < 6) cout << "\t";
-    if (rejectType->getName().size() < 11) cout << "\t";
+    if (rejectType->getName().size() < 8) cout << "\t";
+    if (rejectType->getName().size() < 15) cout << "\t";
 
     cout << "|";
 
     if (rejectType->getParentRejType() != nullptr) {
         cout << " " << rejectType->getParentRejType()->getName();
-        if (rejectType->getParentRejType()->getName().size() < 30) cout << "\t";
-        if (rejectType->getParentRejType()->getName().size() < 20) cout << "\t";
-        if (rejectType->getParentRejType()->getName().size() < 10) cout << "\t";
+        if (rejectType->getParentRejType()->getName().size() < 22) cout << "\t";
+        if (rejectType->getParentRejType()->getName().size() < 15) cout << "\t";
+        if (rejectType->getParentRejType()->getName().size() < 8) cout << "\t";
         cout << " | ";
 
     } else {

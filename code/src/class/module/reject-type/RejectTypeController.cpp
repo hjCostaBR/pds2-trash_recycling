@@ -47,7 +47,7 @@ bool RejectTypeController::getDataFromStdIo(const bool insert) {
         this->currentRejectType->setCode(code);
     }
 
-    this->setCurrentRejTypeParent();
+    if (!this->setCurrentRejTypeParent()) return false;
     if (!this->setCurrentRejectTypeName()) return false;
     if (!this->setCurrentRejectTypeStorageSpecification()) return false;
 
@@ -179,17 +179,17 @@ bool RejectTypeController::setCurrentRejectTypeStorageSpecification(void) {
     return true;
 };
 
-void RejectTypeController::setCurrentRejTypeParent(void) {
+bool RejectTypeController::setCurrentRejTypeParent(void) {
 
     // Verifica SE ha outros tipos de residuo cadastrados
     const auto availableRejTypes = this->dao->findAllThatCanBeParent();
-    if (!availableRejTypes.size()) return;
+    if (!availableRejTypes.size()) return true;
 
     // Confirma intencao
     cout << endl;
     const bool goOn = this->aksYesOrNoQuestionThroughStdIO("Este Tipo de residuo eh 'Subtipo' de algum outro?");
     cin.ignore();
-    if (!goOn) return;
+    if (!goOn) return true;
 
     // Exibe opcoes disponiveis
     cout << ">> Tipos de Residuo disponiveis: " << endl;
@@ -199,19 +199,19 @@ void RejectTypeController::setCurrentRejTypeParent(void) {
     do {
 
         const int selectedCode = this->getNumberFromStdIO("Informe codigo do Tipo de Residuo 'pai'", "Codigo invalido");
-        if (!selectedCode) return;
+        if (!selectedCode) return false;
 
         for (uint i = 0; i < availableRejTypes.size(); i++) {
             const auto currentRejType = availableRejTypes[i].foundRegister;
             if (currentRejType->getCode() != selectedCode) continue;
             cout << "Tipo de Residuo sera Subtipo de: " << currentRejType->getName() << endl << endl;
             this->currentRejectType->setParentRejTypeCode(selectedCode);
-            return;
+            return true;
         }
 
         cout << "Tipo de registro de codigo " << selectedCode << " nao encontrado" << endl << endl;
         const bool tryAgain = this->aksYesOrNoQuestionThroughStdIO("Tentar novamente?");
-        if (!tryAgain) return;
+        if (!tryAgain) return false;
 
     } while (true);
 };

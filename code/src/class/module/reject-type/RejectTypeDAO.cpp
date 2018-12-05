@@ -125,7 +125,7 @@ vector<FindResult<RejectTypeModel>> RejectTypeDAO::findAll(void) {
     this->openStorageForReading();
 
     map<int, shared_ptr<RejectTypeModel>> rejTypesMap;
-    vector<FindResult<RejectTypeModel>> returnList;
+    vector<FindResult<RejectTypeModel>> foundList;
 
     int lineCount = 0;
     string fileLine;
@@ -155,16 +155,31 @@ vector<FindResult<RejectTypeModel>> RejectTypeDAO::findAll(void) {
         result.foundRegister = rejType;
         result.line = lineCount;
 
-        returnList.push_back(result);
+        foundList.push_back(result);
         rejTypesMap[rejType->getCode()] = rejType;
     }
 
-    // Inclui Tipos 'pai'
-    for (uint i = 0; i < returnList.size(); i++) {
-        const shared_ptr<RejectTypeModel> &currentRejType = returnList[i].foundRegister;
-        if (!currentRejType->getParentRejTypeCode()) continue;
-        const auto parentRejTypeSearch = rejTypesMap.find(currentRejType->getParentRejTypeCode());
-        currentRejType->setParentRejType(parentRejTypeSearch->second);
+    // Monta lista definitiva a ser retornada
+    vector<FindResult<RejectTypeModel>> returnList;
+
+    for (uint i = 0; i < foundList.size(); i++) {
+
+        const auto foundRejType = foundList[i];
+        const shared_ptr<RejectTypeModel> &currentRejType = foundRejType.foundRegister;
+
+        if (currentRejType->getParentRejTypeCode() != 0) {
+
+            const auto parentRejTypeSearch = rejTypesMap.find(currentRejType->getParentRejTypeCode());
+
+            if (parentRejTypeSearch == rejTypesMap.end()) {
+                cout << endl << "** WARNING: Cadastro de Tipo de Residuo invalido (linha: " << foundRejType.line << ") **" << endl << endl;
+                continue;
+            }
+
+            currentRejType->setParentRejType(parentRejTypeSearch->second);
+        }
+
+        returnList.push_back(foundRejType);
     }
 
     return returnList;
