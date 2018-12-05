@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <map>
 #include "../../../../header/common/FindResult.h"
 #include "../../../../header/common/class/DAO.h"
 #include "../../../../header/module/reject-type/RejectTypeDAO.h"
@@ -104,11 +105,27 @@ FindResult<RejectTypeModel> RejectTypeDAO::findOne(const int code) {
     return result;
 };
 
+vector<FindResult<RejectTypeModel>> RejectTypeDAO::findAllThatCanBeParent(void) {
+
+    vector<FindResult<RejectTypeModel>> rejTypesThatCanBeParent;
+    const auto allRejTypes = this->findAll();
+
+    for (uint i = 0; i < allRejTypes.size(); i++) {
+        const auto currentRejTypeResult = allRejTypes[i];
+        if (currentRejTypeResult.foundRegister->getParentRejTypeCode()) continue;
+        rejTypesThatCanBeParent.push_back(currentRejTypeResult);
+    }
+
+    return rejTypesThatCanBeParent;
+}
+
 vector<FindResult<RejectTypeModel>> RejectTypeDAO::findAll(void) {
 
     this->openStorageForReading();
 
+    map<int, shared_ptr<RejectTypeModel>> rejTypesMap;
     vector<FindResult<RejectTypeModel>> returnList;
+
     int lineCount = 0;
     string fileLine;
 
@@ -121,9 +138,8 @@ vector<FindResult<RejectTypeModel>> RejectTypeDAO::findAll(void) {
         string item;
         vector<string> lineProps;
 
-        while (getline(ss, item, ';')) {
+        while (getline(ss, item, ';'))
             lineProps.push_back(item);
-        }
 
         // Valida valores extraidos
         if (!this->service->validateStoredRegister(lineProps)) {
@@ -133,9 +149,21 @@ vector<FindResult<RejectTypeModel>> RejectTypeDAO::findAll(void) {
 
         // Add item na lista de retorno
         FindResult<RejectTypeModel> result;
-        result.foundRegister = this->service->getModelFromStorageLine(lineProps);
+        const auto rejType = this->service->getModelFromStorageLine(lineProps);
+
+        result.foundRegister = rejType;
         result.line = lineCount;
+
         returnList.push_back(result);
+        rejTypesMap[rejType->getCode()] = rejType;
+    }
+
+    // Inclui Tipos 'pai'
+    for (uint i = 0; i < returnList.size(); i++) {
+        const shared_ptr<RejectTypeModel> &foo = returnList[i].foundRegister;
+        if (!foo->getParentRejTypeCode()) continue;
+        const auto parentRejTypeSearch = rejTypesMap.find(foo->getParentRejTypeCode());
+        foo->setParentRejType(parentRejTypeSearch->second);
     }
 
     return returnList;

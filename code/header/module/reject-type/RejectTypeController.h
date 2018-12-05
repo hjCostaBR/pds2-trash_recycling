@@ -45,10 +45,13 @@ private:
     bool update(shared_ptr<RejectTypeModel> rejType);
 
     /** Captura & define nome para o registro em edicao no momento. */
-    void setCurrentRejectTypeName(void);
+    bool setCurrentRejectTypeName(void);
 
     /** Captura & define instrucoes de armazenamento para registro em edicao no momento. */
-    void setCurrentRejectTypeStorageSpecification(void);
+    bool setCurrentRejectTypeStorageSpecification(void);
+
+    /** Captura & define tipo de residuo 'pai' do tipo sendo cadastrado no momento. */
+    void setCurrentRejTypeParent(void);
 
     /**
      * Monta & exibe listagem de registros + opcoes de acao.

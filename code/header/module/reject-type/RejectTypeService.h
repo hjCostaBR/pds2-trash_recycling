@@ -14,6 +14,8 @@ using namespace std;
 class RejectTypeService: IService {
 
 public:
+
+    /** Construtor */
     RejectTypeService(void) {};
 
     /**

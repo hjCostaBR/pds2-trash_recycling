@@ -7,11 +7,17 @@
 
 bool RejectTypeService::validateStoredRegister(const vector<string> lineProps) const {
 
-    if (lineProps.size() != 3) return false;
+    if (lineProps.size() != 3 && lineProps.size() != 4) return false;
 
     // Valida codigo
     try { stoi(lineProps[0]); }
     catch (exception err) { return false; }
+
+    // Valida codigo do residuo 'pai' (se necessario)
+    if (lineProps.size() == 4) {
+        try { stoi(lineProps[3]); }
+        catch (exception err) { return false; }
+    }
 
     return true;
 };
@@ -24,13 +30,22 @@ void RejectTypeService::showRegisterData(const shared_ptr<RejectTypeModel> rejec
     if (rejectType->getName().size() < 6) cout << "\t";
     if (rejectType->getName().size() < 11) cout << "\t";
 
-    cout << "| " << rejectType->getStorageSpecification()
-         << endl;
+    cout << "|";
+
+    if (rejectType->getParentRejType() != nullptr) {
+        cout << rejectType->getParentRejType()->getName() << "\t| ";
+
+    } else {
+        cout << "\t\t\t\t| ";
+    }
+
+    cout << rejectType->getStorageSpecification() << endl;
 };
 
 void RejectTypeService::showDataTableHeader(void) const {
     cout << "| Codigo\t|"
          << "\tNome\t\t|"
+         << "\tSubtipo de\t|"
          << "\tInstrucao de armazenamento\t\t\t\t|"
          << endl;
 };
@@ -44,9 +59,8 @@ void RejectTypeService::showRegistersListData(const vector<FindResult<RejectType
 
     this->showDataTableHeader();
 
-    for (uint i = 0; i < rejTypesList.size(); i++) {
+    for (uint i = 0; i < rejTypesList.size(); i++)
         this->showRegisterData(rejTypesList[i].foundRegister);
-    }
 
     cout << endl;
 };
@@ -60,6 +74,7 @@ shared_ptr<RejectTypeModel> RejectTypeService::getModelFromStorageLine(const vec
     rejType->setCode(stoi(lineProps[0]));
     rejType->setName(lineProps[1]);
     rejType->setStorageSpecification(lineProps[2]);
+    rejType->setParentRejTypeCode(stoi(lineProps[3]));
     return rejType;
 };
 
