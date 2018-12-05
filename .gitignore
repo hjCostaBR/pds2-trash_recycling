@@ -1,0 +1,10 @@
+# IDE
+.vscode/*
+.idea/*
+
+# Generated
+/build/*
+/**/*.o
+
+# Storage
+#/**/*storage/*

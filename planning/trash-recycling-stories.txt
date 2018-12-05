@@ -5,54 +5,145 @@
 **** Estorias
 
 - Indice
-	- Agendamento de Coleta
-	- Agendamento de Coleta por Doador
-	- Agendamento de Coleta por Receptor
-	- Cadastro de Residuos
-	- Cadastro de Usuario
-	- Computar coleta realizada
-	- Menu principal
+	- Estoria: Agendamento de Coleta por Doador
+	- Estoria: Agendamento de Coleta por Receptor
+
+	- Estoria: Cadastro de Novo Tipo Residuos
+	- Estoria: Cadastro de novo Usuario
+
+	- Estoria: Computar coleta realizada
+
+	- Estoria: Editar cadastro de usuario
+	- Estoria: Editar Tipo Residuo Cadastrado
+	
+	- Estoria: Listar/Remover tipo de residuo cadastrado
+	- Estoria: Listar/Remover usuarios cadastrados
+
+	- Estoria: Login de Usuario
+	
+	- Estoria: Menu principal
+	
+	- Estoria: Visualizar minhas Coletas agendadas
 
 
 =======================================
-- Agendamento de Coleta
-- Agendamento de Coleta por Doador
-- Agendamento de Coleta por Receptor
+- Estoria: Menu principal
 
-	- Usuario doador
-		- Como 01 usuario do tipo Doador eu desejo agendar 01 doacao de residuo
+	- Como 01 usuario, eu desejo visualizar 01 menu com as opcoes de uso do sistema
+	- Neste procedimento eu devo poder
+		- Visualizar todas as funcoes possiveis disponiveis para mim
+		- Selecionar 01 das opcoes de acao possivel
+		- Sair do sistema (encerrar sessao)
+
+
+=======================================
+- Estoria: Cadastro de novo Usuario
+
+	- Como 01 usuario, eu desejo realizar o meu proprio cadastro no sistema
 		- Neste procedimento eu vou
-			- Selecionar qual(is) residuo(s) vou doar, dentre a minha lista de residuos (residuos que posso doar)
-			- Selecionar para qual receptor eu vou fazer a doacao
-			- Selecionar 01 Ponto de Coleta dentre a lista de pontos de coletas disponiveis, no momento
+			- Informar SE serei 01 doador ou 01 receptor de residuos
+			- Informar meu nome
+			- Informar SE meu cadastro sera de PF OU de PJ
+				- SE meu cadastro for de PF, devo informar meu CPF
+				- SENAO devo informar meu CNPJ
 
-	- Usuario Recolhedor
-		- Como 01 usuario do tipo Recolhedor eu desejo agendar 01 recolhimento de residuo
-		- Neste procedimento eu vou
-			- Selecionar qual(is) residuo(s) desejo receber, dentre a minha lista de residuos (residuos que posso receber)
-			- Selecionar de qual doador eu vou receber a doacao
-			- Selecionar 01 Ponto de Coleta dentre a lista de pontos de coletas disponiveis, no momento
+			- Informar os tipos de residuos que eu tenho interesse em doar/receber, dentre a lista de tipos de residuos cadastrados
 
 
 =======================================
-- Cadastro de Residuos
+- Estoria: Login de Usuario
 
-	- @todo
+	- Como 01 usuario, eu desejo realizar login dentro do sistema
+	- Neste procedimento eu devo
+		- Infomar meu codigo
+		- Infomar minha senha
 
-
-=======================================
-- Cadastro de Usuario
-
-	- @todo
-
-
-=======================================
-- Computar coleta realizada
-
-	- @todo
+	- Caso os dados que eu informar estejam corretos, desejo entao visualizar o menu principal
 
 
 =======================================
-- Menu principal
+- Estoria: Cadastro de Novo Tipo Residuos
 
-	- @todo
+	- Como 01 usuario ADMINISTRADOR eu desejo cadastrar tipos de residuo que poderao ser doados/recebidos atraves do sistema
+	- Neste procedimento eu devo poder informar
+		- Nome do tipo de residuo
+		- SE ele eh subtipo de algum outro tipo previamente cadastrado
+			- CASO seja subtipo, devo selecionar de qual dos tipos ja cadastrados o novo tipo sera subtipo
+
+		- Forma de armazenamento adequada para o novo tipo/subtipo
+
+
+=======================================
+- Estoria: Listar/Remover tipo de residuo cadastrado
+
+	- Como 01 usuario ADMINISTRADOR eu desejo visualizar todos os tipos/subtipos de residuo cadastrados no sistema
+	- Neste procedimento eu devo poder 
+		- Visualizar todos os tipos de residuos disponiveis no momento
+		- Selecionar 01 item da lista de tipos de residuo cadastrado para visulizar todos os seus dados individualmente
+		- Selecionar 01 item da lista de tipos de residuo cadastrados & remove-lo
+
+
+=======================================
+- Estoria: Editar Tipo Residuo Cadastrado
+
+	- Como 01 usuario ADMINISTRADOR eu desejo atualizar o cadastro de 01 tipo de residuo a ser doado/recebido atraves do sistema, ja cadastrado por mim, anteriormente
+	- Neste procedimento eu devo poder alterar
+		- Nome do tipo de residuo
+		- SE ele eh subtipo de algum outro tipo previamente cadastrado
+			- CASO seja subtipo, devo selecionar de qual dos tipos ja cadastrados o novo tipo sera subtipo
+
+		- Forma de armazenamento adequada para o tipo/subtipo
+
+
+=======================================
+- Estoria: Editar cadastro de usuario
+
+	- Como 01 usuario, eu desejo atualizar meus dados de cadastro, no sistema
+		- Neste procedimento eu poderei alterar
+			- SE sou 01 doador ou 01 receptor de residuos
+			- meu nome
+			- SE meu cadastro eh de PF OU de PJ
+				- SE meu cadastro for de PF, devo informar meu CPF
+				- SENAO devo informar meu CNPJ
+
+			- Informar os tipos de residuos que eu tenho interesse em doar/receber, dentre a lista de tipos de residuos cadastrados
+
+
+=======================================
+- Estoria: Listar/Remover usuarios cadastrados
+
+	- Como 01 usuario do tipo ADMINSTRADOR, eu desejo listar todos os usuarios cadastrados no sistema
+		- Neste procedimento eu devo poder
+			- Escolher 01 item da lista de usuarios cadastrados & visualizar todos os seus dados cadastrais
+			- Escolher 01 item da lista de usuarios cadastrados & remove-lo
+
+
+=======================================
+- Estoria: Agendamento de Coleta por Doador
+
+	- Como 01 usuario do tipo DOADOR eu desejo agendar 01 doacao de residuo
+	- Neste procedimento eu vou
+		- Selecionar qual(is) residuo(s) vou doar, dentre a minha lista de residuos (residuos que posso doar)
+		- Selecionar para qual receptor eu vou fazer a doacao
+		- Selecionar 01 Ponto de Coleta dentre a lista de pontos de coletas disponiveis, no momento
+
+
+=======================================
+- Estoria: Agendamento de Coleta por Receptor
+
+	- Como 01 usuario do tipo RECEPTOR eu desejo agendar 01 recolhimento de residuo
+	- Neste procedimento eu vou
+		- Selecionar qual(is) residuo(s) desejo receber, dentre a minha lista de residuos (residuos que posso receber)
+		- Selecionar de qual doador eu vou receber a doacao
+		- Selecionar 01 Ponto de Coleta dentre a lista de pontos de coletas disponiveis, no momento
+
+
+=======================================
+- Estoria: Visualizar minhas Coletas agendadas
+- Estoria: Computar coleta realizada
+
+	- Como 01 usuario, eu desejo listar todos os agendamentos de coleta de residuos nos quais eu esteja alocado
+	- Neste procedimento eu devo poder
+		- Visualizar lista de agendamentos
+		- Selecionar 01 item da lista para visualizar todos os seus dados indivudualmente
+		- Selecionar 01 item da lista & alterar seu status (realizado/NAO-realizado)

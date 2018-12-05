@@ -8,6 +8,26 @@
 	- Descricao
 	- Entidades
 	- Estorias
+		- Estoria: Agendamento de Coleta por Doador
+		- Estoria: Agendamento de Coleta por Receptor
+
+		- Estoria: Cadastro de Novo Tipo Residuos
+		- Estoria: Cadastro de novo Usuario
+
+		- Estoria: Computar coleta realizada
+
+		- Estoria: Editar cadastro de usuario
+		- Estoria: Editar Tipo Residuo Cadastrado
+		
+		- Estoria: Listar/Remover tipo de residuo cadastrado
+		- Estoria: Listar/Remover usuarios cadastrados
+
+		- Estoria: Login de Usuario
+		
+		- Estoria: Menu principal
+		
+		- Estoria: Visualizar minhas Coletas agendadas
+		
 	- O que entregar
 
 
@@ -29,7 +49,7 @@
 		- Entrega parcial
 			- Valor: [06pts]
 
-		- Deve posteriormente ser incluso da documentacao (entrega final)
+		- Deve posteriormente ser incluso na documentacao/Relatorio (entrega final)
 
 	- Programa
 		- Valor
@@ -97,5 +117,17 @@
 
 =======================================
 - Estorias
+- Estoria: Agendamento de Coleta por Doador
+- Estoria: Agendamento de Coleta por Receptor
+- Estoria: Cadastro de Novo Tipo Residuos
+- Estoria: Cadastro de novo Usuario
+- Estoria: Computar coleta realizada
+- Estoria: Editar cadastro de usuario
+- Estoria: Editar Tipo Residuo Cadastrado
+- Estoria: Listar/Remover tipo de residuo cadastrado
+- Estoria: Listar/Remover usuarios cadastrados
+- Estoria: Login de Usuario
+- Estoria: Menu principal
+- Estoria: Visualizar minhas Coletas agendadas
 
 	- Ver arquivo: Estorias .txt
