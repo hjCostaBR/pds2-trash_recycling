@@ -17,10 +17,12 @@ bool RejectTypeService::validateStoredRegister(const vector<string> lineProps) c
 };
 
 void RejectTypeService::showRegisterData(const shared_ptr<RejectTypeModel> rejectType) const {
+
     cout << "|\t" << rejectType->getCode() << "\t"
          << "| " << rejectType->getName() << "\t";
 
     if (rejectType->getName().size() < 6) cout << "\t";
+    if (rejectType->getName().size() < 11) cout << "\t";
 
     cout << "| " << rejectType->getStorageSpecification()
          << endl;
@@ -28,7 +30,7 @@ void RejectTypeService::showRegisterData(const shared_ptr<RejectTypeModel> rejec
 
 void RejectTypeService::showDataTableHeader(void) const {
     cout << "| Codigo\t|"
-         << "\tNome\t|"
+         << "\tNome\t\t|"
          << "\tInstrucao de armazenamento\t\t\t\t|"
          << endl;
 };

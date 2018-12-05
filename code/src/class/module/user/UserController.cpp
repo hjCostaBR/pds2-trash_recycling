@@ -12,7 +12,7 @@
 
 using namespace std;
 
-void UserController::setCurrentUserPersonType(void) {
+bool UserController::setCurrentUserPersonType(void) {
 
     bool reapeat = false;
     bool tried = false;
@@ -33,16 +33,17 @@ void UserController::setCurrentUserPersonType(void) {
 
     } while (reapeat);
 
+    if (readInput == "0") return false;
 
     // Tudo OK
-    if (readInput == "0") return;
-
     this->currentUserType = (readInput == "pf")
         ? make_shared<PersonTypeEnum>(PersonTypeEnum ::PF)
         : make_shared<PersonTypeEnum>(PersonTypeEnum ::PJ);
+
+    return true;
 };
 
-void UserController::setCurrentUserCpfOrCnpj(void) {
+bool UserController::setCurrentUserCpfOrCnpj(void) {
 
     string docType = (*this->currentUserType == PersonTypeEnum::PF) ? "CPF" : "CNPJ";
 
@@ -62,7 +63,7 @@ void UserController::setCurrentUserCpfOrCnpj(void) {
         cin >> readInput;
 
         // Verifica se usuario solicitou 'sair'
-        if (readInput == "0") break;
+        if (readInput == "0") return false;
 
         // Valida entrada (comprimento)
         if ((*this->currentUserType == PersonTypeEnum::PF && readInput.length() != 11)
@@ -82,14 +83,14 @@ void UserController::setCurrentUserCpfOrCnpj(void) {
     } while (reapeat);
 
     // Tudo OK
-    if (readInput != "0") this->currentUser->setCpfCnpj(readInput);
+    this->currentUser->setCpfCnpj(readInput);
+    return true;
 };
 
-void UserController::setCurrentUserType(void) {
+bool UserController::setCurrentUserType(void) {
 
     string readInput = "";
     bool tried = false;
-    bool reapeat = false;
 
     // Monta estrutura para exibir opcoes
     vector<UserTypeEnum> userTypesList;
@@ -106,7 +107,6 @@ void UserController::setCurrentUserType(void) {
         // Notifica tentativa invalida (se necessario)
         if (tried) cout << "Tipo invalido!" << endl << endl;
         tried = true;
-        reapeat = false;
 
         // Exibir opcoes
         cout << "Selecione um tipo de usuario: " << endl;
@@ -121,7 +121,7 @@ void UserController::setCurrentUserType(void) {
         // Capturar entrada
         cin >> readInput;
         cout << endl;
-        if (readInput == "0") break;
+        if (readInput == "0") return false;
 
         // Validar entrada: Tipo
         int selectedTypeCode;
@@ -130,7 +130,6 @@ void UserController::setCurrentUserType(void) {
             selectedTypeCode = stoi(readInput);
 
         } catch (exception error) {
-            reapeat = true;
             continue;
         }
 
@@ -144,18 +143,17 @@ void UserController::setCurrentUserType(void) {
             // Opcao valida informada!
             this->currentUser->setType(validUserType);
             cout << "Tipo selecionado: " << this->service->getUserTypeLabel(validUserType) << endl << endl;
-            break;
+            return true;
         }
 
-        // Verificar: Alguma opcao valida encontrada?
-        if (!this->currentUser->getType()) reapeat = true;
-
-    } while (reapeat);
+    } while (true);
 };
 
-void UserController::setCurrentUserName(void) {
+bool UserController::setCurrentUserName(void) {
     const string readInput = this->getStringFromStdIO("Informe nome do usuario: ");
-    if (readInput != "0") this->currentUser->setName(readInput);
+    if (readInput == "0") return false;
+    this->currentUser->setName(readInput);
+    return true;
 };
 
 void UserController::setCurrentUserRejTypeList(void) {
@@ -172,7 +170,6 @@ void UserController::setCurrentUserRejTypeList(void) {
 
     // Captura selecao do usuario
     vector<int> selectedCodes;
-    bool repeat = true;
 
     do {
 
@@ -205,21 +202,19 @@ void UserController::setCurrentUserRejTypeList(void) {
         }
 
         // Valida
-        if (!error && selectedCodes.size() > 0) {
-            repeat = false;
-            continue;
-        }
+        if (!error && selectedCodes.size() > 0) break;
 
         cout << endl;
         const bool tryAgain = this->aksYesOrNoQuestionThroughStdIO("Lista invalida. Deseja tentar novamente?");
         if (!tryAgain) return;
 
-    } while (repeat);
+    } while (true);
+
+    cin.ignore();
 
     // Add tipos de residuo para o usuario
-    for (uint i = 0; i < selectedCodes.size(); i++) {
+    for (uint i = 0; i < selectedCodes.size(); i++)
         this->currentUser->addRejectTypeOfInterest(selectedCodes[i]);
-    }
 };
 
 bool UserController::getDataForUserFromStdIo(const bool insert, const bool admin) {
@@ -227,33 +222,19 @@ bool UserController::getDataForUserFromStdIo(const bool insert, const bool admin
     cout << "pressione '0' para sair" << endl
          << endl;
 
-    // Define tipo de pessoa do usuario (pf/pj)
-    this->setCurrentUserPersonType();
-    if (this->currentUserType == nullptr) return false;
+    if (!this->setCurrentUserPersonType()) return false;
 
-    // Captura codigo (se necessario)
     if (insert) {
         int code = this->getNumberFromStdIO("Informe um Codigo para o usuario", "Codigo invalido");
         if (!code) return false;
         this->currentUser->setCode(code);
     }
 
-    // Captura documento (cpf/cnpj)
-    this->setCurrentUserCpfOrCnpj();
-    if (this->currentUser->getCpfCnpj() == "") return false;
-
-    // Captura tipo de usuario (se necessario)
-    if (!admin) {
-        this->setCurrentUserType();
-        if (!this->currentUser->getType()) return false;
-    }
-
-    // Captura nome do usuario
-    this->setCurrentUserName();
-    if (this->currentUser->getName() == "") return false;
-
-    // Captura lista de tipos de residuo de interesse do usuario
+    if (!this->setCurrentUserCpfOrCnpj()) return false;
+    if (!admin && !this->setCurrentUserType()) return false;
+    if (!this->setCurrentUserName()) return false;
     this->setCurrentUserRejTypeList();
+
     return true;
 };
 
@@ -348,7 +329,7 @@ bool UserController::showList(void) const {
 
     do {
 
-        const int selectedUserCode = this->getNumberFromStdIO("Informe o codigo do Tipo de Residuo a ser removido", "Codigo invalido: ");
+        const int selectedUserCode = this->getNumberFromStdIO("Informe o codigo do Usuario a ser removido", "Codigo invalido: ");
         if (selectedUserCode == 0) return false;
 
         userSearch = this->dao->findOne(selectedUserCode);

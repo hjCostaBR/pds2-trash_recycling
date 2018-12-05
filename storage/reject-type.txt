@@ -1,4 +1,4 @@
 10;Papel;Pode rasgar mas nao pode amassar;
-11;Vidro;Guardar em material rigido;
 12;Aluminio;Armazenar limpo e seco;
 13;Plastico;Armazenar limpo e seco;
+11;Vidro;Guardar em algum compartimento rigido;

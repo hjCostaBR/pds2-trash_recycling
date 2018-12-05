@@ -17,12 +17,12 @@ bool UserService::validateStoredRegister(const vector<string> lineProps) const {
     try { stoi(lineProps[0]); }
     catch (exception err) { return false; }
 
-    // Valida tipo
-    try { !this->validateUserType(stoi(lineProps[0])); }
-    catch (exception err) { return false; }
-
     // Valida cpf/cnpj
     try { this->getUserPersonType(string(lineProps[1])); }
+    catch (exception err) { return false; }
+
+    // Valida tipo
+    try { !this->validateUserType(stoi(lineProps[2])); }
     catch (exception err) { return false; }
 
     return true;

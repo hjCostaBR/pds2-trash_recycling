@@ -38,16 +38,16 @@ private:
 
 
     /** Captura & define tipo (pf /pj) para insercao de novo usuario. */
-    void setCurrentUserPersonType(void);
+    bool setCurrentUserPersonType(void);
 
     /** Captura & define valor para CPF/CNPJ de 01 novo usuario a ser cadastrado. */
-    void setCurrentUserCpfOrCnpj(void);
+    bool setCurrentUserCpfOrCnpj(void);
 
     /** Captura & define tipo do usuario atual. */
-    void setCurrentUserType(void);
+    bool setCurrentUserType(void);
 
     /** Captura & define nome do usuario atual. */
-    void setCurrentUserName(void);
+    bool setCurrentUserName(void);
 
     /** Captura & define lista de residuos de interesse de 01 usuario. */
     void setCurrentUserRejTypeList(void);
