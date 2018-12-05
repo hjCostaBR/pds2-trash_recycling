@@ -35,7 +35,7 @@ public:
     void setParentRejType(const shared_ptr<RejectTypeModel> parentRejType) { this->parentRejType = parentRejType; }
 
     int getParentRejTypeCode() const { return this->parentRejTypeCode; }
-    void setParentRejTypeCode(int code) { this->parentRejTypeCode = parentRejTypeCode; }
+    void setParentRejTypeCode(int code) { this->parentRejTypeCode = code; }
 };
 
 #endif

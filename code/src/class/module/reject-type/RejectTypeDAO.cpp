@@ -24,6 +24,7 @@ void RejectTypeDAO::writeRegisterIntoStorage(shared_ptr<RejectTypeModel> rejectT
             << rejectType->getCode() << ";"
             << rejectType->getName() << ";"
             << rejectType->getStorageSpecification() << ";"
+            << rejectType->getParentRejTypeCode() << ";"
             << endl;
 }
 
@@ -160,10 +161,10 @@ vector<FindResult<RejectTypeModel>> RejectTypeDAO::findAll(void) {
 
     // Inclui Tipos 'pai'
     for (uint i = 0; i < returnList.size(); i++) {
-        const shared_ptr<RejectTypeModel> &foo = returnList[i].foundRegister;
-        if (!foo->getParentRejTypeCode()) continue;
-        const auto parentRejTypeSearch = rejTypesMap.find(foo->getParentRejTypeCode());
-        foo->setParentRejType(parentRejTypeSearch->second);
+        const shared_ptr<RejectTypeModel> &currentRejType = returnList[i].foundRegister;
+        if (!currentRejType->getParentRejTypeCode()) continue;
+        const auto parentRejTypeSearch = rejTypesMap.find(currentRejType->getParentRejTypeCode());
+        currentRejType->setParentRejType(parentRejTypeSearch->second);
     }
 
     return returnList;

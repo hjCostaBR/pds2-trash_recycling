@@ -49,7 +49,7 @@ bool RejectTypeController::getDataFromStdIo(const bool insert) {
 
     this->setCurrentRejTypeParent();
     if (!this->setCurrentRejectTypeName()) return false;
-    if (this->setCurrentRejectTypeStorageSpecification()) return false;
+    if (!this->setCurrentRejectTypeStorageSpecification()) return false;
 
     return true;
 };
@@ -165,7 +165,7 @@ bool RejectTypeController::setCurrentRejectTypeName(void) {
     cout << "Informe nome do tipo de residuo: ";
     char readInput[100];
     cin.getline(readInput, sizeof(readInput));
-    if (readInput != "0") return false;
+    if (readInput == "0") return false;
     this->currentRejectType->setName(string(readInput));
     return true;
 };
@@ -174,7 +174,7 @@ bool RejectTypeController::setCurrentRejectTypeStorageSpecification(void) {
     cout << "Informe descricao de armazenamento para este tipo de residuo (max 100 caracteres): ";
     char readInput[100];
     cin.getline(readInput, sizeof(readInput));
-    if (readInput != "0") return false;
+    if (readInput == "0") return false;
     this->currentRejectType->setStorageSpecification(string(readInput));
     return true;
 };
@@ -188,6 +188,7 @@ void RejectTypeController::setCurrentRejTypeParent(void) {
     // Confirma intencao
     cout << endl;
     const bool goOn = this->aksYesOrNoQuestionThroughStdIO("Este Tipo de residuo eh 'Subtipo' de algum outro?");
+    cin.ignore();
     if (!goOn) return;
 
     // Exibe opcoes disponiveis
@@ -203,16 +204,13 @@ void RejectTypeController::setCurrentRejTypeParent(void) {
         for (uint i = 0; i < availableRejTypes.size(); i++) {
             const auto currentRejType = availableRejTypes[i].foundRegister;
             if (currentRejType->getCode() != selectedCode) continue;
-            cout << "Tipo de Residuo sera Subtipo de: " << currentRejType->getName() << endl;
+            cout << "Tipo de Residuo sera Subtipo de: " << currentRejType->getName() << endl << endl;
             this->currentRejectType->setParentRejTypeCode(selectedCode);
             return;
         }
 
-        string failMsg = "Tipo de Residuo de codigo '";
-        failMsg += selectedCode;
-        failMsg += "' nao existe. Deseja tentar novamente?";
-
-        const bool tryAgain = this->aksYesOrNoQuestionThroughStdIO(failMsg);
+        cout << "Tipo de registro de codigo " << selectedCode << " nao encontrado" << endl << endl;
+        const bool tryAgain = this->aksYesOrNoQuestionThroughStdIO("Tentar novamente?");
         if (!tryAgain) return;
 
     } while (true);

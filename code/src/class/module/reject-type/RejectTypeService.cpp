@@ -33,10 +33,14 @@ void RejectTypeService::showRegisterData(const shared_ptr<RejectTypeModel> rejec
     cout << "|";
 
     if (rejectType->getParentRejType() != nullptr) {
-        cout << rejectType->getParentRejType()->getName() << "\t| ";
+        cout << " " << rejectType->getParentRejType()->getName();
+        if (rejectType->getParentRejType()->getName().size() < 30) cout << "\t";
+        if (rejectType->getParentRejType()->getName().size() < 20) cout << "\t";
+        if (rejectType->getParentRejType()->getName().size() < 10) cout << "\t";
+        cout << " | ";
 
     } else {
-        cout << "\t\t\t\t| ";
+        cout << "\t\t\t| ";
     }
 
     cout << rejectType->getStorageSpecification() << endl;
@@ -74,7 +78,10 @@ shared_ptr<RejectTypeModel> RejectTypeService::getModelFromStorageLine(const vec
     rejType->setCode(stoi(lineProps[0]));
     rejType->setName(lineProps[1]);
     rejType->setStorageSpecification(lineProps[2]);
-    rejType->setParentRejTypeCode(stoi(lineProps[3]));
+
+    if (lineProps.size() == 4)
+        rejType->setParentRejTypeCode(stoi(lineProps[3]));
+
     return rejType;
 };
 
