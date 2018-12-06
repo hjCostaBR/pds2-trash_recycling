@@ -47,13 +47,9 @@ bool RejectTypeController::getDataFromStdIo(const bool insert) {
         this->currentRejectType->setCode(code);
     }
 
-    // Define nome
-    this->setCurrentRejectTypeName();
-    if (this->currentRejectType->getName() == "") return false;
-
-    // Define instrucoes de armazenamento
-    this->setCurrentRejectTypeStorageSpecification();
-    if (this->currentRejectType->getStorageSpecification() == "") return false;
+    if (!this->setCurrentRejTypeParent()) return false;
+    if (!this->setCurrentRejectTypeName()) return false;
+    if (!this->setCurrentRejectTypeStorageSpecification()) return false;
 
     return true;
 };
@@ -165,18 +161,59 @@ bool RejectTypeController::runAction(int action, shared_ptr<UserModel> currentUs
     return false;
 };
 
-void RejectTypeController::setCurrentRejectTypeName(void) {
+bool RejectTypeController::setCurrentRejectTypeName(void) {
     cout << "Informe nome do tipo de residuo: ";
     char readInput[100];
     cin.getline(readInput, sizeof(readInput));
-    if (readInput != "0") this->currentRejectType->setName(string(readInput));
+    if (readInput == "0") return false;
+    this->currentRejectType->setName(string(readInput));
+    return true;
 };
 
-void RejectTypeController::setCurrentRejectTypeStorageSpecification(void) {
+bool RejectTypeController::setCurrentRejectTypeStorageSpecification(void) {
     cout << "Informe descricao de armazenamento para este tipo de residuo (max 100 caracteres): ";
     char readInput[100];
     cin.getline(readInput, sizeof(readInput));
-    if (readInput != "0") this->currentRejectType->setStorageSpecification(string(readInput));
+    if (readInput == "0") return false;
+    this->currentRejectType->setStorageSpecification(string(readInput));
+    return true;
+};
+
+bool RejectTypeController::setCurrentRejTypeParent(void) {
+
+    // Verifica SE ha outros tipos de residuo cadastrados
+    const auto availableRejTypes = this->dao->findAllThatCanBeParent();
+    if (!availableRejTypes.size()) return true;
+
+    // Confirma intencao
+    cout << endl;
+    const bool goOn = this->aksYesOrNoQuestionThroughStdIO("Este Tipo de residuo eh 'Subtipo' de algum outro?");
+    cin.ignore();
+    if (!goOn) return true;
+
+    // Exibe opcoes disponiveis
+    cout << ">> Tipos de Residuo disponiveis: " << endl;
+    this->service->showRegistersListData(availableRejTypes);
+
+    // Captura selecao do usuario
+    do {
+
+        const int selectedCode = this->getNumberFromStdIO("Informe codigo do Tipo de Residuo 'pai'", "Codigo invalido");
+        if (!selectedCode) return false;
+
+        for (uint i = 0; i < availableRejTypes.size(); i++) {
+            const auto currentRejType = availableRejTypes[i].foundRegister;
+            if (currentRejType->getCode() != selectedCode) continue;
+            cout << "Tipo de Residuo sera Subtipo de: " << currentRejType->getName() << endl << endl;
+            this->currentRejectType->setParentRejTypeCode(selectedCode);
+            return true;
+        }
+
+        cout << "Tipo de registro de codigo " << selectedCode << " nao encontrado" << endl << endl;
+        const bool tryAgain = this->aksYesOrNoQuestionThroughStdIO("Tentar novamente?");
+        if (!tryAgain) return false;
+
+    } while (true);
 };
 
 #endif

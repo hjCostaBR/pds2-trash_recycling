@@ -1,4 +1,3 @@
-10;Papel;Pode rasgar mas nao pode amassar;
-12;Aluminio;Armazenar limpo e seco;
 13;Plastico;Armazenar limpo e seco;
-11;Vidro;Guardar em algum compartimento rigido;
+10;foo;bar;12;
+15;Garrafa PET;Entregar limpo e seco. Pode estar amassado;13;
