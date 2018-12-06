@@ -70,7 +70,7 @@ shared_ptr<UserModel> LoginController::login() {
                 return loggedUser;
             }
 
-            cout << "Usuario nao encontrado!" << endl;
+            cout << "Usuario nao encontrado!" << endl << endl;
 
         } catch (exception error) {
             cout << "Falha inesperada ao tentar realizar autenticacao de usuario" << endl;
