@@ -64,6 +64,12 @@ public:
      * @return
      */
     vector<FindResult<RejectTypeModel>> findAll(void);
+
+    /**
+     * Captura & retorna lista com todos os registros armazenados que NAO sao subtipos de outro.
+     * @return
+     */
+    vector<FindResult<RejectTypeModel>> findAllThatCanBeParent(void);
 };
 
 #endif

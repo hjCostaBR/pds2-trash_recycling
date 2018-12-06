@@ -44,11 +44,23 @@ private:
     /** Atualiza cadastro de 01 registro ja armazenado. */
     bool update(shared_ptr<RejectTypeModel> rejType);
 
-    /** Captura & define nome para o registro em edicao no momento. */
-    void setCurrentRejectTypeName(void);
+    /**
+     * Captura & define nome para o registro em edicao no momento.
+     * @return Retorna falso caso o usuario selecione 'sair'. Ou true.
+     */
+    bool setCurrentRejectTypeName(void);
 
-    /** Captura & define instrucoes de armazenamento para registro em edicao no momento. */
-    void setCurrentRejectTypeStorageSpecification(void);
+    /**
+     * Captura & define instrucoes de armazenamento para registro em edicao no momento.
+     * @return Retorna falso caso o usuario selecione 'sair'. Ou true.
+     */
+    bool setCurrentRejectTypeStorageSpecification(void);
+
+    /**
+     * Captura & define tipo de residuo 'pai' do tipo sendo cadastrado no momento.
+     * @return Retorna falso caso o usuario selecione 'sair'. Ou true.
+     */
+    bool setCurrentRejTypeParent(void);
 
     /**
      * Monta & exibe listagem de registros + opcoes de acao.
