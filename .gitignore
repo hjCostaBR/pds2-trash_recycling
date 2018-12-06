@@ -4,6 +4,7 @@
 
 # Generated
 /build/*
+!/build/Makefile
 /**/*.o
 
 # Storage

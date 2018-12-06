@@ -8,13 +8,13 @@
 	- ***Estoria: Agendamento de Coleta por Doador
 	- ***Estoria: Agendamento de Coleta por Receptor
 
-	- ***Estoria: Cadastro de Novo Tipo Residuos
+	- Estoria: Cadastro de Novo Tipo Residuos
 	- Estoria: Cadastro de novo Usuario
 
 	- Estoria: Computar coleta realizada
 
 	- Estoria: Editar cadastro de usuario
-	- ***Estoria: Editar Tipo Residuo Cadastrado
+	- Estoria: Editar Tipo Residuo Cadastrado
 	
 	- Estoria: Listar/Remover tipo de residuo cadastrado
 	- Estoria: Listar/Remover usuarios cadastrados
