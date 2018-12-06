@@ -9,4 +9,3 @@
 109;88877766624;122;Milton Nascimento;
 110;77733366615;121;Ney Matogrosso;
 111;00099988876543;122;Geraldo Azevedo;10,13,12;
-3;12323434545;121;Joao da Silva;;

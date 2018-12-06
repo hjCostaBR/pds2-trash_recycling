@@ -332,6 +332,13 @@ bool UserController::showList(void) const {
         const int selectedUserCode = this->getNumberFromStdIO("Informe o codigo do Usuario a ser removido", "Codigo invalido: ");
         if (selectedUserCode == 0) return false;
 
+        if (selectedUserCode == 1) {
+            cout << "Usuario ADMIN nao pode ser removido" << endl << endl;
+            const auto tryAgain = this->aksYesOrNoQuestionThroughStdIO("Deseja tentar novamente?");
+            if (!tryAgain) return false;
+            continue;
+        }
+
         userSearch = this->dao->findOne(selectedUserCode);
 
         if (userSearch.foundRegister == nullptr) {
