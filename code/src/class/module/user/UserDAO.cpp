@@ -147,9 +147,8 @@ vector<FindResult<UserModel>> UserDAO::findAll(void) {
         string item;
         vector<string> lineProps;
 
-        while (getline(ss, item, ';')) {
+        while (getline(ss, item, ';'))
             lineProps.push_back(item);
-        }
 
         // Valida valores extraidos
         if (!this->service->validateStoredRegister(lineProps)) {
@@ -167,7 +166,7 @@ vector<FindResult<UserModel>> UserDAO::findAll(void) {
     return returnList;
 };
 
-vector<FindResult<UserModel>> UserDAO::findAllByType(const UserTypeEnum type) {
+vector<FindResult<UserModel>> UserDAO::findMatchingByType(const UserTypeEnum type, const vector<int> rejTypesCodes) {
 
     this->openStorageForReading();
 
@@ -197,6 +196,10 @@ vector<FindResult<UserModel>> UserDAO::findAllByType(const UserTypeEnum type) {
         const auto user = this->service->getModelFromStorageLine(lineProps);
         if (user->getType() != type) continue;
 
+        // Valida se registo possui tipos de residuo de interesse compativeis
+        const auto intersection = this->rejTypeService->get2RejTypesCodesListIntersection(user->getRejectTypesOfInterestCodes(), rejTypesCodes);
+        if (!intersection.size()) continue;
+
         // Add item na lista de retorno
         FindResult<UserModel> result;
         result.foundRegister = user;
@@ -207,12 +210,12 @@ vector<FindResult<UserModel>> UserDAO::findAllByType(const UserTypeEnum type) {
     return returnList;
 };
 
-vector<FindResult<UserModel>> UserDAO::findAllDonators(void) {
-    return this->findAllByType(UserTypeEnum::DONATOR);
+vector<FindResult<UserModel>> UserDAO::findMatchingDonators(const vector<int> rejTypesCodes) {
+    return this->findMatchingByType(UserTypeEnum::DONATOR, rejTypesCodes);
 };
 
-vector<FindResult<UserModel>> UserDAO::findAllReceivers(void) {
-    return this->findAllByType(UserTypeEnum::RECEIVER);
+vector<FindResult<UserModel>> UserDAO::findMatchingReceivers(const vector<int> rejTypesCodes) {
+    return this->findMatchingByType(UserTypeEnum::RECEIVER, rejTypesCodes);
 };
 
 #endif

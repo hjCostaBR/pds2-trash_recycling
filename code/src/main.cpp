@@ -31,7 +31,7 @@ int main(int argc, char const *argv[]) {
     auto rejTypeService = make_shared<RejectTypeService>();
     auto regTypeDao = make_shared<RejectTypeDAO>(rejTypeService);
     auto userService = make_shared<UserService>(regTypeDao);
-    auto userDao = make_shared<UserDAO>(userService);
+    auto userDao = make_shared<UserDAO>(userService, rejTypeService);
     auto userController = make_shared<UserController>(userDao, userService, rejTypeService, regTypeDao);
 
     // Exibir menu principal

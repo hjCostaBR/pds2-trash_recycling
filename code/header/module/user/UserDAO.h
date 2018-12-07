@@ -4,6 +4,7 @@
 #include <memory>
 #include "UserModel.h"
 #include "UserService.h"
+#include "../reject-type/RejectTypeService.h"
 #include "../../common/class/DAO.h"
 #include "../../common/FindResult.h"
 
@@ -24,6 +25,9 @@ private:
     /** Classe de servico. */
     shared_ptr<UserService> service = nullptr;
 
+    /** Classe de servico de Tipos de Residuo. */
+    shared_ptr<RejectTypeService> rejTypeService = nullptr;
+
 
     /**
      * Encapsula procedimento de escrita de 01 registro no arquivo de armazenamento.
@@ -32,12 +36,14 @@ private:
     void writeRegisterIntoStorage(shared_ptr<UserModel> user);
 
     /**
-     * Captura & retorna lista com todos os registros armazenados de 01 determinado tipo.
+     * Captura & retorna lista com todos os registros armazenados de 01 determinado tipo que possuam tipos de residuo
+     * de interesse compativeis com 01 lista de tipos de residuo informada.
      *
      * @param type Tipo do qual os registros pesquisados devem fazer parte.
+     * @param rejTypesList
      * @return
      */
-    vector<FindResult<UserModel>> findAllByType(const UserTypeEnum type);
+    vector<FindResult<UserModel>> findMatchingByType(const UserTypeEnum type, const vector<int> rejTypesList);
 
 protected:
 
@@ -48,7 +54,9 @@ protected:
 
 public:
 
-    UserDAO(shared_ptr<UserService> service): service(service) {};
+    UserDAO(shared_ptr<UserService> service, shared_ptr<RejectTypeService> rejTypeService)
+        : service(service), rejTypeService(rejTypeService)
+        {};
 
     /**
      * @inherit
@@ -92,16 +100,22 @@ public:
     vector<FindResult<UserModel>> findAll(void);
 
     /**
-     * Captura & retorna lista com todos os registros armazenados do tipo DOADOR.
+     * Captura & retorna lista de usuarios do tipo DOADOR que possuam tiops de residuo de interesse compativeis
+     * com 01 lista de tipos de residuo de interesse informada.
+     *
+     * @param rejTypesCodes
      * @return
      */
-    vector<FindResult<UserModel>> findAllDonators(void);
+    vector<FindResult<UserModel>> findMatchingDonators(const vector<int> rejTypesCodes);
 
     /**
-     * Captura & retorna lista com todos os registros armazenados do tipo RECEPTOR.
+     * Captura & retorna lista de usuarios do tipo RECEPTOR que possuam tiops de residuo de interesse compativeis
+     * com 01 lista de tipos de residuo de interesse informada.
+     *
+     * @param rejTypesCodes
      * @return
      */
-    vector<FindResult<UserModel>> findAllReceivers(void);
+    vector<FindResult<UserModel>> findMatchingReceivers(const vector<int> rejTypesCodes);
 };
 
 #endif

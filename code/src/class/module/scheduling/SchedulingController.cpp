@@ -2,6 +2,7 @@
 #define _SCHEDULING_CONTROLLER_CPP_
 
 #include <sstream>
+#include <map>
 #include "../../../../header/module/user/UserModel.h"
 #include "../../../../header/module/scheduling/SchedulingController.h"
 #include "../../../../header/module/scheduling/SchedulingModel.h"
@@ -11,7 +12,7 @@ using namespace std;
 bool SchedulingController::create(const shared_ptr<UserModel> loggedUser) {
 
     // Captura listas de opcoes para criar agendamento
-    const bool resourcesOk = this->getOptionsForScheduling(loggedUser->getType() == UserTypeEnum::DONATOR);
+    const bool resourcesOk = this->getOptionsForScheduling(loggedUser);
     if (!resourcesOk) return false;
 
     bool exit = false;
@@ -53,7 +54,7 @@ bool SchedulingController::create(const shared_ptr<UserModel> loggedUser) {
     return false;
 };
 
-bool SchedulingController::getOptionsForScheduling(const bool loggedUserIsDonator) {
+bool SchedulingController::getOptionsForScheduling(const shared_ptr<UserModel> loggedUser) {
 
     const string defaultErrMsg = "Nao eh possivel cadastrar um agendamento, no momento :(\nNao ha ";
     const string errMsgAux = " disponiveis...\n";
@@ -67,7 +68,26 @@ bool SchedulingController::getOptionsForScheduling(const bool loggedUserIsDonato
     }
 
     // Tipos de residuo
-    this->availableRejTypes = this->rejTypeDao->findAll();
+    const auto allRejTypes = this->rejTypeDao->findAll();
+
+    if (allRejTypes.size() > 0) {
+
+        vector<int> allRejTypeCodes;
+        map<int, FindResult<RejectTypeModel>> allRejTypesMap;
+
+        for (uint i = 0; i < allRejTypes.size(); i++) {
+            const int rejTypeCode = allRejTypes[i].foundRegister->getCode();
+            allRejTypesMap[rejTypeCode] = allRejTypes[i];
+            allRejTypeCodes.push_back(rejTypeCode);
+        }
+
+        const auto intersectionRejTypes = this->rejTypeService->get2RejTypesCodesListIntersection(loggedUser->getRejectTypesOfInterestCodes(), allRejTypeCodes);
+
+        for (uint i = 0; i < intersectionRejTypes.size(); i++) {
+            const auto search = allRejTypesMap.find(intersectionRejTypes[i]);
+            this->availableRejTypes.push_back(search->second);
+        }
+    }
 
     if (!this->availableRejTypes.size()) {
         cout << defaultErrMsg << "Tipos de Residuo" << errMsgAux;
@@ -75,9 +95,11 @@ bool SchedulingController::getOptionsForScheduling(const bool loggedUserIsDonato
     }
 
     // Receptores
+    const bool loggedUserIsDonator = (loggedUser->getType() == UserTypeEnum::DONATOR);
+
     if (loggedUserIsDonator) {
 
-        this->availableReceivers = this->userDao->findAllReceivers();
+        this->availableReceivers = this->userDao->findMatchingReceivers(loggedUser->getRejectTypesOfInterestCodes());
 
         if (!this->availableReceivers.size()) {
             cout << defaultErrMsg << "Receptores" << errMsgAux;
@@ -88,7 +110,7 @@ bool SchedulingController::getOptionsForScheduling(const bool loggedUserIsDonato
     // Doadores
     if (!loggedUserIsDonator) {
 
-        this->availableDonators = this->userDao->findAllDonators();
+        this->availableDonators = this->userDao->findMatchingDonators(loggedUser->getRejectTypesOfInterestCodes());
 
         if (!this->availableDonators.size()) {
             cout << defaultErrMsg << "Doadores" << errMsgAux;
@@ -134,7 +156,7 @@ bool SchedulingController::getDataFromStdIo(const bool isInsert, const shared_pt
 bool SchedulingController::update(const shared_ptr<UserModel> loggedUser) {
 
     // Captura listas de opcoes para criar agendamento
-    const bool resourcesOk = this->getOptionsForScheduling(loggedUser->getType() == UserTypeEnum::DONATOR);
+    const bool resourcesOk = this->getOptionsForScheduling(loggedUser);
     if (!resourcesOk) return false;
 
     cout << endl << "> EDITAR AGENDAMENTO" << endl << endl;

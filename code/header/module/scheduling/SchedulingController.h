@@ -103,10 +103,10 @@ private:
     /**
      * Captura as listas de opcoes necessarias para gerar 01 agendamento (doadores, receptores, tipos de residuos, etc.).
      *
-     * @param loggedUserIsDonator Flag: Informa se o usuario que executa a acao eh do tipo Doador (SE nao for, sera considerado Receptor).
+     * @param loggedUser Usuario que executa a acao
      * @return
      */
-    bool getOptionsForScheduling(const bool loggedUserIsDonator);
+    bool getOptionsForScheduling(const shared_ptr<UserModel> loggedUser);
 
     /**
      * Encapsula procedimento de mudanca de status de realizacao de 01 agendamento.

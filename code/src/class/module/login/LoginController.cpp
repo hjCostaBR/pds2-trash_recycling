@@ -95,7 +95,7 @@ void LoginController::showLoggedOptions(const shared_ptr<UserModel> loggedUser) 
     auto rejectTypeController = make_shared<RejectTypeController>(rejectTypeDao, rejectTypeService);
 
     auto userService = make_shared<UserService>(rejectTypeDao);
-    auto userDao = make_shared<UserDAO>(userService);
+    auto userDao = make_shared<UserDAO>(userService, rejectTypeService);
     auto userController = make_shared<UserController>(userDao, userService, rejectTypeService, rejectTypeDao);
 
     const auto mPointService = make_shared<MeetingPointService>();

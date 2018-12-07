@@ -41,6 +41,24 @@ public:
 
     /** Exibe cabecalho para exibicao tabular de dados. */
     void showDataTableHeader(void) const;
+
+    /**
+     * Analisa 02 listas de tipos de residuo & retorna a intersecao entre elas.
+     *
+     * @param list1
+     * @param list2
+     * @return
+     */
+    vector<RejectTypeModel> get2RejTypesListIntersection(const vector<RejectTypeModel> list1, const vector<RejectTypeModel> list2);
+
+    /**
+     * Analisa 02 listas de codigos de tipos de residuo & retorna a intersecao entre elas.
+     *
+     * @param list1
+     * @param list2
+     * @return
+     */
+    vector<int> get2RejTypesCodesListIntersection(const vector<int> list1, const vector<int> list2);
 };
 
 #endif

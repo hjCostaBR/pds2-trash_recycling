@@ -2,6 +2,7 @@
 #define _REJECTTYPE_SERVICE_CPP_
 
 #include <vector>
+#include <map>
 #include "../../../../header/module/reject-type/RejectTypeService.h"
 #include "../../../../header/common/FindResult.h"
 
@@ -84,5 +85,39 @@ shared_ptr<RejectTypeModel> RejectTypeService::getModelFromStorageLine(const vec
 
     return rejType;
 };
+
+vector<RejectTypeModel> RejectTypeService::get2RejTypesListIntersection(const vector<RejectTypeModel> list1, const vector<RejectTypeModel> list2) {
+
+    vector<RejectTypeModel> returnList;
+    map<int, RejectTypeModel> listOneMap;
+
+    for (uint i = 0; i < list1.size(); i++) {
+        const auto rejType = list1[i];
+        listOneMap[rejType.getCode()] = rejType;
+    }
+
+    for (uint i = 0; i < list2.size(); i++) {
+        const auto rejType = list2[i];
+        if (listOneMap.find(rejType.getCode()) == listOneMap.end()) continue;
+        returnList.push_back(rejType);
+    }
+
+    return returnList;
+}
+
+vector<int> RejectTypeService::get2RejTypesCodesListIntersection(const vector<int> list1, const vector<int> list2) {
+
+    vector<int> returnList;
+
+    for (uint i = 0; i < list1.size(); i++) {
+        for (uint j = 0; j < list2.size(); j++) {
+            if (list1[j] != list1[i]) continue;
+            returnList.push_back(list1[i]);
+            break;
+        }
+    }
+
+    return returnList;
+}
 
 #endif
