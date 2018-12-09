@@ -4,8 +4,9 @@
 
 # Generated
 /build/*
-!/build/Makefile
 /**/*.o
+/**/*.gch
+trash-recycling
 
 # Storage
 #/**/*storage/*
